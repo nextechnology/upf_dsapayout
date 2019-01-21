@@ -1,0 +1,130 @@
+.header {
+	z-index: 1;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background: #18286F;
+	position: fixed;
+	height: 30px;
+	width: 100%;
+	padding: 10px 0px 3px 50px;
+	box-shadow: rgba(0, 0, 0, 0.14902) 0px 1px 1px 0px,
+		rgba(0, 0, 0, 0.09804) 0px 1px 2px 0px;
+}
+
+.header-img {
+	margin-top: 0;
+	max-width: 80%;
+	max-height: 80%;
+}
+
+.footer {
+	text-align: right;
+	background: #18286F;
+	font-size: 13px;
+	color: #8B8878;
+	padding: 5px 10px 5px 10px;
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	height: 15px;
+	width: 99%;
+	box-shadow: rgba(0, 0, 0, 0.14902) 0px 1px 1px 0px,
+		rgba(0, 0, 0, 0.09804) 0px 1px 2px 0px;
+}
+
+/**************************************/
+#searchForm {
+	width: 1100px;
+	margin: 6em auto;
+	padding: 80px 0 0 35px;
+	background: #FFFFFF;
+	border: 1px solid #ebebeb;
+	box-shadow: rgba(0, 0, 0, 0.14902) 0px 1px 1px 0px,
+		rgba(0, 0, 0, 0.09804) 0px 1px 2px 0px;
+}
+
+#btnSearch {
+	margin: 50px 0px;
+}
+
+.group {
+	position: relative;
+	margin-bottom: 10px;
+	width: 100%;
+}
+
+._text-box {
+	margin: 5px 0px 5px 0px;
+	font-size: 16px;
+	padding: 5px 0px 5px 5px;
+	/* 	-webkit-appearance: none; */
+	/* 	background: #FFFFFF; */
+	/* 	color: #636363; */
+	border: lightgrey 1px solid;
+	border-radius: 3px;
+	/* 	border-bottom: 1px solid #757575; */
+	width: 300px;
+}
+
+._text-box:focus {
+	outline: none;
+	border: 1px solid #000; /* #FFA500; */
+}
+
+._label {
+	color: #999;
+	font-size: 12px;
+	pointer-events: none;
+	position: absolute;
+	left: 2px;
+	top: -12px;
+	-webkit-transition: all 0.2s ease;
+	transition: all 0.5s ease;
+}
+
+._text-box:focus ~ ._label, ._text-box.animation ~ ._label {
+	/* 	top: -13px; */
+	/*  	-webkit-transform: scale(.75);  */
+	/* 	transform: scale(.75); */
+	/*  	left: -2px;  */
+	color: #000000; /* #FFA500 */
+}
+
+.button {
+	position: relative;
+	padding: 10px 20px;
+	margin: .3em 0 1em 0;
+	vertical-align: middle;
+	color: #fff;
+	font-size: 16px;
+	line-height: 20px;
+	-webkit-font-smoothing: antialiased;
+	text-align: center;
+	letter-spacing: 1px;
+	background: transparent;
+	border: 0;
+	border-radius: 1px;
+	cursor: pointer;
+	box-shadow: rgba(0, 0, 0, 0.14902) 0px 1px 1px 0px,
+		rgba(0, 0, 0, 0.09804) 0px 1px 2px 0px;
+}
+
+.button:active {
+	outline: 0;
+	box-shadow: none;
+}
+
+.buttonBlue {
+	background: #4a89dc;
+	text-shadow: 1px 1px 0 rgba(39, 110, 204, .5);
+}
+
+.buttonBlue:hover {
+	background: #357bd8;
+}
+
+._inline-group {
+	display: inline-block;
+}
+

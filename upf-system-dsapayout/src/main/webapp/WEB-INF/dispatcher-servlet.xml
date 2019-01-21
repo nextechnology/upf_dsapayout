@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd 
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<mvc:resources mapping="/resources/**" location="/classpath:/resources/css/"></mvc:resources>
+	<mvc:resources mapping="/resources/**" location="/classpath:/resources/js/"></mvc:resources>
+	<mvc:resources mapping="/resources/**" location="/classpath:/resources/img/"></mvc:resources>
+	<mvc:annotation-driven />
+	<context:component-scan base-package="com.guavatrees.upf" />
+	<mvc:view-controller path="/" view-name="login" />
+	<bean id="appDefaultProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath*:upf.properties</value>
+				<value>classpath*:db.properties</value>
+				<value>classpath*:header.properties</value>
+				<value>classpath*:ApplicationResources.properties</value>
+				<value>classpath*:fileupload.properties</value>
+				<value>classpath*:industrymapping.properties</value>
+				<value>classpath*:escalation.properties</value>
+				<value>classpath*:log4j.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="sysEnvLoader" class="com.guavatrees.upf.service.InitFromEnvVariablesBean"
+		init-method="init">
+		<property name="properties" ref="appDefaultProperties" />
+	</bean>
+
+	<bean id="sysEnvProperties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		depends-on="sysEnvLoader" />
+
+	<util:properties id="applicationProps" location="/WEB-INF/application.properties" />
+
+
+	<!-- bind your ApplicationResources.properties -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>ApplicationResources</value>
+			</list>
+		</property>
+	</bean>
+	<!-- XML view resolver -->
+	<bean id="xmlViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+		<property name="location" value="classpath:upf-views.xml" />
+		<property name="order" value="0" />
+	</bean>
+	<!-- internalViewResolver -->
+	<bean id="internalViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+	</bean>
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="basicAuthRestTemplate" class="com.guavatrees.upf.util.BasicAuthRestTemplate"
+		scope="session">
+
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter" />
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+	<bean id="passwordEncoder"
+		class="org.springframework.security.crypto.password.StandardPasswordEncoder">
+		<constructor-arg value="ThisIsAStrongPassword." />
+	</bean>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+	<beans:import resource="upf-db.xml" />
+	
+	<context:component-scan base-package="com.guavatrees.upf.util"
+		annotation-config="true" />
+</beans>        
