@@ -478,4 +478,6 @@ public interface DSAService {
 
 	public String checkDsaOnDsacode(String dsacode)throws Exception;
 
+	public long getDsaCount(DsaDetailsEntity dsadto)throws Exception;
+
 }

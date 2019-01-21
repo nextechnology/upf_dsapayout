@@ -1,40 +1,13 @@
 package com.guavatrees.upf.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.guavatrees.upf.dao.entity.BLInsentive;
-import com.guavatrees.upf.dao.entity.DSADocument;
-import com.guavatrees.upf.dao.entity.DSAEntity;
-import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
-import com.guavatrees.upf.dao.entity.EmployeeEntity;
-import com.guavatrees.upf.dao.entity.Invoice;
-import com.guavatrees.upf.dao.entity.SMInsentive;
-import com.guavatrees.upf.dao.entity.SblInsentive;
-import com.guavatrees.upf.dto.InputDsaDto;
-import com.guavatrees.upf.service.DSAService;
-import com.guavatrees.upf.util.DateUtil;
-import com.guavatrees.upf.util.ReadConfigurationFile;
-import com.guavatrees.upf.util.TokenEncrytedDecrypted;
-import com.guavatrees.upf.util.UnzipUtility;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -59,6 +32,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.guavatrees.upf.dao.entity.BLInsentive;
+import com.guavatrees.upf.dao.entity.DSADocument;
+import com.guavatrees.upf.dao.entity.DSAEntity;
+import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
+import com.guavatrees.upf.dao.entity.EmployeeEntity;
+import com.guavatrees.upf.dao.entity.Invoice;
+import com.guavatrees.upf.dao.entity.ListLosId;
+import com.guavatrees.upf.dao.entity.SMInsentive;
+import com.guavatrees.upf.dao.entity.SblInsentive;
+import com.guavatrees.upf.dto.InputDsaDto;
+import com.guavatrees.upf.service.DSAService;
+import com.guavatrees.upf.util.DateUtil;
+import com.guavatrees.upf.util.ReadConfigurationFile;
+import com.guavatrees.upf.util.TokenEncrytedDecrypted;
+import com.guavatrees.upf.util.UnzipUtility;
 
 /**
  * Class is used for dsapayout operations
@@ -110,6 +112,9 @@ public class DSAPayoutController {
 				dsaEntity.setDsacode(dsaService.getdsacode());
 			}
 			dsaEntity.setUpdated_date(new Date());
+			if (dsaEntity.getCreated_date() == null) {
+				dsaEntity.setCreated_date(new Date());
+			}
 			DSAEntity dsa1 = dsaService.addDsaInfo(dsaEntity);
 			jsonResponse.put("id", dsa1.getDsaid());
 			jsonResponse.put("reply", "success");
@@ -466,7 +471,7 @@ public class DSAPayoutController {
 			@RequestParam(value = "role", required = true) String role,
 			@RequestParam(value = "product", required = true) String product,
 			@RequestParam(value = "purpose", required = true) String purpose, HttpServletRequest reuqest)
-			throws JSONException, Exception {
+					throws JSONException, Exception {
 		LOGGER.info("DSAController smListonCity start");
 		String responseMessage = null;
 		List<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
@@ -636,13 +641,13 @@ public class DSAPayoutController {
 			JSONObject jsonResponse = new JSONObject();
 			for (DsaDetailsEntity dsadetails : listdsasm) {
 				dsadetails.setUpdated_date(new Date());
-				if (dsadetails.getPaymentFlag().equalsIgnoreCase("YES"))
-					dsadetails.setPaymentdate(new Date());
 				dsaService.addDsaAdminInfo(dsadetails);
+
 			}
 			jsonResponse.put("reply", "success");
 			responseMessage = jsonResponse.toString();
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			LOGGER.error("Error while posting addadmindsa details. Reason : " + exception);
 		}
 		LOGGER.info("DSAController addadmindsa ends");
@@ -1779,13 +1784,10 @@ public class DSAPayoutController {
 		try {
 			for (Invoice invoice1 : invoice) {
 				String path = dsaService.CreateInvoicePdfInfo(invoice1);
-				// if(path!=null)
-				// listpath.add(path);
 			}
-			// if(listpath.size()==invoice.size())
+
 			jsonResponse.put("reply", "success");
-			// else
-			// jsonResponse.put("reply", "failure");
+
 			responseMessage = jsonResponse.toString();
 		} catch (Exception exception) {
 			LOGGER.error("Error while posting CreateInvoicePdfInfo details. Reason : " + exception);
@@ -1867,6 +1869,7 @@ public class DSAPayoutController {
 					jsonResponse.put("constatus", dsa.getConstatus());
 					jsonResponse.put("state", dsa.getState());
 					jsonResponse.put("acc_constatus", dsa.getAcc_constatus());
+					jsonResponse.put("acc_remark", dsa.getAcc_remark());
 					jsonResponse.put("paymentdate", dsa.getPaymentdate());
 					jsonResponse.put("pdfpath", invoice.getInvoicepath());
 					jsonResponse.put("invoiceamount", invoice.getInvoiceamount());
@@ -1931,13 +1934,13 @@ public class DSAPayoutController {
 		try {
 			String role = dsaService.getRole((Long.valueOf(userId)));
 
-			if (role.equalsIgnoreCase("CM")) {
+			if (role.equalsIgnoreCase("CAM_CM")) {
 				list = acm(list, input.getSm_id());
-			} else if (role.equalsIgnoreCase("ACM")) {
+			} else if (role.equalsIgnoreCase("CAM_ACM")) {
 				list = rcm(list, input.getSm_id());
-			} else if (role.equalsIgnoreCase("RCM")) {
+			} else if (role.equalsIgnoreCase("CAM_RCM")) {
 				list = zcm(list, input.getSm_id());
-			} else if (role.equalsIgnoreCase("ZCM")) {
+			} else if (role.equalsIgnoreCase("CAM_ZCM")) {
 				list = ncm(list, input.getSm_id());
 			}
 			jsonResponse.put("data", list);
@@ -2221,10 +2224,10 @@ public class DSAPayoutController {
 								.append("<br><br>");
 
 						sb.append("<table border='1' cellpadding='5'").append(
-								"<tr><th>State</th><th>Location</th><th>Company Name</th><th>Sales Maneger</th><th>Net Pay Rate</th><th>Sactioned loan amt</th><th>FinalPayoutAmount</th></tr>");
+								"<tr><th>State</th><th>Location</th><th>Company Name</th><th>Sales Manager</th><th>Net Pay Rate</th><th>Sanctioned Loan Amount</th><th>FinalPayoutAmount</th></tr>");
 						for (DsaDetailsEntity list : disagreelist) {
-							message.setSubject("[DSA-STATUS BASED ON DISAGREE]:".concat("DSA-CODE:")
-									.concat(list.getDsacode().concat("DSA:").concat(list.getDsa())));
+							message.setSubject("[DSA-STATUS BASED ON DISAGREE]: ".concat("DSA-CODE:")
+									.concat(list.getDsacode().concat(" DSA:").concat(list.getDsa())));
 							sb.append("<tr><td>").append(list.getState()).append("</td><td>").append(list.getLocation())
 									.append("</td><td>").append(list.getCompanyname()).append("</td><td>")
 									.append(list.getSalesmanager()).append("</td><td>").append(list.getNetpayrate())
@@ -2297,8 +2300,7 @@ public class DSAPayoutController {
 
 	@ResponseBody
 	@RequestMapping(value = "/sendemailaccount", method = RequestMethod.POST, produces = "application/json")
-	public String sendEmailAccount(@RequestBody DsaDetailsEntity dsa, HttpServletRequest request, HttpSession session)
-			throws Exception {
+	public String sendEmailAccount(HttpServletRequest request, HttpSession session) throws Exception {
 		LOGGER.info("DSAController sendEmailAccount start");
 		JSONObject object = new JSONObject();
 		try {
@@ -2372,21 +2374,17 @@ public class DSAPayoutController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/getStateCode", method = RequestMethod.POST, consumes = "application/json")
-	public String getStateCode(@RequestBody List<InputDsaDto> state, HttpServletRequest request, HttpSession session)
-			throws Exception {
+	@RequestMapping(value = "/getStateData", method = RequestMethod.GET, consumes = "application/json")
+	public String getStateCode(HttpServletRequest request, HttpSession session) throws Exception {
 		LOGGER.info("DSAController getStateCode start");
 		String responseMessage = null;
+		String statecode = request.getParameter("statecode");
 		try {
-			List<JSONObject> list = new ArrayList<JSONObject>();
-			for (InputDsaDto s : state) {
-				InputDsaDto stateList = dsaService.getStateCode(s.getState());
-				JSONObject jsonResponse = new JSONObject();
-				jsonResponse.put("state", stateList.getState());
-				jsonResponse.put("statecode", stateList.getStatecode());
-				list.add(jsonResponse);
-			}
-			responseMessage = list.toString();
+			InputDsaDto stateList = dsaService.getStateCode(statecode);
+			JSONObject jsonResponse = new JSONObject();
+			jsonResponse.put("state", stateList.getState());
+			jsonResponse.put("statecode", stateList.getStatecode());
+			responseMessage = jsonResponse.toString();
 		} catch (Exception exception) {
 			LOGGER.error("Error while posting getStateCode details. Reason : " + exception);
 		}
@@ -2449,7 +2447,7 @@ public class DSAPayoutController {
 					MimeMessage message = new MimeMessage(session);
 					message.setFrom(new InternetAddress(USERNAME));
 					message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailid));
-					message.setSubject("[DSA-STATUS BASED ON MIS]:");
+					message.setSubject("[MIS STATUS]:");
 					sb.append("Dear DSA ,").append("<br><br>")
 							.append("Following are the files that has been approved for the Month of ").append(month)
 							.append(" & year ").append(year)
@@ -2499,10 +2497,19 @@ public class DSAPayoutController {
 		LOGGER.info("DSAController sendemaildsaOnPayDone start");
 		String emailid = request.getParameter("emailid");
 		JSONObject object = new JSONObject();
+		List<Invoice> invoice1 = new ArrayList<Invoice>();
 		try {
 			List<Invoice> invoice = dsaService.getinvoicelist(dsanameEntity);
-			sendingMailToDsaOnPayDone(emailid, invoice, dsanameEntity.getMonth(), dsanameEntity.getYear());
 
+			for (Invoice in : invoice) {
+				String flag = dsaService.getPaymentFlagStatus(in);
+				if (flag.equalsIgnoreCase("YES"))
+					invoice1.add(in);
+			}
+
+			if (invoice1.size() != 0) {
+				sendingMailToDsaOnPayDone(emailid, invoice1, dsanameEntity.getMonth(), dsanameEntity.getYear());
+			}
 			object.put("reply", "success");
 
 		} catch (Exception e) {
@@ -2568,7 +2575,7 @@ public class DSAPayoutController {
 					MimeMessage message = new MimeMessage(session);
 					message.setFrom(new InternetAddress(USERNAME));
 					message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailid));
-					message.setSubject("[DSA-STATUS BASED ON PAYMENT DONE]:");
+					message.setSubject("[PAYMENT DONE STATUS]:");
 					sb.append("Dear DSA,").append("<br><br>").append("Payment for the month of ").append(month)
 							.append(" & year ").append(year).append(" has been done.").append("<br><br>");
 					sb.append("<table border='1' cellpadding='5'").append(
@@ -2731,24 +2738,178 @@ public class DSAPayoutController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/getStateData", method = RequestMethod.GET, consumes = "application/json")
-	public String getStateCode(HttpServletRequest request, HttpSession session) throws Exception {
-		LOGGER.info("DSAController getStateCode start");
-		String responseMessage = null;
-		String statecode = request.getParameter("statecode");
-		try {
-			InputDsaDto stateList = dsaService.getStateCode(statecode);
-			JSONObject jsonResponse = new JSONObject();
-			jsonResponse.put("state", stateList.getState());
-			jsonResponse.put("statecode", stateList.getStatecode());
-			responseMessage = jsonResponse.toString();
-		} catch (Exception exception) {
-			LOGGER.error("Error while posting getStateCode details. Reason : " + exception);
+	@RequestMapping(value = "/getDsaApp", method = RequestMethod.POST, consumes = "application/json")
+	public String getDsaApp(@RequestBody DsaDetailsEntity dsadto, HttpServletRequest request, HttpSession session)
+			throws Exception {
+		LOGGER.info("DSAController getDsaApp starts");
+		String response = null;
+		//List<DsaDetailsEntity> listdsa1 =new ArrayList<DsaDetailsEntity>();
+		
+		//api for get dsacode related admin
+		
+		List<String> s = new ArrayList<String>();
+		
+			List<DsaDetailsEntity> dsaList = dsaService.getdsaadmindetails(dsadto);
+			for(DsaDetailsEntity dsadata:dsaList){
+				
+				String reply=dsaService.checkDsaOnDsacode(dsadata.getDsacode());
+				if(reply.equalsIgnoreCase("present")){
+					dsadto.setDsa(dsadata.getDsacode());
+					
+				
+		
+		List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
+
+		if (listdsa.size() != 0) {
+			for (DsaDetailsEntity listdsadata : listdsa) {
+
+				listdsadata.setInclude("YES");
+				listdsadata.setMisFlag("YES");
+				if (listdsadata.getPaymentFlag() == null)
+					listdsadata.setPaymentFlag("NO");
+				listdsadata.setNetpayrate(listdsadata.getPayrate() - listdsadata.getSubvention());
+				double finalpayoutamount = Math.round((listdsadata.getSanctionedamount() * listdsadata.getNetpayrate()) / 100);
+				listdsadata.setFinalpayoutamount(finalpayoutamount);
+				double roi = Double.parseDouble(listdsadata.getRoi());
+				double interestAmount = (listdsadata.getSanctionedamount() * roi) / 100;
+				listdsadata.setInterestamount(interestAmount);
+
+			}
 		}
-		LOGGER.info("DSAController getStateCode ends");
-		return responseMessage;
+		if (listdsa.size() != 0) {
+			response = adddsalist(listdsa, request, session);
+		}
+	
+			DsaDetailsEntity entity=new DsaDetailsEntity();
+			entity.setProductcode(dsadto.getProductcode());
+			entity.setMonth(dsadto.getMonth());
+			entity.setDsacode(dsadata.getDsacode());
+			entity.setYear(dsadto.getYear());
+			entity.setDsa(dsadata.getDsacode());
+			
+			entity.setMonth(getmonthon(entity.getMonth()));
+			if (entity.getProductcode() == 1)
+				entity.setProductname("UBL");
+			else
+				entity.setProductname("SBL");
+			
+		List<DsaDetailsEntity> listdsadetail = dsaService.getdsabasedlist(entity);
+		List<InputDsaDto> dsaDtos = dsaService.getStateFromDsadetails(entity);
+		if (listdsadetail.size() != 0) {
+
+			List<Invoice> invoices = new ArrayList<>();
+			for (InputDsaDto dto : dsaDtos) {
+				Invoice invoice = new Invoice();
+				List<ListLosId> listLosIds = new ArrayList<ListLosId>();
+				for (DsaDetailsEntity list : listdsadetail) {
+
+					list.setConstatus("Agree");
+
+					if (dto.getState().equalsIgnoreCase(list.getState())) {
+						invoice.setYear(list.getYear());
+						invoice.setMonth(list.getMonth());
+						invoice.setDsacode(list.getDsacode());
+						invoice.setProductname(list.getProductname());
+						invoice.setState(list.getState());
+						invoice.setInvoiceno("1234567890");
+						DSAEntity dsaEntity = dsaService.getDsaOndsacode(list.getDsacode());
+						System.out.println(list.getState());
+						InputDsaDto input = dsaService.getStateCode(list.getState());
+						System.out.println(input.getStatecode());
+						System.out.println(dsaEntity.getCompanypan());
+						invoice.setGstnumber(input.getStatecode().concat(dsaEntity.getCompanypan()).concat("1Z5"));
+						ListLosId listLosId = new ListLosId();
+						listLosId.setCompanyname(list.getCompanyname());
+						listLosId.setLosid(Long.toString(list.getLosid()));
+						listLosId.setFinalpayoutamount(list.getFinalpayoutamount());
+						listLosId.setNetpayrate(list.getNetpayrate());
+						listLosIds.add(listLosId);
+						invoice.setListlos(listLosIds);
+					}
+				}
+				if (invoice.getGstnumber() != null)
+					invoices.add(invoice);
+
+			}
+			response = adddsalist(listdsadetail, request, session);
+
+			String path = CreateInvoicePdfInfo(invoices);
+		}
+		
+		
+				}
+				else{
+				s.add(dsadata.getDsacode()+"========"+dsadata.getLosid()+"============"+dsadata.getCompanyname());
+				}
+			}
+			
+			System.out.println(s);
+			System.out.println(s.size());
+		LOGGER.info("DSAController getDsaApp ends");
+		return response;
 	}
 
+	public String getmonthon(String number) {
+		LOGGER.info("DSADaoImpl getmonthon start");
+		String month = null;
+		switch (number) {
+		case "1":
+			month = "January";
+			break;
+		case "2":
+			month = "February";
+			break;
+		case "3":
+			month = "March";
+			break;
+		case "4":
+			month = "April";
+			break;
+		case "5":
+			month = "May";
+			break;
+		case "6":
+			month = "June";
+			break;
+		case "7":
+			month = "July";
+			break;
+		case "8":
+			month = "August";
+			break;
+		case "9":
+			month = "September";
+			break;
+		case "10":
+			month = "October";
+			break;
+		case "11":
+			month = "November";
+			break;
+		case "12":
+			month = "December";
+			break;
+		default:
+			// month = "nomonth";
+			month = number;
+		}
+		LOGGER.info("DSADaoImpl getmonthon ends");
+		return month;
+
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getDsaCount", method = RequestMethod.POST, produces = "application/json")
+	public long getDsaCount(@RequestBody DsaDetailsEntity dsadto,HttpServletRequest request) throws Exception {
+		LOGGER.info("DSAController getDsaCount start");
+		String response=null;
+		long count=dsaService.getDsaCount(dsadto);
+		
+		LOGGER.info("DSAController getDsaCount end");
+		return count;
+
+	}
+	
 	@RequestMapping(value = "dsapayout", method = RequestMethod.GET)
 	public ModelAndView dsapayout() {
 		ModelAndView mav = new ModelAndView();
@@ -2811,4 +2972,6 @@ public class DSAPayoutController {
 		return mav;
 	}
 
+
+	
 }

@@ -1708,6 +1708,12 @@ public class DSAServiceImpl implements DSAService {
 		return dsaDao.checkDsaOnDsacode(dsacode);
 	}
 
+	@Override
+	public long getDsaCount(DsaDetailsEntity dsadto) throws Exception {
+		LOGGER.info("DSAServiceImpl getDsaCount start");
+		return dsaDao.getDsaCount(dsadto);
+	}
+
 
 
 }

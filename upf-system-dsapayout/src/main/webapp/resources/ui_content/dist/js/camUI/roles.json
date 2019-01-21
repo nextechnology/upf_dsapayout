@@ -1,0 +1,101 @@
+{
+	"headers": [
+		"Credit Head",
+		"Zonal Head",
+		"Area Credit Manager",
+		"Credit Manager",
+		"Area Credit Manager",
+		"Credit Manager"
+	],
+	"data": [{
+		"s": [
+			"ALL",
+			"Read only",
+			"ALL",
+			"Read only",
+			"Read only",
+			"ALL"
+		]
+	}, {
+		"s": [
+			"Read only",
+			"Read only",
+			"Read only",
+			"ALL",
+			"Read only",
+			"Read only"
+		]
+	}, {
+		"s": [
+			"ALL",
+			"Read only",
+			"ALL",
+			"ALL",
+			"Read only",
+			"ALL"
+		]
+	},{
+		"s": [
+			"ALL",
+			"Read only",
+			"ALL",
+			"Read only",
+			"Read only",
+			"ALL"
+		]
+	}, {
+		"s": [
+			"Read only",
+			"Read only",
+			"Read only",
+			"ALL",
+			"Read only",
+			"Read only"
+		]
+	}, {
+		"s": [
+			"ALL",
+			"Read only",
+			"ALL",
+			"ALL",
+			"Read only",
+			"ALL"
+		]
+	},{
+		"s": [
+			"ALL",
+			"Read only",
+			"ALL",
+			"Read only",
+			"Read only",
+			"ALL"
+		]
+	}, {
+		"s": [
+			"Read only",
+			"Read only",
+			"Read only",
+			"ALL",
+			"Read only",
+			"Read only"
+		]
+	}, {
+		"s": [
+			"ALL",
+			"Read only",
+			"ALL",
+			"ALL",
+			"Read only",
+			"ALL"
+		]
+	},{
+		"s": [
+			"ALL",
+			"Read only",
+			"ALL",
+			"ALL",
+			"Read only",
+			"ALL"
+		]
+	}]
+}

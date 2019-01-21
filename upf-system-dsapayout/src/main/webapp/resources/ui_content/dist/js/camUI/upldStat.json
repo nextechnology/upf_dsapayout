@@ -1,0 +1,29 @@
+{
+  "clientId": 707,
+  "data": [
+    {
+      "EMI": "Done",
+      "DebitCredit": "Done",
+      "ITR": "Done",
+      "FileName": "707_NTBANK_NTBank 1",
+      "CardSales": "Done",
+      "ReturnChargesCheck": "Done",
+      "Bank1Part": "Done",
+      "IBT": "Done",
+      "ADB": "Done",
+      "ReturnCharges": "Done"
+    },
+    {
+      "EMI": "Done",
+      "DebitCredit": "Done",
+      "ITR": "N/A",
+      "FileName": "707_NTBANK_NTBank 2",
+      "CardSales": "Done",
+      "ReturnChargesCheck": "N/A",
+      "Bank1Part": "Done",
+      "IBT": "Done",
+      "ADB": "Done",
+      "ReturnCharges": "Done"
+    }
+  ]
+}

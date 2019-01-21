@@ -10,6 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 @Table(name = "dsadetails")
@@ -165,12 +170,20 @@ public class DsaDetailsEntity {
 	@Column(name = "acc_constatus")
 	private String acc_constatus;
 	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "paymentdate")
 	private Date paymentdate;
 	
-
+	@Column(name = "acc_remark")
+	private String acc_remark;
+	
 	@Column(name = "updated_date")
 	private Date updated_date;
+	
+	@Transient
+	private long offset;
+	//@Column(name = "lmsid")
+	//private String lmsid;
 
 	public long getDsadetailsid() {
 		return dsadetailsid;
@@ -556,6 +569,32 @@ public class DsaDetailsEntity {
 	public void setAcc_constatus(String acc_constatus) {
 		this.acc_constatus = acc_constatus;
 	}
+
+	public String getAcc_remark() {
+		return acc_remark;
+	}
+
+	public void setAcc_remark(String acc_remark) {
+		this.acc_remark = acc_remark;
+	}
+
+	public long getOffset() {
+		return offset;
+	}
+
+	public void setOffset(long offset) {
+		this.offset = offset;
+	}
+
+	/*public String getLmsid() {
+		return lmsid;
+	}
+
+	public void setLmsid(String lmsid) {
+		this.lmsid = lmsid;
+	}*/
+
+	
 
 	
 	

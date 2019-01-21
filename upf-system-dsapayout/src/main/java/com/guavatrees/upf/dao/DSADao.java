@@ -552,5 +552,7 @@ public interface DSADao {
 	public List<InputDsaDto> getStateFromDsadetails(DsaDetailsEntity dsadto)throws Exception;
 
 	public String checkDsaOnDsacode(String dsacode)throws Exception;
+
+	public long getDsaCount(DsaDetailsEntity dsadto)throws Exception;
 	
 }

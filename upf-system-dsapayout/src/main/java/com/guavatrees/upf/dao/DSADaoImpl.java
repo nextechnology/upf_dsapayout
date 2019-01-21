@@ -650,11 +650,15 @@ public class DSADaoImpl implements DSADao {
 	    statement.setLong(4, dsanameEntity.getProductcode());
 	    rs = statement.executeQuery();
 	   } else if (dsanameEntity.getDsa() == null) {
-	    SQL1 = "SELECT DISTINCT [LOCATION] = c.ResCity,[Disbursal Date] = CBSDIS.DisbDate ,[Applied Loan Amount]=L.Applied_Loan_Amt,[DisbYear] = Year(CBSDIS.DisbDate),[DisbMonth]= month(CBSDIS.DisbDate),[COMAPNY/ ESTABLISHMENT NAME] = C.name,[SALES MANAGER NAME] = L.VOFFICER,[DSA Code] = L.CRMSUPERVISOR ,[DSA Name] = DSA.Name,[Product Catesgory] = LS.ShortName,[STATUS] = SM.DESCRIPTION,[Sanctioned Loan Amount] = CBSDIS.DISBAMOUNT,[LOAN ID] = L.LOANNO,[GATE KEEPER ID] = L.FCSNO,[PAY RATE] = '',[RATE OF INTEREST (ROI)] = L.INTEREST,[PROCESSING FEES] = CAML.PROCESSINGCHARGES,[FREQUENCY] = CASE WHEN l.instalmentfrequency = 1 THEN 'Daily' WHEN l.instalmentfrequency = 7 THEN 'Weekly' WHEN l.instalmentfrequency IN ( 14, 15 ) THEN 'fortnightly' WHEN l.instalmentfrequency IN ( 30 ) THEN 'Monthly' END, [State] = St.NAME  FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and Year(CBSDIS.DisbDate)=? and month(CBSDIS.DisbDate)=? and L.LoanSubType =? ORDER BY St.NAME";
+	    SQL1 = "SELECT DISTINCT [LOCATION] = c.ResCity,[Disbursal Date] = CBSDIS.DisbDate ,[Applied Loan Amount]=L.Applied_Loan_Amt,[DisbYear] = Year(CBSDIS.DisbDate),[DisbMonth]= month(CBSDIS.DisbDate),[COMAPNY/ ESTABLISHMENT NAME] = C.name,[SALES MANAGER NAME] = L.VOFFICER,[DSA Code] = L.CRMSUPERVISOR ,[DSA Name] = DSA.Name,[Product Catesgory] = LS.ShortName,[STATUS] = SM.DESCRIPTION,[Sanctioned Loan Amount] = CBSDIS.DISBAMOUNT,[LOAN ID] = L.LOANNO,[GATE KEEPER ID] = L.FCSNO,[PAY RATE] = '',[RATE OF INTEREST (ROI)] = L.INTEREST,[PROCESSING FEES] = CAML.PROCESSINGCHARGES,[FREQUENCY] = CASE WHEN l.instalmentfrequency = 1 THEN 'Daily' WHEN l.instalmentfrequency = 7 THEN 'Weekly' WHEN l.instalmentfrequency IN ( 14, 15 ) THEN 'fortnightly' WHEN l.instalmentfrequency IN ( 30 ) THEN 'Monthly' END, [State] = St.NAME  FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and Year(CBSDIS.DisbDate)=? and month(CBSDIS.DisbDate)=? and L.LoanSubType =? "
+	    		+ "ORDER BY St.NAME OFFSET  "+dsanameEntity.getOffset()+
+	    		 "  ROWS FETCH NEXT 50 ROWS ONLY";
+	    		
 	    PreparedStatement statement = con.prepareStatement(SQL1);
 	    statement.setString(1, dsanameEntity.getYear());
 	    statement.setString(2, dsanameEntity.getMonth());
 	    statement.setLong(3, dsanameEntity.getProductcode());
+	    //statement.setLong(4, dsanameEntity.getOffset());
 	    rs = statement.executeQuery();
 	   }
 
@@ -766,8 +770,8 @@ public class DSADaoImpl implements DSADao {
 			month = "December";
 			break;
 		default:
-			//month = "nomonth";
-			month = number;
+			month = "nomonth";
+			//month = number;
 		}
 		LOGGER.info("DSADaoImpl getmonthon ends");
 		return month;
@@ -3143,5 +3147,36 @@ public class DSADaoImpl implements DSADao {
 		return status;
 	}
 
+	@Override
+	@Transactional
+	public long getDsaCount(DsaDetailsEntity dsadto) throws Exception {
+		LOGGER.info("DSADaoImpl getDsaCount start");
+		  StringBuilder connectionUrl = new StringBuilder();
+		  Connection con = null;
+		  connectionUrl.append(MSSQL_URL).append(";").append("user=").append(MSSQL_DB_USERNAME).append(";")
+		    .append("password=").append(MSSQL_DB_PASSWORD);
+		  Class.forName(MSSQL_DB_DRIVER);
+			con = DriverManager.getConnection(connectionUrl.toString());
+		PreparedStatement psmt = null;
+		ResultSet rs = null;
+		long x = 0;
+		psmt = con.prepareStatement("SELECT COUNT(*) as count FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and Year(CBSDIS.DisbDate)=? and month(CBSDIS.DisbDate)=? and L.LoanSubType =?");
+		psmt.setString(1, dsadto.getYear());
+		psmt.setString(2, dsadto.getMonth());
+		psmt.setLong(3, dsadto.getProductcode());
+		rs = psmt.executeQuery();
+		if (rs.next()) {
+			x = rs.getInt("count");
+		}
+		
+		if (rs != null)
+			rs.close();
 
+		ConnectionFactory.closeConnection(con);
+		LOGGER.info("DSADaoImpl getDsaCount ends");
+		return x;
+	}
+
+
+	
 }

@@ -79,6 +79,9 @@ public class DSAEntity implements Serializable {
 
 	@Column(name = "updated_date")
 	private Date updated_date;
+	
+	@Column(name = "created_date")
+	private Date created_date;
 
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(cascade = CascadeType.ALL)
@@ -288,4 +291,14 @@ public class DSAEntity implements Serializable {
 	public void setDsaDocuments(List<DSADocument> dsaDocuments) {
 		this.dsaDocuments = dsaDocuments;
 	}
+
+	public Date getCreated_date() {
+		return created_date;
+	}
+
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+	
+	
 }
