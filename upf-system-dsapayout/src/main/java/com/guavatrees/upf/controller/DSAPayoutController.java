@@ -2923,6 +2923,8 @@ public class DSAPayoutController {
 		String responseMessage = null;
 		try {
 			JSONObject jsonResponse = new JSONObject();
+			blMonthlySlab.setStartdate(getdate(blMonthlySlab.getStartdate()));
+			blMonthlySlab.setEnddate(getdate(blMonthlySlab.getEnddate()));
 			long appid = dsaService.addPayout(blMonthlySlab);
 			jsonResponse.put("id", appid);
 			jsonResponse.put("reply", "success");
