@@ -46,13 +46,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guavatrees.upf.dao.entity.BLInsentive;
+import com.guavatrees.upf.dao.entity.BLMonthlyPayout;
+import com.guavatrees.upf.dao.entity.BLMonthlySlab;
 import com.guavatrees.upf.dao.entity.DSADocument;
 import com.guavatrees.upf.dao.entity.DSAEntity;
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
+import com.guavatrees.upf.dao.entity.FestivalPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
+import com.guavatrees.upf.dao.entity.PayoutDate;
 import com.guavatrees.upf.dao.entity.SMInsentive;
 import com.guavatrees.upf.dao.entity.SblInsentive;
 import com.guavatrees.upf.dto.InputDsaDto;
@@ -2909,6 +2914,116 @@ public class DSAPayoutController {
 		return count;
 
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/addPayout", method = RequestMethod.POST, consumes = "application/json")
+	public String addPayout(@RequestBody PayoutDate blMonthlySlab) {
+		LOGGER.info("DSAController addBLInsentiveInfo start");
+		String responseMessage = null;
+		try {
+			JSONObject jsonResponse = new JSONObject();
+			long appid = dsaService.addPayout(blMonthlySlab);
+			jsonResponse.put("id", appid);
+			jsonResponse.put("reply", "success");
+			responseMessage = jsonResponse.toString();
+		} catch (Exception exception) {
+			LOGGER.error("Error while posting addBLInsentiveInfo details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController addBLInsentiveInfo end");
+		return responseMessage;
+
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/addFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
+	public String addFestivalPayout(@RequestBody FestivalPayout festivalPayout) {
+		LOGGER.info("DSAController addBLInsentiveInfo start");
+		String responseMessage = null;
+		try {
+			JSONObject jsonResponse = new JSONObject();
+			long appid = dsaService.addFestivalPayout(festivalPayout);
+			jsonResponse.put("id", appid);
+			jsonResponse.put("reply", "success");
+			responseMessage = jsonResponse.toString();
+		} catch (Exception exception) {
+			LOGGER.error("Error while posting addBLInsentiveInfo details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController addBLInsentiveInfo end");
+		return responseMessage;
+
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getPayoutdate", method = RequestMethod.POST, consumes = "application/json")
+	public PayoutDate getPayoutdate(HttpServletRequest request) {
+		LOGGER.info("DSAController addBLInsentiveInfo start");
+		
+		PayoutDate blMonthlySlab=new PayoutDate();
+		try {
+			
+			String year=request.getParameter("year");
+			String month=request.getParameter("month");
+			 blMonthlySlab= dsaService.getPayoutdate(year+month);
+			
+		} catch (Exception exception) {
+			LOGGER.error("Error while posting addBLInsentiveInfo details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController addBLInsentiveInfo end");
+		return blMonthlySlab;
+
+	}
+
+	
+	@ResponseBody
+	@RequestMapping(value = "/getPayout", method = RequestMethod.POST, consumes = "application/json")
+	public String getPayout(@RequestBody PayoutDate payoutDate,HttpServletRequest request) {
+		LOGGER.info("DSAController getPayout start");
+		String jsonInString=null;
+		PayoutDate payoutDate2=new PayoutDate();
+		List<BLMonthlyPayout> blMonthlyPayout=new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			if(payoutDate.getStartdate()!=null  && payoutDate.getEnddate()!=null){
+			payoutDate.setStartdate(getdate(payoutDate.getStartdate()));
+			payoutDate.setEnddate(getdate(payoutDate.getEnddate()));
+			payoutDate2= dsaService.getPayout(payoutDate);
+			
+			 jsonInString = mapper.writeValueAsString(payoutDate2);
+			}
+			else{
+				blMonthlyPayout=dsaService.getBlmonthlypayout();
+				jsonInString = mapper.writeValueAsString(blMonthlyPayout);
+			}
+		} catch (Exception exception) {
+			LOGGER.error("Error while  getPayout details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController getPayout end");
+		return jsonInString;
+
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/getPreviousdate", method = RequestMethod.POST, consumes = "application/json")
+	public String getPreviousdate(@RequestBody PayoutDate payoutDate,HttpServletRequest request) {
+		LOGGER.info("DSAController getPayout start");
+		String jsonInString=null;
+		
+		try {
+			
+		} catch (Exception exception) {
+			LOGGER.error("Error while  getPayout details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController getPayout end");
+		return jsonInString;
+
+	}
+	
+	public String getdate(String date){
+		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
+		return date1;
+	}
+	
 	
 	@RequestMapping(value = "dsapayout", method = RequestMethod.GET)
 	public ModelAndView dsapayout() {

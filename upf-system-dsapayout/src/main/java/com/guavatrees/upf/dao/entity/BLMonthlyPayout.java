@@ -12,8 +12,8 @@ import javax.persistence.Table;
 
 @Entity
 @org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
-@Table(name = "blmonthlyslab")
-public class BLMonthlySlab implements Serializable{
+@Table(name = "blmonthlypayout")
+public class BLMonthlyPayout implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID", unique = true, nullable = false)

@@ -15,13 +15,17 @@ import org.springframework.stereotype.Service;
 
 import com.guavatrees.upf.dao.DSADao;
 import com.guavatrees.upf.dao.entity.BLInsentive;
+import com.guavatrees.upf.dao.entity.BLMonthlyPayout;
+import com.guavatrees.upf.dao.entity.BLMonthlySlab;
 import com.guavatrees.upf.dao.entity.ClientInfo;
 import com.guavatrees.upf.dao.entity.ClientInfoWeb;
 import com.guavatrees.upf.dao.entity.DSAEntity;
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
+import com.guavatrees.upf.dao.entity.FestivalPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
+import com.guavatrees.upf.dao.entity.PayoutDate;
 import com.guavatrees.upf.dao.entity.SMInsentive;
 import com.guavatrees.upf.dao.entity.SblInsentive;
 import com.guavatrees.upf.dto.InputDsaDto;
@@ -1712,6 +1716,38 @@ public class DSAServiceImpl implements DSAService {
 	public long getDsaCount(DsaDetailsEntity dsadto) throws Exception {
 		LOGGER.info("DSAServiceImpl getDsaCount start");
 		return dsaDao.getDsaCount(dsadto);
+	}
+
+	@Override
+	public long addPayout(PayoutDate blMonthlySlab) throws Exception {
+		LOGGER.info("DSAServiceImpl getDsaCount start");
+		return dsaDao.addPayout(blMonthlySlab);
+	}
+
+	@Override
+	public PayoutDate getPayoutdate(String date) throws Exception {
+		LOGGER.info("DSAServiceImpl getPayoutdate start");
+		return dsaDao.getPayoutdate(date);
+	}
+
+	@Override
+	public long addFestivalPayout(FestivalPayout festivalPayout) throws Exception {
+		LOGGER.info("DSAServiceImpl getDsaCount start");
+		return dsaDao.addFestivalPayout(festivalPayout);
+	}
+
+	
+
+	@Override
+	public PayoutDate getPayout(PayoutDate payoutDate) throws Exception {
+		LOGGER.info("DSAServiceImpl getPayoutdate start");
+		return dsaDao.getPayout(payoutDate);
+	}
+
+	@Override
+	public List<BLMonthlyPayout> getBlmonthlypayout() throws Exception {
+		LOGGER.info("DSAServiceImpl getPayoutdate start");
+		return dsaDao.getBlmonthlypayout();
 	}
 
 

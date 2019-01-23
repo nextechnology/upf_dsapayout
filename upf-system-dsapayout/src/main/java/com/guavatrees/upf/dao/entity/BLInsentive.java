@@ -30,10 +30,10 @@ public class BLInsentive implements Serializable {
 	@JoinColumn(name = "renewalsid", referencedColumnName = "ID")
 	private BLRenewals renewals;
 	
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "monthlyslabid", referencedColumnName = "ID", nullable = false)
-	private List<BLMonthlySlab> monthlyslab;
+	//@LazyCollection(LazyCollectionOption.FALSE)
+	//@OneToMany(cascade = CascadeType.ALL)
+	//@JoinColumn(name = "monthlyslabid", referencedColumnName = "ID", nullable = false)
+	//private List<BLMonthlySlab> monthlyslab;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(cascade = CascadeType.ALL)
@@ -58,13 +58,7 @@ public class BLInsentive implements Serializable {
 
 	
 
-	public List<BLMonthlySlab> getMonthlyslab() {
-		return monthlyslab;
-	}
-
-	public void setMonthlyslab(List<BLMonthlySlab> monthlyslab) {
-		this.monthlyslab = monthlyslab;
-	}
+	
 
 	public List<BLQuarterlySlab> getQuarterlyslab() {
 		return quarterlyslab;

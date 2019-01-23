@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.guavatrees.upf.dao.entity.BLInsentive;
+import com.guavatrees.upf.dao.entity.BLMonthlyPayout;
+import com.guavatrees.upf.dao.entity.BLMonthlySlab;
 import com.guavatrees.upf.dao.entity.DSAEntity;
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
+import com.guavatrees.upf.dao.entity.FestivalPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
+import com.guavatrees.upf.dao.entity.PayoutDate;
 import com.guavatrees.upf.dao.entity.SMInsentive;
 import com.guavatrees.upf.dao.entity.SblInsentive;
 import com.guavatrees.upf.dto.InputDsaDto;
@@ -479,5 +483,17 @@ public interface DSAService {
 	public String checkDsaOnDsacode(String dsacode)throws Exception;
 
 	public long getDsaCount(DsaDetailsEntity dsadto)throws Exception;
+
+	public long addPayout(PayoutDate blMonthlySlab)throws Exception;
+
+	public PayoutDate getPayoutdate(String date) throws Exception;
+
+	public long addFestivalPayout(FestivalPayout festivalPayout)throws Exception;
+
+	public PayoutDate getPayout( PayoutDate payoutDate)throws Exception;
+
+	public List<BLMonthlyPayout> getBlmonthlypayout()throws Exception;
+
+	
 
 }
