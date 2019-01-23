@@ -2986,8 +2986,8 @@ public class DSAPayoutController {
 		try {
 			payoutDate2= dsaService.getPayout(payoutDate);
 			if(payoutDate2.getDateid()!=0){
-				//payoutDate.setStartdate(getdate(payoutDate.getStartdate()));
-				//payoutDate.setEnddate(getdate(payoutDate.getEnddate()));
+				payoutDate2.setStartdate(getDate1(payoutDate2.getStartdate()));
+				payoutDate2.setEnddate(getDate1(payoutDate2.getEnddate()));
 			 jsonInString = mapper.writeValueAsString(payoutDate2);
 		}
 			else
@@ -3025,7 +3025,7 @@ public class DSAPayoutController {
 	}
 	
 	public String getDate1(String date){
-		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
+		String date1=date.substring(6, 8).concat("/").concat(date.substring(4,6).concat("/").concat(date.substring(0,4)));
 		return date1;
 	}
 	
