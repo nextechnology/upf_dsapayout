@@ -3241,10 +3241,8 @@ public class DSADaoImpl implements DSADao {
 		PayoutDate payoutDate1=new PayoutDate();
 		try{
 			
-			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE  startdate=:startdate AND enddate=:enddate AND year=:year AND month=:month AND producttype=:producttype";
+			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
-			query.setParameter("startdate",payoutDate.getStartdate());
-			query.setParameter("enddate", payoutDate.getEnddate());
 			query.setParameter("year",payoutDate.getYear());
 			query.setParameter("month",payoutDate.getMonth());
 			query.setParameter("producttype",payoutDate.getProducttype());

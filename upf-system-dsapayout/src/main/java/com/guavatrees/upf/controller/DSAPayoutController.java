@@ -2984,14 +2984,14 @@ public class DSAPayoutController {
 		List<BLMonthlyPayout> blMonthlyPayout=new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			if(payoutDate.getStartdate()!=null  && payoutDate.getEnddate()!=null){
-			payoutDate.setStartdate(getdate(payoutDate.getStartdate()));
-			payoutDate.setEnddate(getdate(payoutDate.getEnddate()));
 			payoutDate2= dsaService.getPayout(payoutDate);
-			
+			if(payoutDate2.getDateid()!=0){
+				//payoutDate.setStartdate(getdate(payoutDate.getStartdate()));
+				//payoutDate.setEnddate(getdate(payoutDate.getEnddate()));
 			 jsonInString = mapper.writeValueAsString(payoutDate2);
-			}
-			else{
+		}
+			else
+			{
 				blMonthlyPayout=dsaService.getBlmonthlypayout();
 				jsonInString = mapper.writeValueAsString(blMonthlyPayout);
 			}
@@ -3020,6 +3020,11 @@ public class DSAPayoutController {
 	}
 	
 	public String getdate(String date){
+		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
+		return date1;
+	}
+	
+	public String getDate1(String date){
 		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
 		return date1;
 	}
