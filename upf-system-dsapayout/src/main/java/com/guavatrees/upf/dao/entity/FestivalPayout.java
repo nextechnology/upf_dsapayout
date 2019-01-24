@@ -25,11 +25,6 @@ public class FestivalPayout {
 	@Column(name = "ID", unique = true, nullable = false)
 	private long dateid;
 	
-	@Column(name="startdate")
-	private String startdate;
-	
-	@Column(name="enddate")
-	private String enddate;
 	
 	@Column(name="month")
 	private String month;
@@ -53,21 +48,7 @@ public class FestivalPayout {
 		this.dateid = dateid;
 	}
 
-	public String getStartdate() {
-		return startdate;
-	}
-
-	public void setStartdate(String startdate) {
-		this.startdate = startdate;
-	}
-
-	public String getEnddate() {
-		return enddate;
-	}
-
-	public void setEnddate(String enddate) {
-		this.enddate = enddate;
-	}
+	
 
 	public String getMonth() {
 		return month;
@@ -85,13 +66,7 @@ public class FestivalPayout {
 		this.year = year;
 	}
 
-	public List<FestivalBLMonthlySlab> getMonthlyslab() {
-		return monthlyslab;
-	}
-
-	public void setMonthlyslab(List<FestivalBLMonthlySlab> monthlyslab) {
-		this.monthlyslab = monthlyslab;
-	}
+	
 
 	public String getProducttype() {
 		return producttype;

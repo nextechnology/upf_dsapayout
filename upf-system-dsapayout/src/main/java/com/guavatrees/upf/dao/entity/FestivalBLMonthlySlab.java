@@ -29,6 +29,14 @@ public class FestivalBLMonthlySlab implements Serializable{
 	@Column(name="monthly_payout")
 	private double monthlypayout;
 	
+	@Column(name="month")
+	private String month;
+	
+	@Column(name="year")
+	private String year;
+	
+	@Column(name="producttype")
+	private String producttype;
 	
 	
 	public long getMonthlyslabid() {
