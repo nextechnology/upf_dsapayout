@@ -3213,8 +3213,6 @@ public class DSADaoImpl implements DSADao {
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);
-			
-			
 			return query.list();
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);

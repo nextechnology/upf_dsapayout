@@ -40,6 +40,14 @@ public class FestivalPayout {
 	@JoinColumn(name = "slabid", referencedColumnName = "ID", nullable = false)
 	private List<FestivalBLMonthlySlab> monthlyslab;
 
+	public List<FestivalBLMonthlySlab> getMonthlyslab() {
+		return monthlyslab;
+	}
+
+	public void setMonthlyslab(List<FestivalBLMonthlySlab> monthlyslab) {
+		this.monthlyslab = monthlyslab;
+	}
+
 	public long getDateid() {
 		return dateid;
 	}

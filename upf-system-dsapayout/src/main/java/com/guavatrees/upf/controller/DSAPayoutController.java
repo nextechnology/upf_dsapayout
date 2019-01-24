@@ -2923,14 +2923,12 @@ public class DSAPayoutController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/addPayout", method = RequestMethod.POST, consumes = "application/json")
-	public String addPayout(@RequestBody PayoutDate blMonthlySlab) {
+	public String addPayout(@RequestBody PayoutDate payoutDate) {
 		LOGGER.info("DSAController addBLInsentiveInfo start");
 		String responseMessage = null;
 		try {
 			JSONObject jsonResponse = new JSONObject();
-			blMonthlySlab.setStartdate(getdate(blMonthlySlab.getStartdate()));
-			blMonthlySlab.setEnddate(getdate(blMonthlySlab.getEnddate()));
-			long appid = dsaService.addPayout(blMonthlySlab);
+			long appid = dsaService.addPayout(payoutDate);
 			jsonResponse.put("id", appid);
 			jsonResponse.put("reply", "success");
 			responseMessage = jsonResponse.toString();
