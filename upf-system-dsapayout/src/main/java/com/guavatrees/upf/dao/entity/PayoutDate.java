@@ -40,7 +40,11 @@ public class PayoutDate {
 	@Column(name="producttype")
 	private String producttype;
 	
-	
+	//@LazyCollection(LazyCollectionOption.FALSE)
+	//@OneToMany(cascade = CascadeType.ALL)
+	//@JoinColumn(name = "slabid", referencedColumnName = "ID", nullable = false)
+	//private List<BLMonthlySlab> monthlyslab;
+
 	public long getDateid() {
 		return dateid;
 	}
@@ -81,7 +85,7 @@ public class PayoutDate {
 		this.year = year;
 	}
 
-	
+
 	public String getProducttype() {
 		return producttype;
 	}

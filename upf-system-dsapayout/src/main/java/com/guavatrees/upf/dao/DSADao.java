@@ -575,7 +575,7 @@ public interface DSADao {
 
 	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout()throws Exception;
 
-	public FestivalPayout getPayoutFestivaldate(String year,String month)throws Exception;
+	public List<FestivalPayout> getPayoutFestivaldate(String year,String month)throws Exception;
 	
 	
 }

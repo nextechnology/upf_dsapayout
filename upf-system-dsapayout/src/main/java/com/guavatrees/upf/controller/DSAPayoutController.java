@@ -677,8 +677,10 @@ public class DSAPayoutController {
 
 		List<JSONObject> list = new ArrayList<JSONObject>();
 		try {
+			if(dsadto.getStartdate()!=null && dsadto.getEnddate()!=null ){
 			dsadto.setStartdate(getdate(dsadto.getStartdate()));
 			dsadto.setEnddate(getdate(dsadto.getEnddate()));
+			}
 			List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
 			if (listdsa.size() != 0) {
 				for (DsaDetailsEntity dsa : listdsa) {
@@ -2966,12 +2968,12 @@ public class DSAPayoutController {
 		String jsonInString=null;
 		ObjectMapper mapper = new ObjectMapper();
 		PayoutDate payoutDate=new PayoutDate();
-		FestivalPayout festivalPayout=new FestivalPayout();
+		List<FestivalPayout> festivalPayout=new ArrayList<>();
 		try {
 			String year=request.getParameter("year");
 			String month=request.getParameter("month");
 			festivalPayout=dsaService.getPayoutFestivaldate(year,month);
-			if(festivalPayout!=null){
+			if(festivalPayout.size()!=0){
 			 jsonInString = mapper.writeValueAsString(festivalPayout);
 			}
 			else{

@@ -670,7 +670,7 @@ public class DSADaoImpl implements DSADao {
 		   PreparedStatement statement = con.prepareStatement(SQL1);
 		   statement.setString(1, dsanameEntity.getYear());
 		   statement.setString(2, dsanameEntity.getMonth());
-		    statement.setLong(1, dsanameEntity.getProductcode());
+		    statement.setLong(3, dsanameEntity.getProductcode());
 		    rs = statement.executeQuery();
 	   }
 	   }
@@ -3206,16 +3206,16 @@ public class DSADaoImpl implements DSADao {
 	
 	@Override
 	@Transactional
-	public FestivalPayout getPayoutFestivaldate(String year,String month) throws Exception {
+	public List<FestivalPayout> getPayoutFestivaldate(String year,String month) throws Exception {
 		FestivalPayout festivalPayout=new FestivalPayout();
 		try{
-			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  year=:year AND month=month";
+			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  year=:year AND month=:month";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);
-			festivalPayout= (FestivalPayout) query.uniqueResult();
 			
-			return festivalPayout;
+			
+			return query.list();
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
