@@ -13,6 +13,7 @@ import com.guavatrees.upf.dao.entity.DSAEntity;
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
 import com.guavatrees.upf.dao.entity.FestivalBLMonthlySlab;
+import com.guavatrees.upf.dao.entity.FestivalMonthlyPayout;
 import com.guavatrees.upf.dao.entity.FestivalPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
@@ -568,6 +569,13 @@ public interface DSADao {
 
 	public PayoutDate getPayout(PayoutDate payoutDate)throws Exception;
 
+	public FestivalPayout getFestivalPayout(FestivalPayout festivalPayout)throws Exception;
+
 	public List<BLMonthlyPayout> getBlmonthlypayout()throws Exception;
+
+	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout()throws Exception;
+
+	public FestivalPayout getPayoutFestivaldate(String date)throws Exception;
+	
 	
 }

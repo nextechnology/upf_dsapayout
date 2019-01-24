@@ -37,6 +37,9 @@ public class FestivalPayout {
 	@Column(name="year")
 	private String year;
 	
+	@Column(name="producttype")
+	private String producttype;
+	
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "slabid", referencedColumnName = "ID", nullable = false)
@@ -88,6 +91,14 @@ public class FestivalPayout {
 
 	public void setMonthlyslab(List<FestivalBLMonthlySlab> monthlyslab) {
 		this.monthlyslab = monthlyslab;
+	}
+
+	public String getProducttype() {
+		return producttype;
+	}
+
+	public void setProducttype(String producttype) {
+		this.producttype = producttype;
 	}
 
 	

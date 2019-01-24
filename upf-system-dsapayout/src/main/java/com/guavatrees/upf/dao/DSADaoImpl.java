@@ -37,6 +37,7 @@ import com.guavatrees.upf.dao.entity.DSAEntity;
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
 import com.guavatrees.upf.dao.entity.FestivalBLMonthlySlab;
+import com.guavatrees.upf.dao.entity.FestivalMonthlyPayout;
 import com.guavatrees.upf.dao.entity.FestivalPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
@@ -3187,11 +3188,6 @@ public class DSADaoImpl implements DSADao {
 	public PayoutDate getPayoutdate(String date) throws Exception {
 		PayoutDate festivalPayoutDate=new PayoutDate();
 		try{
-			
-			String queryString1 = "select monthlyslab from FestivalPayout monthlyslab  WHERE  ('"+date+"%' BETWEEN startdate AND enddate)";
-			Query query1 = sessionFactory.getCurrentSession().createQuery(queryString1);
-			FestivalPayout festivalPayout= (FestivalPayout) query1.uniqueResult();
-			
 			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE  ('"+date+"%' BETWEEN startdate AND enddate)";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			PayoutDate payoutDate= (PayoutDate) query.uniqueResult();
@@ -3202,6 +3198,20 @@ public class DSADaoImpl implements DSADao {
 		}
 	}
 	
+	@Override
+	@Transactional
+	public FestivalPayout getPayoutFestivaldate(String date) throws Exception {
+		FestivalPayout festivalPayout=new FestivalPayout();
+		try{
+			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  ('"+date+"%' BETWEEN startdate AND enddate)";
+			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			festivalPayout= (FestivalPayout) query.uniqueResult();
+			
+			return festivalPayout;
+		} catch (Exception exception) {
+			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
+		}
+	}
 	@Override
 	@Transactional
 	public long addPayout(PayoutDate blMonthlySlab) throws Exception {
@@ -3268,5 +3278,37 @@ public class DSADaoImpl implements DSADao {
 		}
 	}
 	
+	
+	@Override
+	@Transactional
+	public FestivalPayout getFestivalPayout(FestivalPayout festivalPayout) throws Exception {
+		PayoutDate payoutDate1=new PayoutDate();
+		try{
+			
+			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  year=:year AND producttype=:producttype";
+			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			query.setParameter("year",festivalPayout.getYear());
+			//query.setParameter("month",payoutDate.getMonth());
+			query.setParameter("producttype",festivalPayout.getProducttype());
+			 payoutDate1= (PayoutDate) query.uniqueResult();
+			
+			return festivalPayout;
+		} catch (Exception exception) {
+			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
+		}
+	}
+	
+	
+	@Override
+	@Transactional
+	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout() throws Exception {
+		try{
+			String queryString = "select monthlyslab from FestivalMonthlyPayout monthlyslab ";
+			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			return query.list();
+		} catch (Exception exception) {
+			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
+		}
+	}
 	
 }

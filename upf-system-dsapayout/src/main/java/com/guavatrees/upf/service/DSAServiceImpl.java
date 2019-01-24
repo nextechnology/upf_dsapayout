@@ -22,6 +22,7 @@ import com.guavatrees.upf.dao.entity.ClientInfoWeb;
 import com.guavatrees.upf.dao.entity.DSAEntity;
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
+import com.guavatrees.upf.dao.entity.FestivalMonthlyPayout;
 import com.guavatrees.upf.dao.entity.FestivalPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
@@ -1748,6 +1749,24 @@ public class DSAServiceImpl implements DSAService {
 	public List<BLMonthlyPayout> getBlmonthlypayout() throws Exception {
 		LOGGER.info("DSAServiceImpl getPayoutdate start");
 		return dsaDao.getBlmonthlypayout();
+	}
+
+	@Override
+	public FestivalPayout getFestivalPayout(FestivalPayout festivalPayout) throws Exception {
+		LOGGER.info("DSAServiceImpl getPayoutdate start");
+		return dsaDao.getFestivalPayout(festivalPayout);
+	}
+
+	@Override
+	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout() throws Exception {
+		LOGGER.info("DSAServiceImpl getPayoutdate start");
+		return dsaDao.getFestivalBlmonthlypayout();
+	}
+
+	@Override
+	public FestivalPayout getPayoutFestivaldate(String date) throws Exception {
+		LOGGER.info("DSAServiceImpl getPayoutdate start");
+		return dsaDao.getPayoutFestivaldate(date);
 	}
 
 

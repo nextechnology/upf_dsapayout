@@ -10,6 +10,7 @@ import com.guavatrees.upf.dao.entity.BLMonthlySlab;
 import com.guavatrees.upf.dao.entity.DSAEntity;
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
+import com.guavatrees.upf.dao.entity.FestivalMonthlyPayout;
 import com.guavatrees.upf.dao.entity.FestivalPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.PayoutDate;
@@ -493,6 +494,12 @@ public interface DSAService {
 	public PayoutDate getPayout( PayoutDate payoutDate)throws Exception;
 
 	public List<BLMonthlyPayout> getBlmonthlypayout()throws Exception;
+
+	public FestivalPayout getFestivalPayout(FestivalPayout festivalPayout)throws Exception;
+
+	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout()throws Exception;
+
+	public FestivalPayout getPayoutFestivaldate(String string)throws Exception;
 
 	
 
