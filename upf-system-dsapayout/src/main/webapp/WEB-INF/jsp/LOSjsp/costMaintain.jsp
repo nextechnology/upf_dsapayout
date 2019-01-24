@@ -385,9 +385,9 @@ padding-right:10px;
 											</tr> -->
 									</tbody>
 								</table>
-								<div class="text-center" id="pgnDiv">
+<!-- 								<div class="text-center" id="pgnDiv">
 									<ul id="pgntnPanel" class="pagination-sm"></ul>
-								</div>
+								</div> -->
 								
 								<div align="center">
 									<table>
@@ -397,9 +397,6 @@ padding-right:10px;
 											<td class="a-dis"><button type="submit" id="btnCstMtgSbtDmId" class="btn btn-primary"></button></td>
 										</tr>
 									</table>
-								</div>
-								<div class="text-center" id="pgnDiv">
-									<ul id="pgntnPanel" class="pagination-sm"></ul>
 								</div>
 							</form>
 						</div>

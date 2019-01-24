@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Payout Master</title>
+<title>Offer Months</title>
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
@@ -54,6 +54,20 @@ input::placeholder {
 .glyphicon-ok-circle{
 color:green !important;
 padding-right:10px;
+}
+.loadingoverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh; /* to make it responsive */
+	width: 100vw; /* to make it responsive */
+	overflow: hidden; /*to remove scrollbars */
+	z-index: 99999; /*to make it appear on topmost part of the page */
+	display: none; /*to make it visible only on fadeIn() function */
+	text-align: center;
+	background-color: black;
+	opacity: 0.7;
+	color: white;
 }
  </style>  
 
@@ -114,29 +128,77 @@ padding-right:10px;
 		
    <div class="content-wrapper" id="mainUserBodyId">
 	<section class="content">
-    	<div class="row">
-    	<div class="col-md-5"></div>
-    	<div class="col-md-2">
-    	<select id="proTypIncId" class="form-control">
-    	<option value="">Select Product Type</option>
-    	<option value="BL">BL</option>
-    	<option value="SBL">SBL</option>
-    	</select>  
-    	</div>
-    	<div class="col-md-5"></div>
-    	</div>
-    	
-    	<div class="row" id="blDivRowId"style="padding-top:30px;display:none;">
-    	<form onsubmit="$_blPost(event)">
+				<div class="row col-md-offset-2">
+
+					<div class="col-md-3">
+						<select id="proTypIncId" class="form-control" oninput="renStartEnd();">
+							<option value="">Select Product Type</option>
+							<option value="BL">BL</option>
+							<option value="SBL">SBL</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<select id="yearAdmin" class="form-control" required="required" oninput="renStartEnd();">
+
+						</select>
+					</div>
+					<div class="col-md-3">
+						<select id="monthAdmin" class="form-control" required="required" oninput="renStartEnd();">
+							<option value="">Select Month</option>
+
+							<option value="01">January</option>
+							<option value="02">February</option>
+							<option value="03">March</option>
+							<option value="04">April</option>
+
+							<option value="05">May</option>
+							<option value="06">June</option>
+							<option value="07">July</option>
+							<option value="08">August</option>
+
+							<option value="09">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select>
+					</div>
+					<!-- <div class="col-sm-3">
+						<button type="submit" id="searchBtnCstMntgId" class="btn btn-info">
+							<i class="glyphicon glyphicon-search"><span style="font-size: 16px;"></span></i>
+						</button>
+					</div> -->
+				</div>
+				<div class="row  col-md-offset-4" id="startEndDateRowId" style="padding-top: 15px;display:none;">
+					<div class="col-sm-3">
+						<div class=" input-group input-append date startDateRangePicker">
+							<input class="form-control readonly" type="text" id="startDateId" required
+								placeholder="Start Date" disabled="disabled"
+								pattern="[0-9]{2}[-|/]{1}[0-9]{2}[-|/]{1}[0-9]{4}"><span
+								class="highlight"></span> <span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class=" input-group input-append date endDateRangePicker">
+							<input class="form-control readonly" type="text" id="endDateId" required
+								placeholder="End Date" disabled="disabled"
+								pattern="[0-9]{2}[-|/]{1}[0-9]{2}[-|/]{1}[0-9]{4}"><span
+								class="highlight"></span> <span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="blDivRowId" style="padding-top:30px;">
     		<div class="col-md-2"></div>   
     		<div class="col-md-8" style="background-color:#fff;padding-top:20px;">
-    		<div align=center style="padding-bottom:15px;"><b style="font-size:18px;">BUSINESS LOAN</b></div>
+    		<div align=center style="padding-bottom:15px;"><b style="font-size:18px;">OFFER MONTHS DETAILS</b></div>
     			<table class="table table-bordered table-condensed">
 							<thead>
 								<tr  class="leftbgcolor">
-								<td>Disbursal in Cr.</td>
-								<td>Min Files Disbursed</td>
-								<td>Monthly Payout (%)</td>
+									<td>Year-Month</td>
+									<td>Start Date</td>
+									<td>End Date</td>
 								</tr>
 							</thead>
 							<tbody>
@@ -165,119 +227,8 @@ padding-right:10px;
 									</tr>			
 							</tbody>
 						</table>
-						<div class="row a-dis">
-							<div class="col-md-2"></div>
-						<div class="col-md-8">
-							<table class="table table-bordered table-condensed">
-							<thead>
-								<tr  class="leftbgcolor">
-								<td>Disbursal in Cr.</td>
-								<td>Quaterly Slab (%)</td>
-							<!-- 	<td>Qualifying Criteria</td> -->
-								</tr>
-							</thead>
-							<tbody>
-									<tr class="a-center">
-									<td id="quarterlyslabid-1" class="a-dis"></td>
-									<td id="disbursalincr-4">1.25 - 2.24</td>
-									<td><input type="text" class="form-control" id="qtrlySlbId-1" required="required"  pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-								<!-- 	<td><input type="text" class="form-control" id="qlfCritId-1" required="required"></td> -->
-									</tr>	
-									
-									<tr class="a-center">
-									<td id="quarterlyslabid-2" class="a-dis"></td>
-									<td id="disbursalincr-5">2.25 - 3</td>
-									<td><input type="text" class="form-control" id="qtrlySlbId-2" required="required"  pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-								<!-- 	<td><input type="text" class="form-control" id="qlfCritId-2" required="required"></td> -->
-									</tr>	
-									
-									<tr class="a-center">
-									<td id="quarterlyslabid-3" class="a-dis"></td>
-									<td id="disbursalincr-6">> 3</td>
-									<td id="renewalsid" class="a-dis"></td>
-									<td><input type="text" class="form-control" id="qtrlySlbId-3" required="required" pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-								<!-- 	<td><input type="text" class="form-control" id="qlfCritId-3" required="required"></td> -->
-									</tr>			
-							</tbody>
-						</table>
-						</div>
-						<div class="col-md-2"></div>
-						</div>
-								
-						<div class="row a-dis">
-							<div class="col-md-2"></div>
-						<div class="col-md-8">
-						<table class="table table-bordered table-condensed">
-							<thead>
-								<tr class="leftbgcolor">
-								<td>Instance Of Renewal</td>
-								<td>Payout Percentage (%)</td>
-								</tr>
-							</thead>
-							<tbody>
-									<tr class="a-center">
-									<td id="renewalsid" class="a-dis"></td>
-									<td id="frstRenwId-1">1st Renewal</td>
-									<td><input type="text" class="form-control" id="frstRenwId-2" required="required"  pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-									</tr>	
-							</tbody>
-						</table>
-						</div>
-						<div class="col-md-2"></div>
-						</div>
-						<div align="center" style="padding-bottom:15px;">
-						<button type="submit" class="btn btn-success" id="btnBlSubmitId">Submit</button>
-						</div>
     		</div>
     		<div class="col-md-2"></div>
-    		</form>
-    	</div>
-    	<div class="row" id="sblDivRowId" style="padding-top:25px;display:none;">
-    		<div class="col-md-3"></div>
-    		<div class="col-md-6" style="background-color:#fff;padding-top:20px;">
-    		<div align=center style="padding-bottom:15px;"><b style="font-size:18px;">SMALL BUSINESS LOAN</b></div>
-    			<form onsubmit="$_sblpost(event);">
-    			<table class="table table-bordered table-condensed">
-    				<thead align="center">
-    				<tr class="leftbgcolor">
-    					<td>Disbursements in Lacs</td>
-    					<td>Monthly Slab (%)</td>
-       				</tr>
-    				</thead>
-    				<tbody align="center">
-    				<tr>
-    					<td id="sblHidIncId-1" class="a-dis"></td>
-    					<td id="disbursementId-1"></td>
-    					<td><input type="text" class="form-control" id="monthSblId-1" required pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-    				</tr>
-    				<tr>
-    				<td id="sblHidIncId-2" class="a-dis"></td>
-    					<td id="disbursementId-2"></td>
-    					<td><input type="text" class="form-control" id="monthSblId-2" required pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-    				</tr>
-    				<tr>
-    				<td id="sblHidIncId-3" class="a-dis"></td>
-    				<td id="disbursementId-3"></td>
-    				<td><input type="text" class="form-control" id="monthSblId-3" required pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-    				</tr>	
-       				<tr>
-       				<td id="sblHidIncId-4" class="a-dis"></td>
-       				<td id="disbursementId-4"></td>
-       				<td><input type="text" class="form-control" id="monthSblId-4" required pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-       				</tr>
-    				<tr>
-    				<td id="sblHidIncId-5" class="a-dis"></td>
-       				<td id="disbursementId-5"></td>
-       				<td><input type="text" class="form-control" id="monthSblId-5" required pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-       				</tr>
-    				</tbody>
-    			</table>
-    			<div align="center" style="padding-bottom:15px;">
-						<button type="submit" class="btn btn-success" id="sblSbmtId">Submit</button>
-						</div>
-    			</form>
-    		</div>
-    		<div class="col-md-3"></div>
     	</div>
     </section>
 	</div>
@@ -341,11 +292,12 @@ padding-right:10px;
 	<script
 		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/snapShot.js"></script>
 	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/forAllLos.js"></script>
-	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/incentives.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/offerMonths.js"></script>
 <script src="/upf-system-dsapayout/resources/ui_content/plugins/bootstrap.filestyle/js/bootstrap-filestyle.min.js"></script>
 <script src="/upf-system-dsapayout/resources/ui_content/plugins/toastr/toastr.min.js"></script>
 <script type="text/javascript">
 	
 </script>
+<div class="loadingoverlay"></div>
 </body>
 </html>
