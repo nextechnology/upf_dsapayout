@@ -2994,24 +2994,24 @@ public class DSAPayoutController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getPayout", method = RequestMethod.POST, consumes = "application/json")
-	public String getPayout(@RequestBody PayoutDate payoutDate,HttpServletRequest request) {
+	public String getPayout(HttpServletRequest request) {
 		LOGGER.info("DSAController getPayout start");
-		String jsonInString=null;
-		PayoutDate payoutDate2=new PayoutDate();
-		List<BLMonthlyPayout> blMonthlyPayout=new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
-		try {
-			payoutDate2= dsaService.getPayout(payoutDate);
-			if(payoutDate2!=null){
-				payoutDate2.setStartdate(getDate1(payoutDate2.getStartdate()));
-				payoutDate2.setEnddate(getDate1(payoutDate2.getEnddate()));
-			 jsonInString = mapper.writeValueAsString(payoutDate2);
-		}
-			else
-			{
-				blMonthlyPayout=dsaService.getBlmonthlypayout();
-				jsonInString = mapper.writeValueAsString(blMonthlyPayout);
+		String jsonInString=null;
+		List<PayoutDate> payoutDate2=new ArrayList<>();
+		String producttype=request.getParameter("producttype");
+	try {
+		if(producttype.equalsIgnoreCase("BL")){
+			payoutDate2= dsaService.getPayout();
+			if(payoutDate2.size()!=0){
+			for(PayoutDate paydate:payoutDate2){
+				paydate.setStartdate(getDate1(paydate.getStartdate()));
+				paydate.setEnddate(getDate1(paydate.getEnddate()));
 			}
+			jsonInString = mapper.writeValueAsString(payoutDate2);
+			}
+			
+		}
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayout details. Reason : " + exception);
 		}

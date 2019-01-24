@@ -3253,18 +3253,13 @@ public class DSADaoImpl implements DSADao {
 
 	@Override
 	@Transactional
-	public PayoutDate getPayout(PayoutDate  payoutDate) throws Exception {
+	public List<PayoutDate> getPayout() throws Exception {
 		PayoutDate payoutDate1=new PayoutDate();
 		try{
-			
-			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
+			String queryString = "select monthlyslab from PayoutDate monthlyslab  ";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
-			query.setParameter("year",payoutDate.getYear());
-			query.setParameter("month",payoutDate.getMonth());
-			query.setParameter("producttype",payoutDate.getProducttype());
-			 payoutDate1= (PayoutDate) query.uniqueResult();
 			
-			return payoutDate1;
+			return query.list();
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
