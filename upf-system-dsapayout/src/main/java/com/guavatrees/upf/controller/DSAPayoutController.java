@@ -2947,8 +2947,6 @@ public class DSAPayoutController {
 		String responseMessage = null;
 		try {
 			JSONObject jsonResponse = new JSONObject();
-			festivalPayout.setStartdate(getdate(festivalPayout.getStartdate()));
-			festivalPayout.setEnddate(getdate(festivalPayout.getEnddate()));
 			long appid = dsaService.addFestivalPayout(festivalPayout);
 			jsonResponse.put("id", appid);
 			jsonResponse.put("reply", "success");
@@ -2972,10 +2970,8 @@ public class DSAPayoutController {
 		try {
 			String year=request.getParameter("year");
 			String month=request.getParameter("month");
-			festivalPayout=dsaService.getPayoutFestivaldate(year+month);
+			festivalPayout=dsaService.getPayoutFestivaldate(year,month);
 			if(festivalPayout!=null){
-				festivalPayout.setStartdate(getDate1(festivalPayout.getStartdate()));
-				festivalPayout.setEnddate(getDate1(festivalPayout.getEnddate()));
 			 jsonInString = mapper.writeValueAsString(festivalPayout);
 			}
 			else{
@@ -3035,8 +3031,6 @@ public class DSAPayoutController {
 		try {
 			festivalPayout1= dsaService.getFestivalPayout(festivalPayout);
 			if(festivalPayout1.getDateid()!=0){
-				festivalPayout1.setStartdate(getDate1(festivalPayout1.getStartdate()));
-				festivalPayout1.setEnddate(getDate1(festivalPayout1.getEnddate()));
 			 jsonInString = mapper.writeValueAsString(festivalPayout1);
 		}
 			else
@@ -3141,6 +3135,19 @@ public class DSAPayoutController {
 		return mav;
 	}
 
-
+	// F MONTHS
+		@RequestMapping(value = "offerMonths", method = RequestMethod.GET)
+		public ModelAndView offerMonths() {
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("DSA/offerMonths");
+			return mav;
+		}
+	//new festival 
+		@RequestMapping(value = "festivalOffer", method = RequestMethod.GET)
+		public ModelAndView festivalOffer() {
+			ModelAndView mav = new ModelAndView();
+			mav.setViewName("DSA/festivalOffer");
+			return mav;
+		}
 	
 }
