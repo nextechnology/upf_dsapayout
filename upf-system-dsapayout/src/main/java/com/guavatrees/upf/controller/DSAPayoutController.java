@@ -2993,7 +2993,7 @@ public class DSAPayoutController {
 
 	
 	@ResponseBody
-	@RequestMapping(value = "/getPayout", method = RequestMethod.POST, consumes = "application/json")
+	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, consumes = "application/json")
 	public String getPayout(HttpServletRequest request) {
 		LOGGER.info("DSAController getPayout start");
 		ObjectMapper mapper = new ObjectMapper();
