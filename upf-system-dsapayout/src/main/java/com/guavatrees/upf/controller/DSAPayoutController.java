@@ -677,6 +677,8 @@ public class DSAPayoutController {
 
 		List<JSONObject> list = new ArrayList<JSONObject>();
 		try {
+			dsadto.setStartdate(getdate(dsadto.getStartdate()));
+			dsadto.setEnddate(getdate(dsadto.getEnddate()));
 			List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
 			if (listdsa.size() != 0) {
 				for (DsaDetailsEntity dsa : listdsa) {
@@ -3004,7 +3006,7 @@ public class DSAPayoutController {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			payoutDate2= dsaService.getPayout(payoutDate);
-			if(payoutDate2.getDateid()!=0){
+			if(payoutDate2!=null){
 				payoutDate2.setStartdate(getDate1(payoutDate2.getStartdate()));
 				payoutDate2.setEnddate(getDate1(payoutDate2.getEnddate()));
 			 jsonInString = mapper.writeValueAsString(payoutDate2);

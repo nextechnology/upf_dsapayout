@@ -182,8 +182,30 @@ public class DsaDetailsEntity {
 	
 	@Transient
 	private long offset;
+	
+	@Transient
+	private String startdate;
+	
+	@Transient
+	private String enddate;
 	//@Column(name = "lmsid")
 	//private String lmsid;
+
+	public String getStartdate() {
+		return startdate;
+	}
+
+	public void setStartdate(String startdate) {
+		this.startdate = startdate;
+	}
+
+	public String getEnddate() {
+		return enddate;
+	}
+
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
 
 	public long getDsadetailsid() {
 		return dsadetailsid;
