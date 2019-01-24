@@ -2964,7 +2964,7 @@ public class DSAPayoutController {
 	@ResponseBody
 	@RequestMapping(value = "/getPayoutdate", method = RequestMethod.POST, consumes = "application/json")
 	public String getPayoutdate(HttpServletRequest request) {
-		LOGGER.info("DSAController addBLInsentiveInfo start");
+		LOGGER.info("DSAController getPayoutdate start");
 		String jsonInString=null;
 		ObjectMapper mapper = new ObjectMapper();
 		PayoutDate payoutDate=new PayoutDate();
@@ -2973,7 +2973,7 @@ public class DSAPayoutController {
 			String year=request.getParameter("year");
 			String month=request.getParameter("month");
 			festivalPayout=dsaService.getPayoutFestivaldate(year+month);
-			if(festivalPayout.getDateid()!=0){
+			if(festivalPayout!=null){
 				festivalPayout.setStartdate(getDate1(festivalPayout.getStartdate()));
 				festivalPayout.setEnddate(getDate1(festivalPayout.getEnddate()));
 			 jsonInString = mapper.writeValueAsString(festivalPayout);
@@ -2988,9 +2988,9 @@ public class DSAPayoutController {
 			 
 			
 		} catch (Exception exception) {
-			LOGGER.error("Error while posting addBLInsentiveInfo details. Reason : " + exception);
+			LOGGER.error("Error while  getPayoutdate details. Reason : " + exception);
 		}
-		LOGGER.info("DSAController addBLInsentiveInfo end");
+		LOGGER.info("DSAController getPayoutdate end");
 		return jsonInString;
 
 	}
