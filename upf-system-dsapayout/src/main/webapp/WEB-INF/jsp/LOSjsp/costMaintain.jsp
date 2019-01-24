@@ -66,6 +66,20 @@ font-size: 12px;
 color:green !important;
 padding-right:10px;
 }
+.loadingoverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh; /* to make it responsive */
+	width: 100vw; /* to make it responsive */
+	overflow: hidden; /*to remove scrollbars */
+	z-index: 99999; /*to make it appear on topmost part of the page */
+	display: none; /*to make it visible only on fadeIn() function */
+	text-align: center;
+	background-color: black;
+	opacity: 0.7;
+	color: white;
+}
  </style>  
 
 </head>
@@ -147,17 +161,17 @@ padding-right:10px;
 						<select id="monthAdmin" class="form-control" required="required">
 						<option value="">Select Month</option>
 						
-						<option value="1">January</option>
-						<option value="2">February</option>
-						<option value="3">March</option>
-						<option value="4">April</option>
+						<option value="01">January</option>
+						<option value="02">February</option>
+						<option value="03">March</option>
+						<option value="04">April</option>
 						
-						<option value="5">May</option>
-						<option value="6">June</option>
-						<option value="7">July</option>
-						<option value="8">August</option>
+						<option value="05">May</option>
+						<option value="06">June</option>
+						<option value="07">July</option>
+						<option value="08">August</option>
 						
-						<option value="9">September</option>
+						<option value="09">September</option>
 						<option value="10">October</option>
 						<option value="11">November</option>
 						<option value="12">December</option>
@@ -169,11 +183,17 @@ padding-right:10px;
 						</select>
 					</div>
 					<div class="col-md-2">
+						<button type="submit" id="searchBtnCstMntgId" class="btn btn-info">
+									<i class="glyphicon glyphicon-search"><span style="font-size: 16px;"></span></i>
+								</button>
+					</div>
+					<div class="col-md-2">
 						<!-- <select id="cityAdmin" class="form-control">
 							<option value="">Select City</option>
 						</select> -->
 					</div>
-					</div> 
+					</div>
+					<!--  :p
 					<div class="row" style="padding-top:10px;padding-left:50px;">  
 						<div class="col-md-11">
 						<div class="input-group">
@@ -186,7 +206,7 @@ padding-right:10px;
 							</span>
 						</div>
 					</div>
-					</div>
+					</div> -->
 					</form>
 				</div>
 				
@@ -196,7 +216,7 @@ padding-right:10px;
 							<form id="CstMtngFrmId" class="a-dis">
 								<table class="table table-bordered table-hover" id="costMainTblId" style="width:1900px; background:#fff;">
 									<thead>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375;display:none; ">
 										<td>COUNT</td>
 										<td></td>
 										<td></td>
@@ -223,7 +243,7 @@ padding-right:10px;
 										<td></td>
 										<td></td>
 										</tr>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375; display: none;">
 										<td>SUM</td>
 										<td></td>
 										<td></td>
@@ -250,7 +270,7 @@ padding-right:10px;
 										<td></td>
 										<td></td>
 										</tr>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375; display: none;">
 										<td>AVERAGE</td>
 										<td></td>
 										<td></td>
@@ -365,15 +385,21 @@ padding-right:10px;
 											</tr> -->
 									</tbody>
 								</table>
+								<div class="text-center" id="pgnDiv">
+									<ul id="pgntnPanel" class="pagination-sm"></ul>
+								</div>
+								
 								<div align="center">
 									<table>
 										<tr>
-											<td><button type="button" id="btnCstMtgSbtId"
-												class="btn btn-primary" onclick="$_cstMngSbmt(event)">Update</button></td>
-												<td class="a-dis"><button type="submit" id="btnCstMtgSbtDmId"
-												class="btn btn-primary"></button></td>
+											<!-- <td><button type="button" id="btnCstMtgSbtId" class="btn btn-primary" onclick="$_cstMngSbmt(event)">Update</button></td> -->
+											<td><button type="button" id="btnCstMtgSbtId" class="btn btn-primary" onclick="$_actualSbmt();">Submit</button></td>
+											<td class="a-dis"><button type="submit" id="btnCstMtgSbtDmId" class="btn btn-primary"></button></td>
 										</tr>
 									</table>
+								</div>
+								<div class="text-center" id="pgnDiv">
+									<ul id="pgntnPanel" class="pagination-sm"></ul>
 								</div>
 							</form>
 						</div>
@@ -471,6 +497,7 @@ padding-right:10px;
 		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/snapShot.js"></script>
 	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/forAllLos.js"></script>
 	<script src="/upf-system-dsapayout/resources/ui_content/plugins/canvas/canvasjs.min.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/plugins/pagination.js"></script>
 	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/costMaintaining.js"></script>
 	<script src="/upf-system-dsapayout/resources/ui_content/plugins/bootstrapTable/sortable.js"></script>
 	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
@@ -480,5 +507,6 @@ padding-right:10px;
 
 
 </script>
+<div class="loadingoverlay"></div>
 </body>
 </html>

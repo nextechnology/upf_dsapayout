@@ -8,21 +8,21 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/bootstrap/css/bootstrap.min.css">
+	href="/upf-system-dsapayout/resources/ui_content/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/datatables/dataTables.bootstrap.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/datatables/dataTables.bootstrap.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/select2/select2.min.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/select2/select2.min.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/datepicker/datepicker3.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/datepicker/datepicker3.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/dist/css/scrypt.css">
+	href="/upf-system-dsapayout/resources/ui_content/dist/css/scrypt.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/toastr/toastr.min.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/toastr/toastr.min.css">
 		<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -54,6 +54,20 @@ input::placeholder {
 .glyphicon-ok-circle{
 color:green !important;
 padding-right:10px;
+}
+.loadingoverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh; /* to make it responsive */
+	width: 100vw; /* to make it responsive */
+	overflow: hidden; /*to remove scrollbars */
+	z-index: 99999; /*to make it appear on topmost part of the page */
+	display: none; /*to make it visible only on fadeIn() function */
+	text-align: center;
+	background-color: black;
+	opacity: 0.7;
+	color: white;
 }
  </style>  
 
@@ -114,19 +128,68 @@ padding-right:10px;
 		
    <div class="content-wrapper" id="mainUserBodyId">
 	<section class="content">
-    	<div class="row">
-    	<div class="col-md-5"></div>
-    	<div class="col-md-2">
-    	<select id="proTypIncId" class="form-control">
-    	<option value="">Select Product Type</option>
-    	<option value="BL">BL</option>
-    	<option value="SBL">SBL</option>
-    	</select>  
-    	</div>
-    	<div class="col-md-5"></div>
-    	</div>
-    	
-    	<div class="row" id="blDivRowId"style="padding-top:30px;display:none;">
+				<div class="row col-md-offset-2">
+
+					<div class="col-md-3">
+						<select id="proTypIncId" class="form-control" oninput="renStartEnd();">
+							<option value="">Select Product Type</option>
+							<option value="BL">BL</option>
+							<option value="SBL">SBL</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<select id="yearAdmin" class="form-control" required="required" oninput="renStartEnd();">
+
+						</select>
+					</div>
+					<div class="col-md-3">
+						<select id="monthAdmin" class="form-control" required="required" oninput="renStartEnd();">
+							<option value="">Select Month</option>
+
+							<option value="01">January</option>
+							<option value="02">February</option>
+							<option value="03">March</option>
+							<option value="04">April</option>
+
+							<option value="05">May</option>
+							<option value="06">June</option>
+							<option value="07">July</option>
+							<option value="08">August</option>
+
+							<option value="09">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select>
+					</div>
+					<!-- <div class="col-sm-3">
+						<button type="submit" id="searchBtnCstMntgId" class="btn btn-info">
+							<i class="glyphicon glyphicon-search"><span style="font-size: 16px;"></span></i>
+						</button>
+					</div> -->
+				</div>
+				<div class="row  col-md-offset-4" id="startEndDateRowId" style="padding-top: 15px;display:none;">
+					<div class="col-sm-3">
+						<div class=" input-group input-append date startDateRangePicker">
+							<input class="form-control readonly" type="text" id="startDateId" required
+								placeholder="Start Date" disabled="disabled"
+								pattern="[0-9]{2}[-|/]{1}[0-9]{2}[-|/]{1}[0-9]{4}"><span
+								class="highlight"></span> <span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class=" input-group input-append date endDateRangePicker">
+							<input class="form-control readonly" type="text" id="endDateId" required
+								placeholder="End Date" disabled="disabled"
+								pattern="[0-9]{2}[-|/]{1}[0-9]{2}[-|/]{1}[0-9]{4}"><span
+								class="highlight"></span> <span class="input-group-addon add-on"><i
+								class="fa fa-calendar"></i></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="row" id="blDivRowId" style="padding-top:30px;display:none;">
     	<form onsubmit="$_blPost(event)">
     		<div class="col-md-2"></div>   
     		<div class="col-md-8" style="background-color:#fff;padding-top:20px;">
@@ -165,7 +228,7 @@ padding-right:10px;
 									</tr>			
 							</tbody>
 						</table>
-						<div class="row a-dis">
+<!--old 						<div class="row a-dis">
 							<div class="col-md-2"></div>
 						<div class="col-md-8">
 							<table class="table table-bordered table-condensed">
@@ -173,7 +236,7 @@ padding-right:10px;
 								<tr  class="leftbgcolor">
 								<td>Disbursal in Cr.</td>
 								<td>Quaterly Slab (%)</td>
-							<!-- 	<td>Qualifying Criteria</td> -->
+								<td>Qualifying Criteria</td>
 								</tr>
 							</thead>
 							<tbody>
@@ -181,14 +244,14 @@ padding-right:10px;
 									<td id="quarterlyslabid-1" class="a-dis"></td>
 									<td id="disbursalincr-4">1.25 - 2.24</td>
 									<td><input type="text" class="form-control" id="qtrlySlbId-1" required="required"  pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-								<!-- 	<td><input type="text" class="form-control" id="qlfCritId-1" required="required"></td> -->
+									<td><input type="text" class="form-control" id="qlfCritId-1" required="required"></td>
 									</tr>	
 									
 									<tr class="a-center">
 									<td id="quarterlyslabid-2" class="a-dis"></td>
 									<td id="disbursalincr-5">2.25 - 3</td>
 									<td><input type="text" class="form-control" id="qtrlySlbId-2" required="required"  pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-								<!-- 	<td><input type="text" class="form-control" id="qlfCritId-2" required="required"></td> -->
+									<td><input type="text" class="form-control" id="qlfCritId-2" required="required"></td>
 									</tr>	
 									
 									<tr class="a-center">
@@ -196,14 +259,14 @@ padding-right:10px;
 									<td id="disbursalincr-6">> 3</td>
 									<td id="renewalsid" class="a-dis"></td>
 									<td><input type="text" class="form-control" id="qtrlySlbId-3" required="required" pattern="[0-9]+(\.[0-9]{0,2})?"></td>
-								<!-- 	<td><input type="text" class="form-control" id="qlfCritId-3" required="required"></td> -->
+									<td><input type="text" class="form-control" id="qlfCritId-3" required="required"></td>
 									</tr>			
 							</tbody>
 						</table>
 						</div>
 						<div class="col-md-2"></div>
-						</div>
-								
+						</div> -->
+<!-- 	old							
 						<div class="row a-dis">
 							<div class="col-md-2"></div>
 						<div class="col-md-8">
@@ -224,7 +287,7 @@ padding-right:10px;
 						</table>
 						</div>
 						<div class="col-md-2"></div>
-						</div>
+						</div> -->
 						<div align="center" style="padding-bottom:15px;">
 						<button type="submit" class="btn btn-success" id="btnBlSubmitId">Submit</button>
 						</div>
@@ -309,215 +372,44 @@ padding-right:10px;
       
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
 <script
-		src="/upf-system/resources/ui_content/plugins/jQuery/jquery-2.2.3.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/ajax/ajax-1.12.0.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/ajax/ajax-1.12.0.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.concat.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.concat.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/bootstrap/js/bootstrap.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/bootstrap/js/bootstrap.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/jQueryUI/jquery-ui.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/jQueryUI/jquery-ui.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/select2/select2.full.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/select2/select2.full.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/datepicker/bootstrap-datepicker.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/datepicker/bootstrap-datepicker.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/datatables/jquery.dataTables.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/datatables/jquery.dataTables.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/datatables/dataTables.bootstrap.min.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/forAll.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/scrypt.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/datatables/dataTables.bootstrap.min.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/forAll.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/scrypt.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/boottag/boottag-1.0.7.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/camUI/forAll.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/camUI/itr.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/boottag/boottag-1.0.7.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/forAll.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/itr.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/bankSummary.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/bankSummary.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/stressTest.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/stressTest.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/qualitative.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/qualitative.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/snapShot.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/LOS/forAllLos.js"></script>
-<script src="/upf-system/resources/ui_content/plugins/bootstrap.filestyle/js/bootstrap-filestyle.min.js"></script>
-<script src="/upf-system/resources/ui_content/plugins/toastr/toastr.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/snapShot.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/forAllLos.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/incentives.js"></script>
+<script src="/upf-system-dsapayout/resources/ui_content/plugins/bootstrap.filestyle/js/bootstrap-filestyle.min.js"></script>
+<script src="/upf-system-dsapayout/resources/ui_content/plugins/toastr/toastr.min.js"></script>
 <script type="text/javascript">
-	var 
-	API_SBL_GET = '/upf-system-dsapayout/dsapayout/dsa/getsblincentive'
-	,API_SBL_POST = '/upf-system-dsapayout/dsapayout/dsa/addsblincentive'
-	,API_BL_GET = '/upf-system-dsapayout/dsapayout/dsa/getBLInsentive?id='
-	,API_BL_POST = '/upf-system-dsapayout/dsapayout/dsa/addBlincentive'
-	;
-	$(function(){
-		
-		if(localStorage.getItem('productType') == "BL" && localStorage.getItem("role").includes('SM')){
-			$('#proTypIncId').html('<option selected value="BL">BL</option>');
-			$('#proTypIncId').attr('disabled',true);
-			$('#sblDivRowId').hide();
-			$('#blDivRowId').show();
-			$_blGet();
-		}else if(localStorage.getItem('productType') == "SBL"  && localStorage.getItem("role").includes('SM')){
-			$('#proTypIncId').html('<option selected value="SBL">SBL</option>');
-			$('#proTypIncId').attr('disabled',true);
-			$('#sblDivRowId').show();
-			$('#blDivRowId').hide();
-			$_sblGet();
-		}
-	    $(document).on('click','#doneMsgOkId',function(){
-	    	window.location.reload();
-	    });
 	
-		$(document).on('change','#proTypIncId',function(){
-			if($(this).val() == "BL"){
-				$('#sblDivRowId').hide();
-				$('#blDivRowId').show();
-				$_blGet();
-			}else if($(this).val() == ""){
-				$('#sblDivRowId').hide();
-				$('#blDivRowId').hide();
-			}else if($(this).val() == "SBL"){
-				$('#sblDivRowId').show();
-				$('#blDivRowId').hide();
-				$_sblGet();
-			}
-		});
-	});
-	
-	function $_sblGet(){
-		requestData(API_SBL_GET,"GET").done(function(reply){
-			$(reply).each(function(k,v){
-				$('#sblHidIncId-'+(k+1)).text(v.sblincentiveid);	
-				$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
-				$('#monthSblId-'+(k+1)).val(v.monthlyslab);
-			});
-		});
-	}
-	function $_sblpost(event){
-		event.preventDefault();
-		$('#sblSbmtId').attr('disabled',true);
-		var arr = [];
-		var formData = {};
-		for(i=1;i<=5;i++){
-			formData = {
-					"sblincentiveid": $('#sblHidIncId-'+i).text(),
-			        "disbursementinlac": $('#disbursementId-'+i).text(),
-			        "monthlyslab": parseFloat($('#monthSblId-'+i).val())
-			};
-			arr.push(formData);
-		}
-		requestData(API_SBL_POST,"POST",JSON.stringify(arr)).done(function(reply){
-			if(reply.reply == "success"){
-				$('#sblSbmtId').attr('disabled',false);
-				$('#diagMsgDivId').show();
-				$('#sucMgsId').html(`<span class="glyphicon glyphicon-ok-circle"></span>SBL Incentives saved successfully.`);
-				$('#sucModalWindId').click();
-			/* 	alert("SBL Incentives saved successfully.");
-				window.location.reload(); */
-				//$_sblGet();
-			}
-		});
-	}
-	function $_blGet(){
-		var id = $('#blincentiveId').text()==""?1:$('#blincentiveId').text();
-		requestData(API_BL_GET+id,"GET").done(function(blReply){
-			
-		 $('#blincentiveId').text(blReply.blincentiveid);
-		
-		 $('#renewalsid').text(blReply.renewals.renewalsid);
-		 $('#frstRenwId-1').val(blReply.renewals.instanceofrenewal);  
-		 $('#frstRenwId-2').val(blReply.renewals.payoutpercentage);
-		 
-		 $('#monthlyslabid-1').text(blReply.monthlyslab[0].monthlyslabid); 
-		 $('#monthlyslabid-2').text(blReply.monthlyslab[1].monthlyslabid); 
-		 $('#monthlyslabid-3').text(blReply.monthlyslab[2].monthlyslabid);
-		 
-		 $('#disbursalincr-1').text(blReply.monthlyslab[0].disbursalincr);
-		 $('#disbursalincr-2').text(blReply.monthlyslab[1].disbursalincr);
-		 $('#disbursalincr-3').text(blReply.monthlyslab[2].disbursalincr);
-		 
-		 $('#minFileDis-1').val(blReply.monthlyslab[0].minfilesdisbursed);
-		 $('#minFileDis-2').val(blReply.monthlyslab[1].minfilesdisbursed);
-		 $('#minFileDis-3').val(blReply.monthlyslab[2].minfilesdisbursed);
-		 
-		 $('#mnthPayout-1').val(blReply.monthlyslab[0].monthlypayout);
-		 $('#mnthPayout-2').val(blReply.monthlyslab[1].monthlypayout);
-		 $('#mnthPayout-3').val(blReply.monthlyslab[2].monthlypayout);
-		 
-		 $('#disbursalincr-4').text(blReply.quarterlyslab[0].disbursalincr);
-		 $('#disbursalincr-5').text(blReply.quarterlyslab[1].disbursalincr);
-		 $('#disbursalincr-6').text(blReply.quarterlyslab[2].disbursalincr);
-		 
-		 $('#quarterlyslabid-1').text(blReply.quarterlyslab[0].quarterlyslabid)
-		 $('#quarterlyslabid-2').text(blReply.quarterlyslab[1].quarterlyslabid)
-		 $('#quarterlyslabid-3').text(blReply.quarterlyslab[2].quarterlyslabid)
-		 
-		 $('#qtrlySlbId-1').val(blReply.quarterlyslab[0].quarterlyslab);
-		 $('#qtrlySlbId-2').val(blReply.quarterlyslab[1].quarterlyslab);
-		 $('#qtrlySlbId-3').val(blReply.quarterlyslab[2].quarterlyslab);
-		 
-		 $('#qlfCritId-1').val(blReply.quarterlyslab[0].qualifyingcriteria);
-		 $('#qlfCritId-2').val(blReply.quarterlyslab[1].qualifyingcriteria);
-		 $('#qlfCritId-3').val(blReply.quarterlyslab[2].qualifyingcriteria);
-		
-		});
-	}
-	function $_blPost(event){
-		event.preventDefault();
-		$('#btnBlSubmitId').attr('disabled',true);
-		var formData = {
-				"blincentiveid":isNaN(parseInt($('#blincentiveId').text()))?0:(parseInt($('#blincentiveId').text())),
-				"renewals": {
-					  "renewalsid": isNaN(parseInt($('#renewalsid').text()))?0:(parseInt($('#renewalsid').text())),
-					  "instanceofrenewal": $('#frstRenwId-1').text(),
-					  "payoutpercentage": $('#frstRenwId-2').val()
-					 },
-				"monthlyslab": [{
-						  "monthlyslabid": isNaN(parseInt($('#monthlyslabid-1').text()))?0:(parseInt($('#monthlyslabid-1').text())),
-						  "disbursalincr": $('#disbursalincr-1').text(),
-						  "minfilesdisbursed": parseInt($('#minFileDis-1').val()),
-						  "monthlypayout": parseFloat($('#mnthPayout-1').val())
-						 }, {
-						  "monthlyslabid": isNaN(parseInt($('#monthlyslabid-2').text()))?0:(parseInt($('#monthlyslabid-2').text())),
-						  "disbursalincr": $('#disbursalincr-2').text(),
-						  "minfilesdisbursed": parseInt($('#minFileDis-2').val()),
-						  "monthlypayout": parseFloat($('#mnthPayout-2').val())
-						},{
-						  "monthlyslabid": isNaN(parseInt($('#monthlyslabid-3').text()))?0:(parseInt($('#monthlyslabid-3').text())),
-						  "disbursalincr": $('#disbursalincr-3').text(),
-						  "minfilesdisbursed": parseInt($('#minFileDis-3').val()),
-						  "monthlypayout": parseFloat($('#mnthPayout-3').val())
-						 }],"quarterlyslab": [{
-							  "quarterlyslabid": isNaN(parseInt($('#quarterlyslabid-1').text()))?0:(parseInt($('#quarterlyslabid-1').text())),
-							  "disbursalincr": $('#disbursalincr-4').text(),
-							  "qualifyingcriteria" : "",//$('#qlfCritId-1').val(),
-							  "quarterlyslab": parseFloat($('#qtrlySlbId-1').val())
-							 }, {
-							  "quarterlyslabid": isNaN(parseInt($('#quarterlyslabid-2').text()))?0:(parseInt($('#quarterlyslabid-2').text())),
-							  "disbursalincr": $('#disbursalincr-5').text(),
-							  "qualifyingcriteria" : "", //$('#qlfCritId-2').val(),
-							  "quarterlyslab": parseFloat($('#qtrlySlbId-2').val())
-							 },
-							 {
-							  "quarterlyslabid": isNaN(parseInt($('#quarterlyslabid-3').text()))?0:(parseInt($('#quarterlyslabid-3').text())),
-							  "disbursalincr": $('#disbursalincr-6').text(),
-							  "qualifyingcriteria" :"",//$('#qlfCritId-3').val(),
-							  "quarterlyslab": parseFloat($('#qtrlySlbId-3').val())
-							}]
-		}
-		requestData(API_BL_POST,"POST",JSON.stringify(formData)).done(function(reply){
-			if(reply.reply == "success"){
-				$('#btnBlSubmitId').attr('disabled',false);
-				$('#diagMsgDivId').show();
-				$('#sucMgsId').html(`<span class="glyphicon glyphicon-ok-circle"></span>BL Incentives saved successfully.`);
-				$('#sucModalWindId').click();
-		/* 		alert("BL Incentives saved successfully.");
-				window.location.reload(); */
-				//$_sblGet();
-			}
-		});
-	} 
 </script>
+<div class="loadingoverlay"></div>
 </body>
 </html>
