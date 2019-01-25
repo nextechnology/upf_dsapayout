@@ -679,8 +679,7 @@ public class DSAPayoutController {
 		List<JSONObject> list = new ArrayList<JSONObject>();
 		try {
 			
-			dsadto.setStartdate(getdate(dsadto.getStartdate()));
-			dsadto.setEnddate(getdate(dsadto.getEnddate()));
+			
 			
 			List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
 			if (listdsa.size() != 0) {
