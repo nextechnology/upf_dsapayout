@@ -2863,31 +2863,31 @@ public class DSAPayoutController {
 		LOGGER.info("DSADaoImpl getmonthon start");
 		String month = null;
 		switch (number) {
-		case "1":
+		case "01":
 			month = "January";
 			break;
-		case "2":
+		case "02":
 			month = "February";
 			break;
-		case "3":
+		case "03":
 			month = "March";
 			break;
-		case "4":
+		case "04":
 			month = "April";
 			break;
-		case "5":
+		case "05":
 			month = "May";
 			break;
-		case "6":
+		case "06":
 			month = "June";
 			break;
-		case "7":
+		case "07":
 			month = "July";
 			break;
-		case "8":
+		case "08":
 			month = "August";
 			break;
-		case "9":
+		case "09":
 			month = "September";
 			break;
 		case "10":
@@ -2946,7 +2946,7 @@ public class DSAPayoutController {
 	@ResponseBody
 	@RequestMapping(value = "/addFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
 	public String addFestivalPayout(@RequestBody FestivalPayout festivalPayout) {
-		LOGGER.info("DSAController addBLInsentiveInfo start");
+		LOGGER.info("DSAController addFestivalPayout start");
 		String responseMessage = null;
 		try {
 			JSONObject jsonResponse = new JSONObject();
@@ -2955,9 +2955,9 @@ public class DSAPayoutController {
 			jsonResponse.put("reply", "success");
 			responseMessage = jsonResponse.toString();
 		} catch (Exception exception) {
-			LOGGER.error("Error while posting addBLInsentiveInfo details. Reason : " + exception);
+			LOGGER.error("Error while posting addFestivalPayout details. Reason : " + exception);
 		}
-		LOGGER.info("DSAController addBLInsentiveInfo end");
+		LOGGER.info("DSAController addFestivalPayout end");
 		return responseMessage;
 
 	}
@@ -3010,6 +3010,7 @@ public class DSAPayoutController {
 			for(PayoutDate paydate:payoutDate2){
 				paydate.setStartdate(getDate1(paydate.getStartdate()));
 				paydate.setEnddate(getDate1(paydate.getEnddate()));
+				paydate.setMonth(getmonthon(paydate.getMonth()));
 			}
 			jsonInString = mapper.writeValueAsString(payoutDate2);
 			}
@@ -3033,7 +3034,7 @@ public class DSAPayoutController {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			festivalPayout1= dsaService.getFestivalPayout(festivalPayout);
-			if(festivalPayout1.getDateid()!=0){
+			if(festivalPayout1!=null){
 			 jsonInString = mapper.writeValueAsString(festivalPayout1);
 		}
 			else
@@ -3049,21 +3050,7 @@ public class DSAPayoutController {
 
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/getPreviousdate", method = RequestMethod.POST, consumes = "application/json")
-	public String getPreviousdate(@RequestBody PayoutDate payoutDate,HttpServletRequest request) {
-		LOGGER.info("DSAController getPayout start");
-		String jsonInString=null;
-		
-		try {
-			
-		} catch (Exception exception) {
-			LOGGER.error("Error while  getPayout details. Reason : " + exception);
-		}
-		LOGGER.info("DSAController getPayout end");
-		return jsonInString;
-
-	}
+	
 	
 	public String getdate(String date){
 		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
