@@ -2929,6 +2929,8 @@ public class DSAPayoutController {
 		try {
 			JSONObject jsonResponse = new JSONObject();
 			for(PayoutDate paydate:payoutDate){
+				paydate.setStartdate(getdate(paydate.getStartdate()));
+				paydate.setEnddate(getdate(paydate.getEnddate()));
 			long appid = dsaService.addPayout(paydate);
 		}
 			jsonResponse.put("reply", "success");
