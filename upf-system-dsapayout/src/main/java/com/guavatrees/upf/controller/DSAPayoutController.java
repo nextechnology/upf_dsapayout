@@ -2923,16 +2923,16 @@ public class DSAPayoutController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/addPayout", method = RequestMethod.POST, consumes = "application/json")
-	public String addPayout(@RequestBody List<PayoutDate> payoutDate) {
+	public String addPayout(@RequestBody PayoutDate payoutDate) {
 		LOGGER.info("DSAController addPayout start");
 		String responseMessage = null;
 		try {
 			JSONObject jsonResponse = new JSONObject();
-			for(PayoutDate paydate:payoutDate){
-				paydate.setStartdate(getdate(paydate.getStartdate()));
-				paydate.setEnddate(getdate(paydate.getEnddate()));
-			long appid = dsaService.addPayout(paydate);
-		}
+			payoutDate.setStartdate(getdate(payoutDate.getStartdate()));
+			payoutDate.setEnddate(getdate(payoutDate.getEnddate()));
+			
+			long appid = dsaService.addPayout(payoutDate);
+			jsonResponse.put("id", appid);
 			jsonResponse.put("reply", "success");
 			responseMessage = jsonResponse.toString();
 		} catch (Exception exception) {
