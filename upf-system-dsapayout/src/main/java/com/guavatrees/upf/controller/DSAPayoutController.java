@@ -2995,7 +2995,7 @@ public class DSAPayoutController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, consumes = "application/json")
-	public String getPayout(HttpServletRequest request) {
+	public List<PayoutDate> getPayout(HttpServletRequest request) {
 		LOGGER.info("DSAController getPayout start");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString=null;
@@ -3010,7 +3010,7 @@ public class DSAPayoutController {
 				paydate.setEnddate(getDate1(paydate.getEnddate()));
 				paydate.setMonth(getmonthon(paydate.getMonth()));
 			}
-			jsonInString = mapper.writeValueAsString(payoutDate2);
+			
 			}
 			
 		}
@@ -3018,7 +3018,7 @@ public class DSAPayoutController {
 			LOGGER.error("Error while  getPayout details. Reason : " + exception);
 		}
 		LOGGER.info("DSAController getPayout end");
-		return jsonInString;
+		return payoutDate2;
 
 	}
 	
