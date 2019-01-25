@@ -3049,6 +3049,25 @@ public class DSAPayoutController {
 	}
 	
 	
+	@ResponseBody
+	@RequestMapping(value = "/getDate", method = RequestMethod.POST, consumes = "application/json")
+	public PayoutDate getDate(HttpServletRequest request) {
+		LOGGER.info("DSAController getFestivalPayout start");
+		String jsonInString=null;
+		PayoutDate payoutDate=new PayoutDate();
+		String year=request.getParameter("year");
+		String month=request.getParameter("month");
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			payoutDate= dsaService.getPayoutdate(year, month);			
+		} catch (Exception exception) {
+			LOGGER.error("Error while  getPayout details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController getPayout end");
+		return payoutDate;
+
+	}
+	
 	
 	public String getdate(String date){
 		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
