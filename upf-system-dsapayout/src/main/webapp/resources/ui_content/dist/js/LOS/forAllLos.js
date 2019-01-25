@@ -75,7 +75,7 @@ var html = {
 $(document).ready(function(){
 //	console.log('localStorage.getItem()-',localStorage.getItem("role"));
 	var API_PRODUCT_GET = '/upf-system-dsapayout/dsapayout/dsa/getproductbyuserid?userid=';
-	var API_ALLLOGINDETAIL_GET	  = '/upf-system/upf/authentication/getUserByUserId';
+	var API_ALLLOGINDETAIL_GET	  = 'http://110.173.177.254:8080/upf-system/upf/authentication/getUserByUserId?id='+uid;
 	var API_SCORECARD_GET = '/upf-system/upf/scoreCard/getScoreCardCreditMember?userName=';
 	
 	var roleLeftId = localStorage.getItem("role");
