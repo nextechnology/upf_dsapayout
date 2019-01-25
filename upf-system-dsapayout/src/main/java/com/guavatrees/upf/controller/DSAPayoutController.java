@@ -47,6 +47,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import com.guavatrees.upf.dao.entity.BLInsentive;
 import com.guavatrees.upf.dao.entity.BLMonthlyPayout;
 import com.guavatrees.upf.dao.entity.BLMonthlySlab;
@@ -677,10 +678,10 @@ public class DSAPayoutController {
 
 		List<JSONObject> list = new ArrayList<JSONObject>();
 		try {
-			if(dsadto.getStartdate()!=null && dsadto.getEnddate()!=null ){
+			
 			dsadto.setStartdate(getdate(dsadto.getStartdate()));
 			dsadto.setEnddate(getdate(dsadto.getEnddate()));
-			}
+			
 			List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
 			if (listdsa.size() != 0) {
 				for (DsaDetailsEntity dsa : listdsa) {
@@ -2968,24 +2969,21 @@ public class DSAPayoutController {
 		LOGGER.info("DSAController getPayoutdate start");
 		String jsonInString=null;
 		ObjectMapper mapper = new ObjectMapper();
-		PayoutDate payoutDate=new PayoutDate();
+		BLInsentive blInsentive=new BLInsentive();
 		List<FestivalPayout> festivalPayout=new ArrayList<>();
 		try {
 			String year=request.getParameter("year");
 			String month=request.getParameter("month");
+			String id=request.getParameter("id");
 			festivalPayout=dsaService.getPayoutFestivaldate(year,month);
 			if(festivalPayout.size()!=0){
-			 jsonInString = mapper.writeValueAsString(festivalPayout);
+				jsonInString = mapper.writeValueAsString(festivalPayout);
 			}
 			else{
-				payoutDate= dsaService.getPayoutdate(year,month);
-				payoutDate.setStartdate(getDate1(payoutDate.getStartdate()));
-				payoutDate.setEnddate(getDate1(payoutDate.getEnddate()));
-			 jsonInString = mapper.writeValueAsString(payoutDate);
+				blInsentive=dsaService.getBLInsentiveInfo(Long.parseLong(id));
+				jsonInString = mapper.writeValueAsString(blInsentive);
+				
 			}
-			
-			 
-			
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayoutdate details. Reason : " + exception);
 		}
