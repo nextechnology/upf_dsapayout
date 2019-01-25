@@ -563,7 +563,7 @@ public interface DSADao {
 
 	public long addPayout(PayoutDate blMonthlySlab)throws Exception;
 	
-	public PayoutDate getPayoutdate(String date)throws Exception;
+	public PayoutDate getPayoutdate(String year, String month)throws Exception;
 
 	public long addFestivalPayout(FestivalPayout festivalPayout)throws Exception;
 

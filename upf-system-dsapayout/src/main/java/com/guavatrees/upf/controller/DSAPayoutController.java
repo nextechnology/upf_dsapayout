@@ -2923,19 +2923,20 @@ public class DSAPayoutController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/addPayout", method = RequestMethod.POST, consumes = "application/json")
-	public String addPayout(@RequestBody PayoutDate payoutDate) {
-		LOGGER.info("DSAController addBLInsentiveInfo start");
+	public String addPayout(@RequestBody List<PayoutDate> payoutDate) {
+		LOGGER.info("DSAController addPayout start");
 		String responseMessage = null;
 		try {
 			JSONObject jsonResponse = new JSONObject();
-			long appid = dsaService.addPayout(payoutDate);
-			jsonResponse.put("id", appid);
+			for(PayoutDate paydate:payoutDate){
+			long appid = dsaService.addPayout(paydate);
+		}
 			jsonResponse.put("reply", "success");
 			responseMessage = jsonResponse.toString();
 		} catch (Exception exception) {
-			LOGGER.error("Error while posting addBLInsentiveInfo details. Reason : " + exception);
+			LOGGER.error("Error while posting addPayout details. Reason : " + exception);
 		}
-		LOGGER.info("DSAController addBLInsentiveInfo end");
+		LOGGER.info("DSAController addPayout end");
 		return responseMessage;
 
 	}
@@ -2975,7 +2976,7 @@ public class DSAPayoutController {
 			 jsonInString = mapper.writeValueAsString(festivalPayout);
 			}
 			else{
-				payoutDate= dsaService.getPayoutdate(year+month);
+				payoutDate= dsaService.getPayoutdate(year,month);
 				payoutDate.setStartdate(getDate1(payoutDate.getStartdate()));
 				payoutDate.setEnddate(getDate1(payoutDate.getEnddate()));
 			 jsonInString = mapper.writeValueAsString(payoutDate);

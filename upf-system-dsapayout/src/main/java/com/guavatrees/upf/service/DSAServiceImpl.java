@@ -1726,9 +1726,9 @@ public class DSAServiceImpl implements DSAService {
 	}
 
 	@Override
-	public PayoutDate getPayoutdate(String date) throws Exception {
+	public PayoutDate getPayoutdate(String year,String month) throws Exception {
 		LOGGER.info("DSAServiceImpl getPayoutdate start");
-		return dsaDao.getPayoutdate(date);
+		return dsaDao.getPayoutdate(year,month);
 	}
 
 	@Override

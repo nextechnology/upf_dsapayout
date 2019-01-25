@@ -3191,11 +3191,13 @@ public class DSADaoImpl implements DSADao {
 
 	@Override
 	@Transactional
-	public PayoutDate getPayoutdate(String date) throws Exception {
+	public PayoutDate getPayoutdate(String year,String month) throws Exception {
 		PayoutDate festivalPayoutDate=new PayoutDate();
 		try{
-			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE  ('"+date+"%' BETWEEN startdate AND enddate)";
+			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE year=:year AND month=:month";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			query.setParameter("year", year);
+			query.setParameter("month", month);
 			PayoutDate payoutDate= (PayoutDate) query.uniqueResult();
 			
 			return payoutDate;
