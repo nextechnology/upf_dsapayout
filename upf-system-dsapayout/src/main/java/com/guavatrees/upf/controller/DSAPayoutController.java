@@ -39,6 +39,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -2994,15 +2995,16 @@ public class DSAPayoutController {
 
 	
 	@ResponseBody
-	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, consumes = "application/json")
-	public List<PayoutDate> getPayout(HttpServletRequest request) {
+	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<List<PayoutDate>> getPayout(HttpServletRequest request) {
 		LOGGER.info("DSAController getPayout start");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString=null;
 		List<PayoutDate> payoutDate2=new ArrayList<>();
 		String producttype=request.getParameter("producttype");
 	try {
-		if(producttype.equalsIgnoreCase("BL")){
+		/*if(producttype.equalsIgnoreCase("BL"))
+		{
 			payoutDate2= dsaService.getPayout();
 			if(payoutDate2.size()!=0){
 			for(PayoutDate paydate:payoutDate2){
@@ -3012,16 +3014,28 @@ public class DSAPayoutController {
 			}
 			
 			}
+		}*/
+			payoutDate2= dsaService.getPayout(producttype);
+			if(payoutDate2.size()!=0){
+			for(PayoutDate paydate:payoutDate2){
+				paydate.setStartdate(getDate1(paydate.getStartdate()));
+				paydate.setEnddate(getDate1(paydate.getEnddate()));
+				paydate.setMonth(getmonthon(paydate.getMonth()));
+			}
 			
-		}
+			}
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayout details. Reason : " + exception);
 		}
 		LOGGER.info("DSAController getPayout end");
-		return payoutDate2;
+		return new ResponseEntity<List<PayoutDate>>(payoutDate2, HttpStatus.OK);
 
 	}
 	
+	
+	/*
+	 * for BL Festival payout
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/getFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
 	public String getFestivalPayout(@RequestBody FestivalPayout festivalPayout,HttpServletRequest request) {
@@ -3047,6 +3061,7 @@ public class DSAPayoutController {
 		return jsonInString;
 
 	}
+	
 	
 	
 	@ResponseBody

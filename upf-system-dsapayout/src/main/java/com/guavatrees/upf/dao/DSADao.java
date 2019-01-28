@@ -567,7 +567,7 @@ public interface DSADao {
 
 	public long addFestivalPayout(FestivalPayout festivalPayout)throws Exception;
 
-	public List<PayoutDate> getPayout()throws Exception;
+	public List<PayoutDate> getPayout(String producttype)throws Exception;
 
 	public FestivalPayout getFestivalPayout(FestivalPayout festivalPayout)throws Exception;
 
