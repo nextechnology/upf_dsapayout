@@ -493,7 +493,7 @@ public interface DSAService {
 
 	public long addFestivalPayout(FestivalPayout festivalPayout)throws Exception;
 
-	public List<PayoutDate> getPayout()throws Exception;
+	public List<PayoutDate> getPayout(String producttype)throws Exception;
 
 	public List<BLMonthlyPayout> getBlmonthlypayout()throws Exception;
 

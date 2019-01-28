@@ -3027,15 +3027,12 @@ public class DSAPayoutController {
 		List<PayoutDate> payoutDate2=new ArrayList<>();
 		String producttype=request.getParameter("producttype");
 	try {
-		if(producttype.equalsIgnoreCase("BL")){
-			payoutDate2= dsaService.getPayout();
+			payoutDate2= dsaService.getPayout(producttype);
 			if(payoutDate2.size()!=0){
 			for(PayoutDate paydate:payoutDate2){
 				paydate.setStartdate(getDate1(paydate.getStartdate()));
 				paydate.setEnddate(getDate1(paydate.getEnddate()));
 				paydate.setMonth(getmonthon(paydate.getMonth()));
-			}
-			
 			}
 			
 		}
