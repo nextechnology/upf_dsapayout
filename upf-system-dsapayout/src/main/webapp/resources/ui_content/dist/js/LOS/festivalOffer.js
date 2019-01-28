@@ -25,13 +25,11 @@ var api = {
 			$('#proTypIncId').attr('disabled',true);
 			$('#sblDivRowId').hide();
 			$('#blDivRowId,#startEndDateRowId').show();
-			$_blGet();
 		}else if(localStorage.getItem('productType') == "SBL"  && localStorage.getItem("role").includes('SM')){
 			$('#proTypIncId').html('<option selected value="SBL">SBL</option>');
 			$('#proTypIncId').attr('disabled',true);
 			$('#sblDivRowId').show();
 			$('#blDivRowId,#startEndDateRowId').hide();
-			$_sblGet();
 		}
 	    $(document).on('click','#doneMsgOkId',function(){
 	    	window.location.reload();
@@ -91,7 +89,7 @@ var api = {
 			}
 		});
 	}
-	function $_blGet(){
+	function setValues(){
 		var id = $('#blincentiveId').text()==""?1:$('#blincentiveId').text();
 		var postData = {
 				"month": $('#monthAdmin').val(),
@@ -209,11 +207,11 @@ var api = {
 			if(prodType == "BL"){
 				$('#sblDivRowId').hide();
 				$('#blDivRowId,#startEndDateRowId').show();
-				$_blGet();
+				setValues();
 			}else if(prodType == "SBL"){
 				$('#sblDivRowId').show();
 				$('#blDivRowId,#startEndDateRowId').hide();
-				$_sblGet();
+				setValues();
 			}
 		}
 	}

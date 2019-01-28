@@ -1,3 +1,21 @@
+var loginEntity = JSON.parse(localStorage.getItem("loginEntity"));
+var ip = '192.168.149.17'
+var API_ALLLOGINDETAIL_GET	  = 'http://'+ip+':8080/upf-system/upf/authentication/getUserByUserId?id='+loginEntity==null?1:loginEntity.id;
+
+var api = {
+	getCount: function(){
+		return `/upf-system-dsapayout/dsapayout/dsa/getDsaCount`
+	},
+	getPayoutdate: function(y,m,i){
+		return 	`/upf-system-dsapayout/dsapayout/dsa/getPayoutdate?year=${y}&month=${m}&id=${i}`	
+	},
+	getDate: function(y,m){
+		return `/upf-system-dsapayout/dsapayout/dsa/getDate?month=${m}&year=${y}`
+	},
+	
+}
+
+
 var API_COST_POST = '/upf-system-dsapayout/dsapayout/dsa/addadmindsa',
  API_COSTFORM_POST = '/upf-system-dsapayout/dsapayout/dsa/getlistdsaadmin'
 //API_COSTFORM_POST = '/upf-system/upf/dsa/getdsabasedlist'
@@ -11,18 +29,6 @@ var API_COST_POST = '/upf-system-dsapayout/dsapayout/dsa/addadmindsa',
 ,API_GET_COUNT = '/upf-system-dsapayout/dsapayout/dsa/getDsaCount'
 ,glblCnt = 0
 ,finalFormData = [];
-
-var api = {
-		getCount: function(){
-			return `/upf-system-dsapayout/dsapayout/dsa/getDsaCount`
-		},
-		getPayoutdate: function(y,m,i){
-			return 	`/upf-system-dsapayout/dsapayout/dsa/getPayoutdate?year=${y}&month=${m}&id=${i}`	
-		},
-		getDate: function(y,m){
-			return `/upf-system-dsapayout/dsapayout/dsa/getDate?month=${m}&year=${y}`
-		}
-}
 
 var DSACODE = ""
 ,EMAILID = ""
@@ -733,9 +739,10 @@ function $_searchSbmt(event){
 		console.log(getDateResponse);
 		if(getDateResponse.startdate==null){
 			alert("Please define payouts for given month!");
+			
 		}else{
 			requestData(api.getPayoutdate(year,month,1),"POST").done(function(blResponse){
-				blGet = blResponse[0];
+				blGet = blResponse;
 				/*if(blResponse.startdate==null){
 					blGet = blResponse[0];
 					postData = {
@@ -760,10 +767,12 @@ function $_searchSbmt(event){
 				}
 				requestData(API_COSTFORM_POST, 'POST',JSON.stringify(postData)).done(function(data) {
 					if ($.isEmptyObject(data)){
+						$('#btnCstMtgSbtId').attr('disabled',true);
 						tblData += 
 							'<tr><td colspan="18" style="text-align:center;">NO DATA FOUND</td></tr>';
 						$('#CstMtngTbBdyId').html(tblData);
 					}else{
+						$('#btnCstMtgSbtId').attr('disabled',false);
 						console.log(data)
 
 						var 
@@ -840,16 +849,16 @@ function $_searchSbmt(event){
 						$('.cntAppMisCls').text(count);
 						$('#CstMtngTbBdyId').html(tblData);
 //						:p					/////
-//						requestData(API_ALLLOGINDETAIL_GET, "GET",{}).done(function(replyAccess) {
-//						$(replyAccess.accessList).each(function(k,v){
-//						if( v.APPLICATION_MIS_TAB == "READ ONLY" ||  v.APPLICATION_MIS_TAB == "READONLY" || v.APPLICATION_MIS_TAB == "READ" ){
-//						$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', true);
-//						}else if( v.APPLICATION_MIS_TAB == "WRITE" ||  v.APPLICATION_MIS_TAB == "VIEW ALL"){
-//						$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', false);
-//						}else{
-//						$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', false);
-//						}  
-//						});
+						requestData(API_ALLLOGINDETAIL_GET, "GET",{}).done(function(replyAccess) {
+						$(replyAccess.accessList).each(function(k,v){
+						if( v.APPLICATION_MIS_TAB == "READ ONLY" ||  v.APPLICATION_MIS_TAB == "READONLY" || v.APPLICATION_MIS_TAB == "READ" ){
+						$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', true);
+						}else if( v.APPLICATION_MIS_TAB == "WRITE" ||  v.APPLICATION_MIS_TAB == "VIEW ALL"){
+						$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', false);
+						}else{
+						$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', false);
+						}  
+						});
 						var slctCnt = 0;
 						$(data).each(function(k,v){++slctCnt;
 						$('#includeCstMngId-'+slctCnt).val((v.include == undefined?"YES":v.include));
@@ -1057,335 +1066,24 @@ function $_searchSbmt(event){
 //								$('#finalSbmtId').attr('disabled',false);
 							}
 						}
-//						"p					});
+											});
 					}
+				}).fail(function(){
+					$('#btnCstMtgSbtId').attr('disabled',true);
+					tblData += 
+							'<tr><td colspan="18" style="text-align:center;">NO DATA FOUND</td></tr>';
+						$('#CstMtngTbBdyId').html(tblData);
 				});
 		});
 		}
+	}).fail(function(){
+		$('#btnCstMtgSbtId').attr('disabled',true);
+		tblData += 
+				'<tr><td colspan="18" style="text-align:center;">NO DATA FOUND</td></tr>';
+			$('#CstMtngTbBdyId').html(tblData);
+		alert("Please add month defination for given month first!");
 	});
 	
-	
-	
-	//:p
-/*	return false;
-	requestData(API_COSTFORM_POST,"POST",JSON.stringify(dataGet)).done(function(replyForm){
-		if($.isEmptyObject(replyForm)){
-			tblData += 
-				'<tr><td colspan="18" style="text-align:center;">NO DATA FOUND</td></tr>';
-			   
-			   $('#sanctioned_amount_total').text(0);
-	           $('#finalpayoutamount_total').text(0);
-	           $('#int_amount_total').text(0);
-	           $('#pfamounttotal').text(0);
-	         
-	           $('#avgpf').text(0);   
-	           $('#avgnetpayrate').text(0); 
-	           $('#avgroi').text(0);
-	           $('#sancamnavgId').text(0);
-	           $('#defPyRtAvgId').text(0);
-	           $('#subAvgId').text(0);
-	           $('#finalPayAvgId').text(0);
-	           $('#intAmntAvgId').text(0);
-	           $('#pfAmntAvgId').text(0);
-	           $('.cntAppMisCls').text(0);
-		
-		}else{
-			var 
-			 sum1 = 0
-			,sum2 = 0
-			,sum3 = 0
-			,sum4 = 0
-			,sum5 = 0
-			,sum6 = 0
-			,sum7 = 0
-			,count= 0
-			,checkYes = 0;
-		$(replyForm).each(function(k,v){
-			if(v.dsacode !== undefined){
-				++rowCnt;
-				tblData += '<tr style="align:center;">'+
-				'<td id="dsadetailsid-'+rowCnt+'" class="a-dis">'+v.dsadetailsid+'</td>'+
-				'<td id="appliedloanamountId-'+rowCnt+'" class="a-dis">'+(v.applied_loan_amount===undefined ?"":$comPut(v.applied_loan_amount))+'</td>'+
-				'<td id="productnameid-'+rowCnt+'" class="a-dis">'+v.productname+'</td>'+
-				'<td id="srNoCstMng-'+rowCnt+'">'+rowCnt+'</td>'+
-				'<td id="state-'+rowCnt+'" class="stateCls">'+(v.state==undefined?'':v.state)+'</td>'+
-				'<td id="lctnCstMngId-'+rowCnt+'">'+(v.location===undefined ?"":v.location)+'</td>'+
-			//	'<td id="mnthCstMngId-'+rowCnt+'">'+(v.month===undefined ?"":v.month)+'</td>'+
-				'<td id="cmpNmCstMngId-'+rowCnt+'">'+(v.companyname===undefined ?"":v.companyname)+'</td>'+
-				'<td id="slsMngrCstMngId-'+rowCnt+'">'+(v.salesmanger===undefined ?"":v.salesmanger)+'</td>'+
-				'<td id="dsaCodeMngId-'+rowCnt+'" class="dsaHideCls">'+(v.dsacode===undefined ?"":v.dsacode)+'</td>'+
-				'<td id="dsaCstMngId-'+rowCnt+'" class="dsaHideCls">'+(v.dsa===undefined ?"":v.dsa)+'</td>'+
-			//	'<td id="stsCstMngId-'+rowCnt+'">'+(v.status===undefined ?"":v.status)+'</td>'+
-				'<td id="sancAmntCstMngId-'+rowCnt+'">'+(v.sanctionloanamount===undefined ?"":$comPut(v.sanctionloanamount))+'</td>'+
-				'<td id="defPyRtCstMngId-'+rowCnt+'" class="defPyRtCstMngCls">'+(v.definedpayrate===undefined ?"":parseFloat(v.definedpayrate).toFixed(2))+'</td>'+
-				'<td>'+
-				'<input id="subventCstMngId-'+rowCnt+'" type="text" class="form-control subvntnCalCls" required value="'+v.subinvention+'">'+
-				'</td>'+
-				'<td id="netPayRteCstMngId-'+rowCnt+'">'+(v.netpayrate===undefined ?"":v.netpayrate)+'</td>'+
-				'<td>'+
-				'<select  id="includeCstMngId-'+rowCnt+'" class="form-control slctIncCls" required>'+
-				'<option selected>YES</option>'+
-				'<option>NO</option>'+
-				'</select>'+
-				'</td>'+
-				'<td id="fnlPayAmntCstMngId-'+rowCnt+'">'+(v.finalpayoutamount===undefined ?"":$comPut(v.finalpayoutamount))+'</td>'+
-				'<td id="rteOfIntCstMngId-'+rowCnt+'">'+(v.roi===undefined ?"":v.roi)+'</td>'+
-				'<td id="intAmntCstMngId-'+rowCnt+'">'+(v.intamt===undefined ?"":$comPut(v.intamt))+'</td>'+
-				'<td id="pfCstMngId-'+rowCnt+'">'+(v.pf===undefined ?"":(v.pf).toFixed(2))+'</td>'+
-				'<td id="pfAmntCstMngId-'+rowCnt+'">'+(v.processingamount===undefined ?"":$comPut(v.processingamount))+'</td>'+
-				'<td id="frequencyId-'+rowCnt+'">'+(v.frequency===undefined ?"":v.frequency)+'</td>'+
-				'<td id="losCstMngId-'+rowCnt+'">'+(v.losid===undefined ?"":v.losid)+'</td>'+
-				'<td id="paymentdoneId-'+rowCnt+'">'+(v.paymentFlag=='YES'?'YES':'NO')+'</td>'+
-				'<td id="gatekeeperId-'+rowCnt+'" class="a-dis">'+v.gatekeeperid+'</td>'+
-				'<td id="dsaConfirmId-'+rowCnt+'">'+(v.constatus===undefined||v.constatus==="" ?"Yet To Confirm":v.constatus)+'</td>'+
-				'<td id="paymentDateShwId-'+rowCnt+'">'+(v.paymentdate===undefined||v.paymentdate==="" ?"N/A":v.paymentdate.split(' ')[0])+'</td>'+
-				'<td class="a-dis" id="paymentDateId-'+rowCnt+'">'+(v.paymentdate===undefined||v.paymentdate==="" ?"N/A":v.paymentdate)+'</td>'+
-				'<td id="remarkId-'+rowCnt+'" style="min-width: 200px;">'+(v.remark===undefined||v.remark==="" ?"N/A":v.remark)+'</td>'+
-				'</tr>';
-				if(v.paymentFlag == "NO" && v.include == "YES"){++checkYes
-					 sum1 = sum1 + v.sanctionloanamount;
-					 sum2 = sum2 + parseFloat(v.netpayrate);
-					 sum3 = sum3 + v.finalpayoutamount;
-					 sum4 = sum4 + parseFloat(v.roi);
-					 sum5 = sum5 + v.intamt;
-					 sum6 = sum6 + parseFloat(v.pf);
-					 sum7 = sum7 + v.processingamount;
-					 count = count + 1;
-				}
-				 glblCnt = rowCnt;
-			}
-		});
-		 $('#sanctioned_amount_total').text(sum1);
-		 $('#avgnetpayrate').text(isNaN(sum2/checkYes)?0:(sum2/checkYes));
-		 $('#finalpayoutamount_total').text(sum3);
-		 $('#avgroi').text(isNaN(sum4/checkYes)?0:(sum4/checkYes));    
-		 $('#int_amount_total').text(sum5);
-		 $('#avgpf').text(isNaN(sum6/checkYes)?0:(sum6/checkYes));
-		 $('#pfamounttotal').text(sum7);
-		 $('.cntAppMisCls').text(count);
-	}
-		$('#CstMtngTbBdyId').html(tblData);
-		
-		
-		requestData(API_ALLLOGINDETAIL_GET, "GET",{}).done(function(replyAccess) {
-			$(replyAccess.accessList).each(function(k,v){
-			if( v.APPLICATION_MIS_TAB == "READ ONLY" ||  v.APPLICATION_MIS_TAB == "READONLY" || v.APPLICATION_MIS_TAB == "READ" ){
-				$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', true);
-			}else if( v.APPLICATION_MIS_TAB == "WRITE" ||  v.APPLICATION_MIS_TAB == "VIEW ALL"){
-				$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', false);
-			}else{
-				$('#CstMtngFrmId input, #CstMtngFrmId select, #CstMtngFrmId textarea, #CstMtngFrmId button').prop('disabled', false);
-			}  
-			});
-			var slctCnt = 0;
-			$(replyForm).each(function(k,v){++slctCnt;
-			$('#includeCstMngId-'+slctCnt).val((v.include == undefined?"YES":v.include));
-			if(v.misFlag == "YES"){
-				$('#includeCstMngId-'+slctCnt).attr('disabled',true);
-				$('#subventCstMngId-'+slctCnt).attr('disabled',true);
-			}else if(v.misFlag == "NO"){
-				$('#includeCstMngId-'+slctCnt).attr('disabled',true);
-				$('#subventCstMngId-'+slctCnt).attr('disabled',true);
-				//$('#includeCstMngId-'+slctCnt).attr('disabled',false);
-				//$('#subventCstMngId-'+slctCnt).attr('disabled',false);
-			}
-			
-			if(v.constatus == "DISAGREE"){
-				$('#includeCstMngId-'+slctCnt).attr('disabled',false);
-				$('#subventCstMngId-'+slctCnt).attr('disabled',false);
-			 }
-		});
-			var 
-			 sancTtl = 0,
-			 netPyRtTtl = 0.00,
-			 defPyRtTtl = 0.00,
-			 fnlPyAmtTtl = 0,
-			 rtOfIntTtl = 0.00,
-			 intAmntTtl = 0,
-			 subVentionTtl = 0.00,
-			 pfTtl = 0,
-			 count = 0,
-			 pfAmtTtl = 0;
-					for(i=1;i<=glblCnt;i++){
-						 $('#netPayRteCstMngId-'+i).text((isNAN('defPyRtCstMngId-'+i,'t') - isNAN('subventCstMngId-'+i,'v')).toFixed(2));
-						 $('#fnlPayAmntCstMngId-'+i).text($comPut((isNAN('sancAmntCstMngId-'+i,'t') * (isNAN('netPayRteCstMngId-'+i,'t')/100)).toFixed(0)));
-						 $('#intAmntCstMngId-'+i).text($comPut((isNAN('sancAmntCstMngId-'+i,'t') * (isNAN('rteOfIntCstMngId-'+i,'t')/100)).toFixed(0)));
-					
-					if($('#includeCstMngId-'+i).val() == "YES" && ($('#paymentdoneId-'+i).text() == "NO" || $('#paymentdoneId-'+i).text() == "YES")){
-					 sancTtl += isNAN('sancAmntCstMngId-'+i,'t');
-					 netPyRtTtl += isNAN('netPayRteCstMngId-'+i,'t');
-					 fnlPyAmtTtl += isNAN('fnlPayAmntCstMngId-'+i,'t');
-					 rtOfIntTtl += isNAN('rteOfIntCstMngId-'+i,'t');
-					 intAmntTtl += isNAN('intAmntCstMngId-'+i,'t');
-					 pfTtl += isNAN('pfCstMngId-'+i,'t');
-					 pfAmtTtl +=isNAN('pfAmntCstMngId-'+i,'t');
-					 defPyRtTtl += isNAN('defPyRtCstMngId-'+i,'t');
-					 subVentionTtl += isNAN('subventCstMngId-'+i,'val');
-					 count = count + 1;
-					}
-					 $('#sanctioned_amount_total').text($comPut(sancTtl));							
-					 $('#avgnetpayrate').text(parseFloat(netPyRtTtl).toFixed(2));
-					 $('#finalpayoutamount_total').text($comPut(fnlPyAmtTtl));
-					 $('#avgroi').text(parseFloat(rtOfIntTtl).toFixed(2));
-					 $('#int_amount_total').text($comPut(intAmntTtl));
-					 $('#avgpf').text(pfTtl);   
-					 $('#pfamounttotal').text($comPut(pfAmtTtl));
-					 $('.cntAppMisCls').text(count);
-				}
-				var checkYes = 0;
-				for(j=1;j<=glblCnt;j++){
-					if($('#includeCstMngId-'+j).val() == "YES" && ($('#paymentdoneId-'+j).text() == "NO" || $('#paymentdoneId-'+j).text() == "YES")){
-						++checkYes;
-						$('#sancamnavgId').text($comPut(parseFloat(sancTtl/checkYes).toFixed(0)));
-						$('#defPyRtAvgId').text(parseFloat(defPyRtTtl/checkYes).toFixed(2));
-						$('#subAvgId').text(parseFloat(subVentionTtl/checkYes).toFixed(2));
-						$('#avgnetpayrate').text(parseFloat(netPyRtTtl/checkYes).toFixed(2)); 
-						$('#finalPayAvgId').text($comPut(parseFloat(fnlPyAmtTtl/checkYes).toFixed(0)));
-						$('#avgroi').text(parseFloat(rtOfIntTtl/checkYes).toFixed(2));
-						$('#intAmntAvgId').text($comPut(parseFloat(intAmntTtl/checkYes).toFixed(0)));
-						$('#avgpf').text(parseFloat(pfTtl/checkYes).toFixed(2));
-						$('#pfAmntAvgId').text($comPut(parseFloat(pfAmtTtl/checkYes).toFixed(0)));
-						}
-				}
-				var countInd = 0;
-				while(glblCnt >= countInd){++countInd;
-					var noOfIndFiles = 0;
-					var sancIndTtl =0;
-					var rowArr = ["",];
-						for(j=1;j<=glblCnt;j++){
-							if($('#dsaCodeMngId-'+j).text() === $('#dsaCodeMngId-'+countInd).text()){
-								rowArr.push(j);
-								if($('#includeCstMngId-'+j).val() === "YES" && ($('#paymentdoneId-'+j).text() == "NO" || $('#paymentdoneId-'+j).text() == "YES")){
-									++noOfIndFiles;
-									sancIndTtl += parseInt($comRem($('#sancAmntCstMngId-'+j).text()));
-								}
-							}
-						}
-					for(arr=1;arr<rowArr.length;arr++){
-						if($('#proTypCostId').val() == "1"){
-							if((parseInt(noOfIndFiles) >= blGet.monthlyslab[2].minfilesdisbursed)) {
-							     if((sancIndTtl > 10000000)) {
-							      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
-							     }else if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-							      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
-							     }else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-							      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
-							     }else{
-							      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
-							     }
-							    }else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[1].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[2].minfilesdisbursed)) {
-							     if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-							      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
-							     }else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-							      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
-							     }else{
-							    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
-							     }
-							    }else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[0].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[1].minfilesdisbursed)) {
-							     if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-							      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
-							     }else{
-							    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));  
-							     }
-							    }else{
-							     $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(0).toFixed(2));
-							    }
-						}else if($('#proTypCostId').val() == "4"){
-							if(sancIndTtl >= 200000 && sancIndTtl <=2000000){
-								$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(sblGet[0].monthlyslab).toFixed(2));
-							}else if(sancIndTtl >= 2100000 && sancIndTtl <= 3000000){
-								$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(sblGet[1].monthlyslab).toFixed(2));
-							}else if(sancIndTtl >= 3100000 && sancIndTtl <= 5000000){
-								$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(sblGet[2].monthlyslab).toFixed(2));
-							}else if(sancIndTtl >= 5100000 && sancIndTtl <= 7400000){
-								$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(sblGet[3].monthlyslab).toFixed(2));
-							}else if(sancIndTtl >= 7500000){
-								$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(sblGet[4].monthlyslab).toFixed(2));
-							}else{
-								$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(0).toFixed(2));
-							}
-						}
-					}
-				}
-				var 
-				sancTtlDef = 0,
-				netPyRtTtlDef = 0,
-				fnlPyAmtTtlDef = 0,
-				rtOfIntTtlDef = 0,
-				intAmntTtlDef = 0,
-				pfTtlDef = 0,
-				pfAmtTtlDef = 0,     
-				defPyRtTtlDef = 0,
-				subVentionTtlDef = 0,
-				checkDis = 0;
-				for(k=1;k<=glblCnt;k++){
-					 $('#netPayRteCstMngId-'+k).text((isNAN('defPyRtCstMngId-'+k,'t') - isNAN('subventCstMngId-'+k,'v')).toFixed(2));
-					 $('#fnlPayAmntCstMngId-'+k).text($comPut((isNAN('sancAmntCstMngId-'+k,'t') * (isNAN('netPayRteCstMngId-'+k,'t')/100)).toFixed(0)));
-					 $('#intAmntCstMngId-'+k).text($comPut((isNAN('sancAmntCstMngId-'+k,'t') * (isNAN('rteOfIntCstMngId-'+k,'t')/100)).toFixed(0)));
-				
-				if($('#includeCstMngId-'+k).val() == "YES" && ($('#paymentdoneId-'+k).text() == "NO" || $('#paymentdoneId-'+k).text() == "YES")){
-						  	sancTtlDef += isNAN('sancAmntCstMngId-'+k,'t');
-		                    netPyRtTtlDef += isNAN('netPayRteCstMngId-'+k,'t');
-		                    fnlPyAmtTtlDef += isNAN('fnlPayAmntCstMngId-'+k,'t');
-		                    rtOfIntTtlDef += isNAN('rteOfIntCstMngId-'+k,'t');
-		                    intAmntTtlDef += isNAN('intAmntCstMngId-'+k,'t');
-		                    pfTtlDef += isNAN('pfCstMngId-'+k,'t');
-		                    pfAmtTtlDef +=isNAN('pfAmntCstMngId-'+k,'t');
-		                    defPyRtTtlDef += isNAN('defPyRtCstMngId-'+k,'t');
-		                    subVentionTtlDef += isNAN('subventCstMngId-'+k,'val'); 
-		                    if($('#includeCstMngId-'+k).is(':disabled') === true){
-		                    	++checkDis;
-							 }  
-				}
-				$('#sanctioned_amount_total').text($comPut(sancTtlDef));						
-		           $('#avgnetpayrate').text(parseFloat(netPyRtTtlDef).toFixed(2));
-		           $('#finalpayoutamount_total').text($comPut(fnlPyAmtTtlDef));
-		           $('#avgroi').text(parseFloat(rtOfIntTtlDef).toFixed(2));
-		           $('#int_amount_total').text($comPut(intAmntTtlDef));
-		           $('#avgpf').text(pfTtlDef);   
-		           $('#pfamounttotal').text($comPut(pfAmtTtlDef));
-		           $('#avgnetpayrate').text(isNaN(parseFloat(netPyRtTtlDef/checkYes).toFixed(2))?0:(parseFloat(netPyRtTtlDef/checkYes).toFixed(2))); 
-		           $('#avgroi').text(isNaN(parseFloat(rtOfIntTtlDef/checkYes).toFixed(2))?0:(parseFloat(rtOfIntTtlDef/checkYes).toFixed(2)));
-		           $('#avgpf').text(isNaN(parseFloat(pfTtlDef/checkYes).toFixed(2))?0:(parseFloat(pfTtlDef/checkYes).toFixed(2)));
-		           $('#sancamnavgId').text($comPut(isNaN(parseFloat(sancTtlDef/checkYes).toFixed(0))?0:(parseFloat(sancTtlDef/checkYes).toFixed(0))));
-		           $('#defPyRtAvgId').text(isNaN(parseFloat(defPyRtTtlDef/checkYes).toFixed(2))?0:(parseFloat(defPyRtTtlDef/checkYes).toFixed(2)));
-		           $('#subAvgId').text(isNaN(parseFloat(subVentionTtlDef/checkYes).toFixed(2))?0:(parseFloat(subVentionTtlDef/checkYes).toFixed(2)));
-		           $('#finalPayAvgId').text($comPut(isNaN(parseFloat(fnlPyAmtTtlDef/checkYes).toFixed(0))?0:(parseFloat(fnlPyAmtTtlDef/checkYes).toFixed(0))));
-		           $('#intAmntAvgId').text($comPut(isNaN(parseFloat(intAmntTtlDef/checkYes).toFixed(0))?0:(parseFloat(intAmntTtlDef/checkYes).toFixed(0))));
-		           $('#pfAmntAvgId').text($comPut(isNaN(parseFloat(pfAmtTtlDef/checkYes).toFixed(0))?0:(parseFloat(pfAmtTtlDef/checkYes).toFixed(0))));
-			}
-				
-				if(DSACODE === null){
-					$('#btnCstMtgSbtId').attr('disabled',true);
-				}else if(DSACODE !== null){
-					$('#btnCstMtgSbtId').attr('disabled',false);
-				}
-				
-				for(z=1;z<=glblCnt;z++){
-					if($('#includeCstMngId-'+z).is(':disabled') === true){
-                    	++checkDis;
-					 }
-				}
-				if($('#searchBoxCstMntgId').val() == ""){
-					DSACODE = null;
-//:p					$('.dsaHideCls').show();
-					$('nav').css({"width":"1950px"});
-					$('#costMainTblId').css({"width":"2100px"});
-				}else{
-					DSACODE = DSACODE;
-//:p					$('.dsaHideCls').hide();
-					$('nav').css({"width":"1650px"});
-					$('#costMainTblId').css({"width":"1830px"});
-					if(glblCnt == checkDis){
-						$('#btnCstMtgSbtId').attr('disabled',false);
-						$('#finalSbmtId').attr('disabled',true);
-					}else{
-						$('#btnCstMtgSbtId').attr('disabled',false);
-						$('#finalSbmtId').attr('disabled',false);
-					}
-				}
-		});
-	});  */
 }
 function $_yearList(initOpt,idToApp){
 	var dateYrOptn = initOpt;
@@ -1564,6 +1262,7 @@ function sortTable(n) {
 
 	
 	function $_renderPages(cnt){
+		//not used function for now
 		console.log(blGet)
 		$('#pgntnPanel').twbsPagination('destroy');
 		$('#pgntnPanel').twbsPagination({

@@ -26,13 +26,19 @@ var tempRangeObj = [];
 	    		requestData(api.getPayoutProductType(prodType),'GET').done(function(data){
 					var tblData ='';
 					tempRangeObj = data;
-					$(data).each(function(k,v){
+					if($.isEmptyObject(data)){
 						tblData += `<tr class="a-center">
-											<td>${v.month}-${v.year}</td>
-											<td>${v.startdate}</td>
-											<td>${v.enddate}</td>
-										</tr>	`
-					});
+							<td colspan="3">NO DATA FOUND</td>
+						</tr>	`;
+					}else{
+						$(data).each(function(k,v){
+							tblData += `<tr class="a-center">
+												<td>${v.month}-${v.year}</td>
+												<td>${v.startdate}</td>
+												<td>${v.enddate}</td>
+											</tr>	`
+						});
+					}
 					$('#monthYearTblId').html(tblData)
 					$('#startEndDateRowId,#blDivRowId').show()
 				}).fail(function(e){

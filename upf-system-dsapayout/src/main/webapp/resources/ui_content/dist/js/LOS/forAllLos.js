@@ -1,4 +1,4 @@
-
+var uid = window.location.search.split('=')[1]==null?localStorage.getItem('userId'):window.location.search.split('=')[1];
 var html = {
 		"FILE_UPLOADS": '<li class="treeview"><a href="#"><span>File Uploads</span>'+
 			'<span class="pull-right-container">'+
@@ -61,21 +61,24 @@ var html = {
 		"ACCOUNT_HISTORIC": '<li><a href="/upf-system/upf/debitCredit/historic" class="asideCls"><span>HISTORICAL DATA</span></a></li>',
 		"ACCOUNT_INVOICE" : '<li><a href="/upf-system/upf/debitCredit/accinvoice" class="asideCls"><span>INVOICE</span></a></li>',
 		"DSA_PAYOUT":'<li><a href="/upf-system/upf/debitCredit/dsapayout" class="asideCls"><span>DSA PAYOUT</span></a></li>',
-		"APPLICATION_MIS" : '<li><a href="/upf-system/upf/debitCredit/costMaintain" class="asideCls"><span>APPLICATION MIS</span></a></li>',
+		"APPLICATION_MIS" : '<li><a href="/upf-system-dsapayout/dsapayout/dsa/costMaintain" class="asideCls"><span>APPLICATION MIS</span></a></li>',
 		"HIERARCHY" : '<li><a href="/upf-system/upf/debitCredit/hierarchy" class="asideCls"><span>HIERARCHY</span></a></li>',
-		"INCENTIVES" : '<li><a href="/upf-system/upf/debitCredit/incentives" class="asideCls"><span>PAYOUT MASTER</span></a></li>',
+		"INCENTIVES" : '<li><a href="/upf-system-dsapayout/dsapayout/dsa/incentives" class="asideCls"><span>PAYOUT MASTER</span></a></li>',
 		"CAMS_LIST" :'<li><a href="/upf-system/upf/debitCredit/cams" class="asideCls"><span>CAMS LIST</span></a></li>',
 		"DEXTER" :'<li><a href="/upf-system/upf/debitCredit/dexter" class="asideCls"><span>DEXTER ENGINE</span></a></li>',
 		"SCORE_CARD" : '<li id="scrCrdPnlId"><a href="/upf-system/upf/debitCredit/scorecard" class="asideCls"><span>SCORE CARD</span></a></li>',
 		"DSA_ONBOARD":'<li><a href="/upf-system/upf/debitCredit/addDsa" class="asideCls"><span>DSA ONBOARD</span></a></li>',
         "UNVERIFIED_DSA_LIST":'<li><a href="/upf-system/upf/debitCredit/dsaList" class="asideCls"><span>UNVERIFIED DSA LIST</span></a></li>',
-        "COLLECTION_LIST":'<li><a href="/upf-system/upf/debitCredit/collectionList" class="asideCls"><span>COLLECTION LIST</span></a></li>'
+        "COLLECTION_LIST":'<li><a href="/upf-system/upf/debitCredit/collectionList" class="asideCls"><span>COLLECTION LIST</span></a></li>',
+        
+        "MONTHOFFERS":'<li><a href="/upf-system-dsapayout/dsapayout/dsa/offerMonths" class="asideCls"><span>OFFER MONTHS</span></a></li>',
+        "FESTIVALOFFERS":'<li><a href="/upf-system-dsapayout/dsapayout/dsa/festivalOffer" class="asideCls"><span>FESTIVAL MONTHS</span></a></li>'
 		//"SALES_APPLICATION_MIS" : '<li><a href="/upf-system/upf/debitCredit/salesmis" class="asideCls"><span>SALES APPLICATION MIS</span></a></li>'
 };   
 $(document).ready(function(){
 //	console.log('localStorage.getItem()-',localStorage.getItem("role"));
 	var API_PRODUCT_GET = '/upf-system-dsapayout/dsapayout/dsa/getproductbyuserid?userid=';
-	var API_ALLLOGINDETAIL_GET	  = 'http://110.173.177.254:8080/upf-system/upf/authentication/getUserByUserId?id='+uid;
+	var API_ALLLOGINDETAIL_GET	  = 'http://192.168.149.17:8080/upf-system/upf/authentication/getUserByUserId?id='+uid;
 	var API_SCORECARD_GET = '/upf-system/upf/scoreCard/getScoreCardCreditMember?userName=';
 	
 	var roleLeftId = localStorage.getItem("role");
@@ -98,6 +101,7 @@ $(document).ready(function(){
 				'<li><a href="/upf-system/upf/debitCredit/gkweb"><i class="fa fa-circle-o"></i>DD Checker</a></li>'+
 			'</ul></li>';
 	requestData(API_ALLLOGINDETAIL_GET, "GET",{}).done(function(reply) {
+		localStorage.setItem("loginEntity", JSON.stringify(reply))
 		$("body").append(function(){
 			return '<aside class="main-sidebar m-layer">'+
 							'<section class="sidebar">'+   
@@ -117,7 +121,7 @@ $(document).ready(function(){
 					'</aside>';
 		});
 		if(localStorage.getItem('role') == "DSA"){
-			$('#btntoggleClick').click();
+//			$('#btntoggleClick').click();
 			$('#listViewDsaId').click();
 		}
 		if(reply.accessList.SBL_MAKER == "HIDE" && reply.accessList.SBL_CHECKER == "HIDE"){
