@@ -39,7 +39,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,9 +58,11 @@ import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 import com.guavatrees.upf.dao.entity.EmployeeEntity;
 import com.guavatrees.upf.dao.entity.FestivalMonthlyPayout;
 import com.guavatrees.upf.dao.entity.FestivalPayout;
+import com.guavatrees.upf.dao.entity.FestivalSBLMonthlyPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
 import com.guavatrees.upf.dao.entity.PayoutDate;
+import com.guavatrees.upf.dao.entity.SBLFestivalPayout;
 import com.guavatrees.upf.dao.entity.SMInsentive;
 import com.guavatrees.upf.dao.entity.SblInsentive;
 import com.guavatrees.upf.dto.InputDsaDto;
@@ -2203,7 +2204,6 @@ public class DSAPayoutController {
 
 	}
 
-	
 	private void sendingMail(List<InputDsaDto> listemail, List<DsaDetailsEntity> disagreelist) throws Exception {
 
 		Runnable task = new Runnable() {
@@ -2965,6 +2965,29 @@ public class DSAPayoutController {
 
 	}
 	
+	/*
+	 * add SBL festival payout
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/addSBLFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
+	public ResponseEntity<String> addSBLFestivalPayout(@RequestBody SBLFestivalPayout sblfestivalPayout) {
+		LOGGER.info("DSAController addSBLFestivalPayout start");
+		String responseMessage = null;
+		try {
+			JSONObject jsonResponse = new JSONObject();
+			long appid = dsaService.addSBLFestivalPayout(sblfestivalPayout);
+			jsonResponse.put("id", appid);
+			jsonResponse.put("reply", "success");
+			responseMessage = jsonResponse.toString();
+		} catch (Exception exception) {
+			LOGGER.error("Error while posting addSBLFestivalPayout details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController addSBLFestivalPayout end");
+		return new ResponseEntity<String>(responseMessage, HttpStatus.OK);
+
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/getPayoutdate", method = RequestMethod.POST, consumes = "application/json")
 	public String getPayoutdate(HttpServletRequest request) {
@@ -2996,16 +3019,15 @@ public class DSAPayoutController {
 
 	
 	@ResponseBody
-	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<List<PayoutDate>> getPayout(HttpServletRequest request) {
+	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, consumes = "application/json")
+	public List<PayoutDate> getPayout(HttpServletRequest request) {
 		LOGGER.info("DSAController getPayout start");
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString=null;
 		List<PayoutDate> payoutDate2=new ArrayList<>();
 		String producttype=request.getParameter("producttype");
 	try {
-		/*if(producttype.equalsIgnoreCase("BL"))
-		{
+		if(producttype.equalsIgnoreCase("BL")){
 			payoutDate2= dsaService.getPayout();
 			if(payoutDate2.size()!=0){
 			for(PayoutDate paydate:payoutDate2){
@@ -3015,27 +3037,19 @@ public class DSAPayoutController {
 			}
 			
 			}
-		}*/
-			payoutDate2= dsaService.getPayout(producttype);
-			if(payoutDate2.size()!=0){
-			for(PayoutDate paydate:payoutDate2){
-				paydate.setStartdate(getDate1(paydate.getStartdate()));
-				paydate.setEnddate(getDate1(paydate.getEnddate()));
-				paydate.setMonth(getmonthon(paydate.getMonth()));
-			}
 			
-			}
+		}
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayout details. Reason : " + exception);
 		}
 		LOGGER.info("DSAController getPayout end");
-		return new ResponseEntity<List<PayoutDate>>(payoutDate2, HttpStatus.OK);
+		return payoutDate2;
 
 	}
 	
-	
 	/*
-	 * for BL Festival payout
+	 * 
+	 * BL festival payout
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
@@ -3063,6 +3077,35 @@ public class DSAPayoutController {
 
 	}
 	
+	/*
+	 * SBL festival payout
+	 */
+	
+	@ResponseBody
+	@RequestMapping(value = "/getSBLFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
+	public ResponseEntity<String> getSBLFestivalPayout(@RequestBody SBLFestivalPayout sblfestivalPayout,HttpServletRequest request) {
+		LOGGER.info("DSAController getSBLFestivalPayout start");
+		String jsonInString=null;
+		SBLFestivalPayout sblfestivalPayout1 =new SBLFestivalPayout();
+		List<FestivalSBLMonthlyPayout> sblMonthlyPayout=new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			sblfestivalPayout1= dsaService.getSBLFestivalPayout(sblfestivalPayout);
+			if(sblfestivalPayout1!=null){
+			 jsonInString = mapper.writeValueAsString(sblfestivalPayout1);
+		}
+			else
+			{
+				sblMonthlyPayout=dsaService.getFestivalSblmonthlypayout();
+				jsonInString = mapper.writeValueAsString(sblMonthlyPayout);
+			}
+		} catch (Exception exception) {
+			LOGGER.error("Error while  getPayout details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController getPayout end");
+		return new ResponseEntity<String>(jsonInString, HttpStatus.OK);
+
+	}
 	
 	
 	@ResponseBody

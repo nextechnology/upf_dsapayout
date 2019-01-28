@@ -39,9 +39,11 @@ import com.guavatrees.upf.dao.entity.EmployeeEntity;
 import com.guavatrees.upf.dao.entity.FestivalBLMonthlySlab;
 import com.guavatrees.upf.dao.entity.FestivalMonthlyPayout;
 import com.guavatrees.upf.dao.entity.FestivalPayout;
+import com.guavatrees.upf.dao.entity.FestivalSBLMonthlyPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
 import com.guavatrees.upf.dao.entity.PayoutDate;
+import com.guavatrees.upf.dao.entity.SBLFestivalPayout;
 import com.guavatrees.upf.dao.entity.SMInsentive;
 import com.guavatrees.upf.dao.entity.SblInsentive;
 import com.guavatrees.upf.dto.InputDsaDto;
@@ -3245,12 +3247,12 @@ public class DSADaoImpl implements DSADao {
 
 	@Override
 	@Transactional
-	public List<PayoutDate> getPayout(String producttype) throws Exception {
-		//PayoutDate payoutDate1=new PayoutDate();
+	public List<PayoutDate> getPayout() throws Exception {
+		PayoutDate payoutDate1=new PayoutDate();
 		try{
-			String queryString = "select monthlyslab from PayoutDate monthlyslab where producttype=:producttype";
+			String queryString = "select monthlyslab from PayoutDate monthlyslab  ";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
-			query.setParameter("producttype", producttype);
+			
 			return query.list();
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
@@ -3302,6 +3304,50 @@ public class DSADaoImpl implements DSADao {
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
+	}
+
+	@Override
+	@Transactional
+	public SBLFestivalPayout getSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout) {
+		SBLFestivalPayout sblfestivalPayout1=new SBLFestivalPayout();
+		try{
+			
+			String queryString = "select monthlyslab from SBLFestivalPayout monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
+			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			query.setParameter("year",sblfestivalPayout.getYear());
+			query.setParameter("month",sblfestivalPayout.getMonth());
+			query.setParameter("producttype",sblfestivalPayout.getProducttype());
+			sblfestivalPayout1= (SBLFestivalPayout) query.uniqueResult();
+			
+			return sblfestivalPayout1;
+		} catch (Exception exception) {
+			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
+		}
+	}
+
+	@Override
+	public List<FestivalSBLMonthlyPayout> getFestivalSblmonthlypayout() throws Exception {
+		try{
+			String queryString = "select monthlyslab from FestivalSBLMonthlyPayout monthlyslab ";
+			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			return query.list();
+		} catch (Exception exception) {
+			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
+		}
+	}
+
+	@Override
+	public long addSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout) throws Exception {
+		LOGGER.info("DSADaoImpl addSBLMonthlyslab start");
+		long id = 0;
+		try {
+			SBLFestivalPayout app = (SBLFestivalPayout) sessionFactory.getCurrentSession().merge(sblfestivalPayout);
+			id = app.getDateid();
+		} catch (Exception exception) {
+			LOGGER.debug("Exception occured while adding addSBLMonthlyslab details in database.Reason : " + exception);
+		}
+		LOGGER.info("DSADaoImpl addSBLMonthlyslab end");
+		return id;
 	}
 	
 }

@@ -15,9 +15,11 @@ import com.guavatrees.upf.dao.entity.EmployeeEntity;
 import com.guavatrees.upf.dao.entity.FestivalBLMonthlySlab;
 import com.guavatrees.upf.dao.entity.FestivalMonthlyPayout;
 import com.guavatrees.upf.dao.entity.FestivalPayout;
+import com.guavatrees.upf.dao.entity.FestivalSBLMonthlyPayout;
 import com.guavatrees.upf.dao.entity.Invoice;
 import com.guavatrees.upf.dao.entity.ListLosId;
 import com.guavatrees.upf.dao.entity.PayoutDate;
+import com.guavatrees.upf.dao.entity.SBLFestivalPayout;
 import com.guavatrees.upf.dao.entity.SMInsentive;
 import com.guavatrees.upf.dao.entity.SblInsentive;
 import com.guavatrees.upf.dto.InputDsaDto;
@@ -567,7 +569,7 @@ public interface DSADao {
 
 	public long addFestivalPayout(FestivalPayout festivalPayout)throws Exception;
 
-	public List<PayoutDate> getPayout(String producttype)throws Exception;
+	public List<PayoutDate> getPayout()throws Exception;
 
 	public FestivalPayout getFestivalPayout(FestivalPayout festivalPayout)throws Exception;
 
@@ -576,6 +578,12 @@ public interface DSADao {
 	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout()throws Exception;
 
 	public List<FestivalPayout> getPayoutFestivaldate(String year,String month)throws Exception;
+
+	public SBLFestivalPayout getSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout);
+
+	public List<FestivalSBLMonthlyPayout> getFestivalSblmonthlypayout()throws Exception;
+
+	public long addSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout)throws Exception;
 	
 	
 }
