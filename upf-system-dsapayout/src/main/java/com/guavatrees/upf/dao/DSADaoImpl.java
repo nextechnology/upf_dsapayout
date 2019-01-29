@@ -729,31 +729,31 @@ public class DSADaoImpl implements DSADao {
 		LOGGER.info("DSADaoImpl getmonthon start");
 		String month = null;
 		switch (number) {
-		case "1":
+		case "01":
 			month = "January";
 			break;
-		case "2":
+		case "02":
 			month = "February";
 			break;
-		case "3":
+		case "03":
 			month = "March";
 			break;
-		case "4":
+		case "04":
 			month = "April";
 			break;
-		case "5":
+		case "05":
 			month = "May";
 			break;
-		case "6":
+		case "06":
 			month = "June";
 			break;
-		case "7":
+		case "07":
 			month = "July";
 			break;
-		case "8":
+		case "08":
 			month = "August";
 			break;
-		case "9":
+		case "09":
 			month = "September";
 			break;
 		case "10":
