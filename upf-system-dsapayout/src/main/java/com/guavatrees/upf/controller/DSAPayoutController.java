@@ -481,7 +481,7 @@ public class DSAPayoutController {
 			@RequestParam(value = "role", required = true) String role,
 			@RequestParam(value = "product", required = true) String product,
 			@RequestParam(value = "purpose", required = true) String purpose, HttpServletRequest reuqest)
-					throws JSONException, Exception {
+			throws JSONException, Exception {
 		LOGGER.info("DSAController smListonCity start");
 		String responseMessage = null;
 		List<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
@@ -635,8 +635,7 @@ public class DSAPayoutController {
 	 * This api is used for addadmindsa mapping
 	 * 
 	 * 
-	 * @param List
-	 *            DsaDetailsEntity
+	 * @param List    DsaDetailsEntity
 	 * @param session
 	 * @return reply
 	 * @throws Exception
@@ -681,9 +680,7 @@ public class DSAPayoutController {
 
 		List<JSONObject> list = new ArrayList<JSONObject>();
 		try {
-			
-			
-			
+
 			List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
 			if (listdsa.size() != 0) {
 				for (DsaDetailsEntity dsa : listdsa) {
@@ -1067,8 +1064,8 @@ public class DSAPayoutController {
 
 				/*
 				 * if (role.equalsIgnoreCase("SSM")) { jsonResponse =
-				 * sm(Long.valueOf(input.getSm_id()), jsonResponse,
-				 * input.getProduct()); } else if
+				 * sm(Long.valueOf(input.getSm_id()), jsonResponse, input.getProduct()); } else
+				 * if
 				 */if (role.equalsIgnoreCase("ASM")) {
 					jsonResponse = ssm(Long.valueOf(input.getSm_id()), jsonResponse, product);
 				} else if (role.equalsIgnoreCase("RSM")) {
@@ -1276,8 +1273,7 @@ public class DSAPayoutController {
 				String role = dsaService.getRole((Long.valueOf(userId)));
 				/*
 				 * if (role.equalsIgnoreCase("SM")) { jsonResponse =
-				 * ssmUpper(Long.valueOf(input.getSm_id()), jsonResponse); }
-				 * else
+				 * ssmUpper(Long.valueOf(input.getSm_id()), jsonResponse); } else
 				 */if (role.equalsIgnoreCase("SSM") || role.equalsIgnoreCase("SM")) {
 					jsonResponse = asmUpper(Long.valueOf(input.getSm_id()), jsonResponse, product);
 				} else if (role.equalsIgnoreCase("ASM")) {
@@ -2410,7 +2406,7 @@ public class DSAPayoutController {
 	public String sendemailDsaOnMis(@RequestBody List<DsaDetailsEntity> listdsasm, HttpServletRequest request,
 			HttpSession session) throws Exception {
 		LOGGER.info("DSAController sendemailDsaOnMis start");
-		String emailid = request.getParameter("emailid");
+		String dsacode = request.getParameter("dsacode");
 		String month = request.getParameter("month");
 		String year = request.getParameter("year");
 		JSONObject object = new JSONObject();
@@ -2418,12 +2414,15 @@ public class DSAPayoutController {
 			List<DsaDetailsEntity> list = new ArrayList<DsaDetailsEntity>();
 
 			for (DsaDetailsEntity entity : listdsasm) {
-				if (entity.getInclude().equalsIgnoreCase("yes")) {
+				if (entity.getInclude().equalsIgnoreCase("yes") && entity.getDsacode().equalsIgnoreCase(dsacode)) {
 					list.add(entity);
 				}
 			}
 			if (list.size() != 0) {
-				sendingMailToDsa(emailid, list, month, year);
+				DSAEntity dsa = dsaService.getDsaOndsacode(dsacode);
+				if (null != dsa) {
+					sendingMailToDsa(dsa.getEmailid(), list, month, year);
+				}
 			}
 			object.put("reply", "success");
 
@@ -2756,108 +2755,107 @@ public class DSAPayoutController {
 			throws Exception {
 		LOGGER.info("DSAController getDsaApp starts");
 		String response = null;
-		//List<DsaDetailsEntity> listdsa1 =new ArrayList<DsaDetailsEntity>();
-		
-		//api for get dsacode related admin
-		
+		// List<DsaDetailsEntity> listdsa1 =new ArrayList<DsaDetailsEntity>();
+
+		// api for get dsacode related admin
+
 		List<String> s = new ArrayList<String>();
-		
-			List<DsaDetailsEntity> dsaList = dsaService.getdsaadmindetails(dsadto);
-			for(DsaDetailsEntity dsadata:dsaList){
-				
-				String reply=dsaService.checkDsaOnDsacode(dsadata.getDsacode());
-				if(reply.equalsIgnoreCase("present")){
-					dsadto.setDsa(dsadata.getDsacode());
-					
-				
-		
-		List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
 
-		if (listdsa.size() != 0) {
-			for (DsaDetailsEntity listdsadata : listdsa) {
+		List<DsaDetailsEntity> dsaList = dsaService.getdsaadmindetails(dsadto);
+		for (DsaDetailsEntity dsadata : dsaList) {
 
-				listdsadata.setInclude("YES");
-				listdsadata.setMisFlag("YES");
-				if (listdsadata.getPaymentFlag() == null)
-					listdsadata.setPaymentFlag("NO");
-				listdsadata.setNetpayrate(listdsadata.getPayrate() - listdsadata.getSubvention());
-				double finalpayoutamount = Math.round((listdsadata.getSanctionedamount() * listdsadata.getNetpayrate()) / 100);
-				listdsadata.setFinalpayoutamount(finalpayoutamount);
-				double roi = Double.parseDouble(listdsadata.getRoi());
-				double interestAmount = (listdsadata.getSanctionedamount() * roi) / 100;
-				listdsadata.setInterestamount(interestAmount);
+			String reply = dsaService.checkDsaOnDsacode(dsadata.getDsacode());
+			if (reply.equalsIgnoreCase("present")) {
+				dsadto.setDsa(dsadata.getDsacode());
 
-			}
-		}
-		if (listdsa.size() != 0) {
-			response = adddsalist(listdsa, request, session);
-		}
-	
-			DsaDetailsEntity entity=new DsaDetailsEntity();
-			entity.setProductcode(dsadto.getProductcode());
-			entity.setMonth(dsadto.getMonth());
-			entity.setDsacode(dsadata.getDsacode());
-			entity.setYear(dsadto.getYear());
-			entity.setDsa(dsadata.getDsacode());
-			
-			entity.setMonth(getmonthon(entity.getMonth()));
-			if (entity.getProductcode() == 1)
-				entity.setProductname("UBL");
-			else
-				entity.setProductname("SBL");
-			
-		List<DsaDetailsEntity> listdsadetail = dsaService.getdsabasedlist(entity);
-		List<InputDsaDto> dsaDtos = dsaService.getStateFromDsadetails(entity);
-		if (listdsadetail.size() != 0) {
+				List<DsaDetailsEntity> listdsa = dsaService.getdsaadmindetails(dsadto);
 
-			List<Invoice> invoices = new ArrayList<>();
-			for (InputDsaDto dto : dsaDtos) {
-				Invoice invoice = new Invoice();
-				List<ListLosId> listLosIds = new ArrayList<ListLosId>();
-				for (DsaDetailsEntity list : listdsadetail) {
+				if (listdsa.size() != 0) {
+					for (DsaDetailsEntity listdsadata : listdsa) {
 
-					list.setConstatus("Agree");
+						listdsadata.setInclude("YES");
+						listdsadata.setMisFlag("YES");
+						if (listdsadata.getPaymentFlag() == null)
+							listdsadata.setPaymentFlag("NO");
+						listdsadata.setNetpayrate(listdsadata.getPayrate() - listdsadata.getSubvention());
+						double finalpayoutamount = Math
+								.round((listdsadata.getSanctionedamount() * listdsadata.getNetpayrate()) / 100);
+						listdsadata.setFinalpayoutamount(finalpayoutamount);
+						double roi = Double.parseDouble(listdsadata.getRoi());
+						double interestAmount = (listdsadata.getSanctionedamount() * roi) / 100;
+						listdsadata.setInterestamount(interestAmount);
 
-					if (dto.getState().equalsIgnoreCase(list.getState())) {
-						invoice.setYear(list.getYear());
-						invoice.setMonth(list.getMonth());
-						invoice.setDsacode(list.getDsacode());
-						invoice.setProductname(list.getProductname());
-						invoice.setState(list.getState());
-						invoice.setInvoiceno("1234567890");
-						DSAEntity dsaEntity = dsaService.getDsaOndsacode(list.getDsacode());
-						System.out.println(list.getState());
-						InputDsaDto input = dsaService.getStateCode(list.getState());
-						System.out.println(input.getStatecode());
-						System.out.println(dsaEntity.getCompanypan());
-						invoice.setGstnumber(input.getStatecode().concat(dsaEntity.getCompanypan()).concat("1Z5"));
-						ListLosId listLosId = new ListLosId();
-						listLosId.setCompanyname(list.getCompanyname());
-						listLosId.setLosid(Long.toString(list.getLosid()));
-						listLosId.setFinalpayoutamount(list.getFinalpayoutamount());
-						listLosId.setNetpayrate(list.getNetpayrate());
-						listLosIds.add(listLosId);
-						invoice.setListlos(listLosIds);
 					}
 				}
-				if (invoice.getGstnumber() != null)
-					invoices.add(invoice);
+				if (listdsa.size() != 0) {
+					response = adddsalist(listdsa, request, session);
+				}
 
+				DsaDetailsEntity entity = new DsaDetailsEntity();
+				entity.setProductcode(dsadto.getProductcode());
+				entity.setMonth(dsadto.getMonth());
+				entity.setDsacode(dsadata.getDsacode());
+				entity.setYear(dsadto.getYear());
+				entity.setDsa(dsadata.getDsacode());
+
+				entity.setMonth(getmonthon(entity.getMonth()));
+				if (entity.getProductcode() == 1)
+					entity.setProductname("UBL");
+				else
+					entity.setProductname("SBL");
+
+				List<DsaDetailsEntity> listdsadetail = dsaService.getdsabasedlist(entity);
+				List<InputDsaDto> dsaDtos = dsaService.getStateFromDsadetails(entity);
+				if (listdsadetail.size() != 0) {
+
+					List<Invoice> invoices = new ArrayList<>();
+					for (InputDsaDto dto : dsaDtos) {
+						Invoice invoice = new Invoice();
+						List<ListLosId> listLosIds = new ArrayList<ListLosId>();
+						for (DsaDetailsEntity list : listdsadetail) {
+
+							list.setConstatus("Agree");
+
+							if (dto.getState().equalsIgnoreCase(list.getState())) {
+								invoice.setYear(list.getYear());
+								invoice.setMonth(list.getMonth());
+								invoice.setDsacode(list.getDsacode());
+								invoice.setProductname(list.getProductname());
+								invoice.setState(list.getState());
+								invoice.setInvoiceno("1234567890");
+								DSAEntity dsaEntity = dsaService.getDsaOndsacode(list.getDsacode());
+								System.out.println(list.getState());
+								InputDsaDto input = dsaService.getStateCode(list.getState());
+								System.out.println(input.getStatecode());
+								System.out.println(dsaEntity.getCompanypan());
+								invoice.setGstnumber(
+										input.getStatecode().concat(dsaEntity.getCompanypan()).concat("1Z5"));
+								ListLosId listLosId = new ListLosId();
+								listLosId.setCompanyname(list.getCompanyname());
+								listLosId.setLosid(Long.toString(list.getLosid()));
+								listLosId.setFinalpayoutamount(list.getFinalpayoutamount());
+								listLosId.setNetpayrate(list.getNetpayrate());
+								listLosIds.add(listLosId);
+								invoice.setListlos(listLosIds);
+							}
+						}
+						if (invoice.getGstnumber() != null)
+							invoices.add(invoice);
+
+					}
+					response = adddsalist(listdsadetail, request, session);
+
+					String path = CreateInvoicePdfInfo(invoices);
+				}
+
+			} else {
+				s.add(dsadata.getDsacode() + "========" + dsadata.getLosid() + "============"
+						+ dsadata.getCompanyname());
 			}
-			response = adddsalist(listdsadetail, request, session);
-
-			String path = CreateInvoicePdfInfo(invoices);
 		}
-		
-		
-				}
-				else{
-				s.add(dsadata.getDsacode()+"========"+dsadata.getLosid()+"============"+dsadata.getCompanyname());
-				}
-			}
-			
-			System.out.println(s);
-			System.out.println(s.size());
+
+		System.out.println(s);
+		System.out.println(s.size());
 		LOGGER.info("DSAController getDsaApp ends");
 		return response;
 	}
@@ -2910,20 +2908,19 @@ public class DSAPayoutController {
 		return month;
 
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/getDsaCount", method = RequestMethod.POST, produces = "application/json")
-	public long getDsaCount(@RequestBody DsaDetailsEntity dsadto,HttpServletRequest request) throws Exception {
+	public long getDsaCount(@RequestBody DsaDetailsEntity dsadto, HttpServletRequest request) throws Exception {
 		LOGGER.info("DSAController getDsaCount start");
-		String response=null;
-		long count=dsaService.getDsaCount(dsadto);
-		
+		String response = null;
+		long count = dsaService.getDsaCount(dsadto);
+
 		LOGGER.info("DSAController getDsaCount end");
 		return count;
 
 	}
-	
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/addPayout", method = RequestMethod.POST, consumes = "application/json")
 	public String addPayout(@RequestBody PayoutDate payoutDate) {
@@ -2933,7 +2930,7 @@ public class DSAPayoutController {
 			JSONObject jsonResponse = new JSONObject();
 			payoutDate.setStartdate(getdate(payoutDate.getStartdate()));
 			payoutDate.setEnddate(getdate(payoutDate.getEnddate()));
-			
+
 			long appid = dsaService.addPayout(payoutDate);
 			jsonResponse.put("id", appid);
 			jsonResponse.put("reply", "success");
@@ -2945,7 +2942,7 @@ public class DSAPayoutController {
 		return responseMessage;
 
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/addFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
 	public String addFestivalPayout(@RequestBody FestivalPayout festivalPayout) {
@@ -2964,7 +2961,7 @@ public class DSAPayoutController {
 		return responseMessage;
 
 	}
-	
+
 	/*
 	 * add SBL festival payout
 	 * 
@@ -2987,28 +2984,27 @@ public class DSAPayoutController {
 		return new ResponseEntity<String>(responseMessage, HttpStatus.OK);
 
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/getPayoutdate", method = RequestMethod.POST, consumes = "application/json")
 	public String getPayoutdate(HttpServletRequest request) {
 		LOGGER.info("DSAController getPayoutdate start");
-		String jsonInString=null;
+		String jsonInString = null;
 		ObjectMapper mapper = new ObjectMapper();
-		BLInsentive blInsentive=new BLInsentive();
-		List<FestivalPayout> festivalPayout=new ArrayList<>();
+		BLInsentive blInsentive = new BLInsentive();
+		List<FestivalPayout> festivalPayout = new ArrayList<>();
 		try {
-			String year=request.getParameter("year");
-			String month=request.getParameter("month");
-			String producttype=request.getParameter("producttype");
-			String id=request.getParameter("id");
-			festivalPayout=dsaService.getPayoutFestivaldate(year,month,producttype);
-			if(festivalPayout.size()!=0){
+			String year = request.getParameter("year");
+			String month = request.getParameter("month");
+			String producttype = request.getParameter("producttype");
+			String id = request.getParameter("id");
+			festivalPayout = dsaService.getPayoutFestivaldate(year, month, producttype);
+			if (festivalPayout.size() != 0) {
 				jsonInString = mapper.writeValueAsString(festivalPayout);
-			}
-			else{
-				blInsentive=dsaService.getBLInsentiveInfo(Long.parseLong(id));
+			} else {
+				blInsentive = dsaService.getBLInsentiveInfo(Long.parseLong(id));
 				jsonInString = mapper.writeValueAsString(blInsentive);
-				
+
 			}
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayoutdate details. Reason : " + exception);
@@ -3017,8 +3013,7 @@ public class DSAPayoutController {
 		return jsonInString;
 
 	}
-	
-	
+
 	/*
 	 * for sbl getSblpayoutdate
 	 * 
@@ -3029,23 +3024,22 @@ public class DSAPayoutController {
 	@RequestMapping(value = "/getSblPayoutdate", method = RequestMethod.POST, consumes = "application/json")
 	public String getSblPayoutdate(HttpServletRequest request) {
 		LOGGER.info("DSAController getSblPayoutdate start");
-		String jsonInString=null;
+		String jsonInString = null;
 		ObjectMapper mapper = new ObjectMapper();
-		SblInsentive sblInsentive=new SblInsentive();
-		List<SBLFestivalPayout> sblfestivalPayout=new ArrayList<>();
+		SblInsentive sblInsentive = new SblInsentive();
+		List<SBLFestivalPayout> sblfestivalPayout = new ArrayList<>();
 		try {
-			String year=request.getParameter("year");
-			String month=request.getParameter("month");
-			String producttype=request.getParameter("producttype");
-			String id=request.getParameter("id");
-			sblfestivalPayout=dsaService.getSblPayoutFestivaldate(year,month,producttype);
-			if(sblfestivalPayout.size()!=0){
+			String year = request.getParameter("year");
+			String month = request.getParameter("month");
+			String producttype = request.getParameter("producttype");
+			String id = request.getParameter("id");
+			sblfestivalPayout = dsaService.getSblPayoutFestivaldate(year, month, producttype);
+			if (sblfestivalPayout.size() != 0) {
 				jsonInString = mapper.writeValueAsString(sblfestivalPayout);
-			}
-			else{
-				sblInsentive=dsaService.getSBLInsentiveInfo(Long.parseLong(id));
+			} else {
+				sblInsentive = dsaService.getSBLInsentiveInfo(Long.parseLong(id));
 				jsonInString = mapper.writeValueAsString(sblInsentive);
-				
+
 			}
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayoutdate details. Reason : " + exception);
@@ -3054,24 +3048,25 @@ public class DSAPayoutController {
 		return jsonInString;
 
 	}
+
 	@ResponseBody
 	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, consumes = "application/json")
 	public List<PayoutDate> getPayout(HttpServletRequest request) {
 		LOGGER.info("DSAController getPayout start");
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonInString=null;
-		List<PayoutDate> payoutDate2=new ArrayList<>();
-		String producttype=request.getParameter("producttype");
-	try {
-			payoutDate2= dsaService.getPayout(producttype);
-			if(payoutDate2.size()!=0){
-			for(PayoutDate paydate:payoutDate2){
-				paydate.setStartdate(getDate1(paydate.getStartdate()));
-				paydate.setEnddate(getDate1(paydate.getEnddate()));
-				paydate.setMonth(getmonthon(paydate.getMonth()));
+		String jsonInString = null;
+		List<PayoutDate> payoutDate2 = new ArrayList<>();
+		String producttype = request.getParameter("producttype");
+		try {
+			payoutDate2 = dsaService.getPayout(producttype);
+			if (payoutDate2.size() != 0) {
+				for (PayoutDate paydate : payoutDate2) {
+					paydate.setStartdate(getDate1(paydate.getStartdate()));
+					paydate.setEnddate(getDate1(paydate.getEnddate()));
+					paydate.setMonth(getmonthon(paydate.getMonth()));
+				}
+
 			}
-			
-		}
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayout details. Reason : " + exception);
 		}
@@ -3079,27 +3074,25 @@ public class DSAPayoutController {
 		return payoutDate2;
 
 	}
-	
+
 	/*
 	 * 
 	 * BL festival payout
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
-	public String getFestivalPayout(@RequestBody FestivalPayout festivalPayout,HttpServletRequest request) {
+	public String getFestivalPayout(@RequestBody FestivalPayout festivalPayout, HttpServletRequest request) {
 		LOGGER.info("DSAController getFestivalPayout start");
-		String jsonInString=null;
-		FestivalPayout festivalPayout1 =new FestivalPayout();
-		List<FestivalMonthlyPayout> blMonthlyPayout=new ArrayList<>();
+		String jsonInString = null;
+		FestivalPayout festivalPayout1 = new FestivalPayout();
+		List<FestivalMonthlyPayout> blMonthlyPayout = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			festivalPayout1= dsaService.getFestivalPayout(festivalPayout);
-			if(festivalPayout1!=null){
-			 jsonInString = mapper.writeValueAsString(festivalPayout1);
-		}
-			else
-			{
-				blMonthlyPayout=dsaService.getFestivalBlmonthlypayout();
+			festivalPayout1 = dsaService.getFestivalPayout(festivalPayout);
+			if (festivalPayout1 != null) {
+				jsonInString = mapper.writeValueAsString(festivalPayout1);
+			} else {
+				blMonthlyPayout = dsaService.getFestivalBlmonthlypayout();
 				jsonInString = mapper.writeValueAsString(blMonthlyPayout);
 			}
 		} catch (Exception exception) {
@@ -3109,27 +3102,26 @@ public class DSAPayoutController {
 		return jsonInString;
 
 	}
-	
+
 	/*
 	 * SBL festival payout
 	 */
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/getSBLFestivalPayout", method = RequestMethod.POST, consumes = "application/json")
-	public ResponseEntity<String> getSBLFestivalPayout(@RequestBody SBLFestivalPayout sblfestivalPayout,HttpServletRequest request) {
+	public ResponseEntity<String> getSBLFestivalPayout(@RequestBody SBLFestivalPayout sblfestivalPayout,
+			HttpServletRequest request) {
 		LOGGER.info("DSAController getSBLFestivalPayout start");
-		String jsonInString=null;
-		SBLFestivalPayout sblfestivalPayout1 =new SBLFestivalPayout();
-		List<FestivalSBLMonthlyPayout> sblMonthlyPayout=new ArrayList<>();
+		String jsonInString = null;
+		SBLFestivalPayout sblfestivalPayout1 = new SBLFestivalPayout();
+		List<FestivalSBLMonthlyPayout> sblMonthlyPayout = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			sblfestivalPayout1= dsaService.getSBLFestivalPayout(sblfestivalPayout);
-			if(sblfestivalPayout1!=null){
-			 jsonInString = mapper.writeValueAsString(sblfestivalPayout1);
-		}
-			else
-			{
-				sblMonthlyPayout=dsaService.getFestivalSblmonthlypayout();
+			sblfestivalPayout1 = dsaService.getSBLFestivalPayout(sblfestivalPayout);
+			if (sblfestivalPayout1 != null) {
+				jsonInString = mapper.writeValueAsString(sblfestivalPayout1);
+			} else {
+				sblMonthlyPayout = dsaService.getFestivalSblmonthlypayout();
 				jsonInString = mapper.writeValueAsString(sblMonthlyPayout);
 			}
 		} catch (Exception exception) {
@@ -3139,43 +3131,41 @@ public class DSAPayoutController {
 		return new ResponseEntity<String>(jsonInString, HttpStatus.OK);
 
 	}
-	
+
 	/*
 	 * 
-	 *  for bl 
+	 * for bl
 	 * 
 	 */
-	/*@ResponseBody
-	@RequestMapping(value = "/getDate", method = RequestMethod.POST, consumes = "application/json")
-	public PayoutDate getDate(HttpServletRequest request) {
-		LOGGER.info("DSAController getFestivalPayout start");
-		String jsonInString=null;
-		PayoutDate payoutDate=new PayoutDate();
-		String year=request.getParameter("year");
-		String month=request.getParameter("month");
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			payoutDate= dsaService.getPayoutdate(year, month);			
-		} catch (Exception exception) {
-			LOGGER.error("Error while  getPayout details. Reason : " + exception);
-		}
-		LOGGER.info("DSAController getPayout end");
-		return payoutDate;
+	/*
+	 * @ResponseBody
+	 * 
+	 * @RequestMapping(value = "/getDate", method = RequestMethod.POST, consumes =
+	 * "application/json") public PayoutDate getDate(HttpServletRequest request) {
+	 * LOGGER.info("DSAController getFestivalPayout start"); String
+	 * jsonInString=null; PayoutDate payoutDate=new PayoutDate(); String
+	 * year=request.getParameter("year"); String
+	 * month=request.getParameter("month"); ObjectMapper mapper = new
+	 * ObjectMapper(); try { payoutDate= dsaService.getPayoutdate(year, month); }
+	 * catch (Exception exception) {
+	 * LOGGER.error("Error while  getPayout details. Reason : " + exception); }
+	 * LOGGER.info("DSAController getPayout end"); return payoutDate;
+	 * 
+	 * }
+	 */
 
-	}*/
-	
 	@ResponseBody
 	@RequestMapping(value = "/getDate", method = RequestMethod.POST, consumes = "application/json")
 	public PayoutDate getDate(HttpServletRequest request) {
 		LOGGER.info("DSAController getFestivalPayout start");
-		String jsonInString=null;
-		PayoutDate payoutDate=new PayoutDate();
-		String year=request.getParameter("year");
-		String month=request.getParameter("month");
-		String producttype=request.getParameter("producttype");
+		String jsonInString = null;
+		PayoutDate payoutDate = new PayoutDate();
+		String year = request.getParameter("year");
+		String month = request.getParameter("month");
+		String producttype = request.getParameter("producttype");
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			payoutDate= dsaService.getPayoutdate(year, month,producttype);			
+			payoutDate = dsaService.getPayoutdate(year, month, producttype);
 		} catch (Exception exception) {
 			LOGGER.error("Error while  getPayout details. Reason : " + exception);
 		}
@@ -3183,18 +3173,18 @@ public class DSAPayoutController {
 		return payoutDate;
 
 	}
-	
-	public String getdate(String date){
-		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
+
+	public String getdate(String date) {
+		String date1 = date.substring(6, 10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
 		return date1;
 	}
-	
-	public String getDate1(String date){
-		String date1=date.substring(6, 8).concat("/").concat(date.substring(4,6).concat("/").concat(date.substring(0,4)));
+
+	public String getDate1(String date) {
+		String date1 = date.substring(6, 8).concat("/")
+				.concat(date.substring(4, 6).concat("/").concat(date.substring(0, 4)));
 		return date1;
 	}
-	
-	
+
 	@RequestMapping(value = "dsapayout", method = RequestMethod.GET)
 	public ModelAndView dsapayout(@ModelAttribute("id") String id) {
 		ModelAndView mav = new ModelAndView();
@@ -3258,18 +3248,19 @@ public class DSAPayoutController {
 	}
 
 	// F MONTHS
-		@RequestMapping(value = "offerMonths", method = RequestMethod.GET)
-		public ModelAndView offerMonths() {
-			ModelAndView mav = new ModelAndView();
-			mav.setViewName("DSA/offerMonths");
-			return mav;
-		}
-	//new festival 
-		@RequestMapping(value = "festivalOffer", method = RequestMethod.GET)
-		public ModelAndView festivalOffer() {
-			ModelAndView mav = new ModelAndView();
-			mav.setViewName("DSA/festivalOffer");
-			return mav;
-		}
-	
+	@RequestMapping(value = "offerMonths", method = RequestMethod.GET)
+	public ModelAndView offerMonths() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("DSA/offerMonths");
+		return mav;
+	}
+
+	// new festival
+	@RequestMapping(value = "festivalOffer", method = RequestMethod.GET)
+	public ModelAndView festivalOffer() {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("DSA/festivalOffer");
+		return mav;
+	}
+
 }
