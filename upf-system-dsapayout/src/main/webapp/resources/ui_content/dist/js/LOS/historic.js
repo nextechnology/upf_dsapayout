@@ -287,7 +287,7 @@ function $_searchSbmt(event){
 	var formdata = [];
 	var dataGet = 
 			{
-				  "dsacode" : DSACODE==""?null:DSACODE,
+				  "dsacode" : $('#searchBoxCstMntgId').val(),//DSACODE==""?null:DSACODE,
 				  "year":$('#yearAdmin').val()==""?null:$('#yearAdmin').val(),
 				  "month":$('#monthAdmin').val()==""?null:$('#monthAdmin').val(),
 				  "productname":$('#proTypHisId').val()

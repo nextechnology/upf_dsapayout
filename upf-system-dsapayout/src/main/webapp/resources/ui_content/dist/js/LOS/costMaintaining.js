@@ -13,8 +13,8 @@ var api = {
 	},
 	getSblPayoutdate: function(y,m,p,i){
 		return 	`/upf-system-dsapayout/dsapayout/dsa/getSblPayoutdate?year=${y}&month=${m}&producttype=${p}&id=${i}`	
-	}
-	,sendemailDsaOnMis: function(d,m,y){
+	},
+	sendemailDsaOnMis: function(d,m,y){
 		return `/upf-system-dsapayout/dsapayout/dsa/sendemailDsaOnMis?dsacode=${d}&month=${m}&year=${y}`
 	}
 }
@@ -739,8 +739,16 @@ function $_searchSbmt(event){
 			
 		}else{
 			apiToCall = producttype=='BL'?api.getPayoutdate(year,month,producttype,1):api.getSblPayoutdate(year,month,producttype,1)
-			requestData(apiToCall,"POST").done(function(blResponse){
-				blGet = blResponse;
+			requestData(apiToCall,"POST").done(function(blSblResponse){
+				if(producttype=='BL'){
+					if(blSblResponse.blincentiveid==null){
+						blGet = blSblResponse[0];
+					}else{
+						blGet = blSblResponse;
+					}
+				}else{
+					sblGet = blSblResponse[0].sblmonthlyslab;
+				}
 				/*if(blResponse.startdate==null){
 					blGet = blResponse[0];
 					postData = {

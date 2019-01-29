@@ -23,7 +23,8 @@ var api = {
 		addSBLFestivalPayout: function(){
 			return `/upf-system-dsapayout/dsapayout/dsa/addSBLFestivalPayout`
 		}
-}
+};
+var sReply = {};
 	$(function(){
 		
 		if(localStorage.getItem('productType') == "BL" && localStorage.getItem("role").includes('SM')){
@@ -64,29 +65,30 @@ var api = {
 		renStartEnd();
 	});
 	
-	function $_sblGet(){
-		requestData(api.getSBLFestivalPayout(),"GET").done(function(reply){
-			$(reply).each(function(k,v){
-				$('#sblHidIncId-'+(k+1)).text(v.sblincentiveid);	
-				$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
-				$('#monthSblId-'+(k+1)).val(v.monthlyslab);
-			});
-		});
-	}
 	function $_sblpost(event){
 		event.preventDefault();
 		$('#sblSbmtId').attr('disabled',true);
-		var arr = [];
-		var formData = {};
-		for(i=1;i<=5;i++){
+		var formData = sReply;
+		var sblmonthlyslab = [];
+		if($.isEmptyObject(sReply)){
 			formData = {
-					"sblincentiveid": $('#sblHidIncId-'+i).text(),
-			        "disbursementinlac": $('#disbursementId-'+i).text(),
-			        "monthlyslab": parseFloat($('#monthSblId-'+i).val())
+					"dateid": 0,
+					"producttype": $('#proTypIncId').val(),
+					"month": $('#monthAdmin').val(),
+					"year": $('#yearAdmin').val(),
+					"sblmonthlyslab": []
 			};
-			arr.push(formData);
 		}
-		requestData(API_SBL_POST,"POST",JSON.stringify(arr)).done(function(reply){
+		for(i=1;i<=5;i++){
+			sblmonthlyslab.push({
+				"sblmonthlyslabid": $('#sblHidIncId-'+i).text(),
+		        "disbursementinlac": $('#disbursementId-'+i).text(),
+		        "monthlyslab": parseFloat($('#monthSblId-'+i).val())
+			});
+		}
+		formData.sblmonthlyslab = sblmonthlyslab;
+		
+		requestData(api.addSBLFestivalPayout(),"POST",JSON.stringify(formData)).done(function(reply){
 			if(reply.reply == "success"){
 				$('#sblSbmtId').attr('disabled',false);
 				$('#diagMsgDivId').show();
@@ -147,11 +149,22 @@ var api = {
 		}
 		else{
 			requestData(api.getSBLFestivalPayout(),"POST",JSON.stringify(postData)).done(function(reply){
-				$(reply).each(function(k,v){
-					$('#sblHidIncId-'+(k+1)).text(v.sblincentiveid);	
-					$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
-					$('#monthSblId-'+(k+1)).val(v.monthlyslab);
-				});
+				console.log(reply);
+				if(reply.dateid==null){
+					$(reply).each(function(k,v){
+						$('#sblHidIncId-'+(k+1)).text(0);	
+						$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
+						$('#monthSblId-'+(k+1)).val(v.monthlyslab);
+					});
+				}else{
+					sReply = reply;
+					$(reply.sblmonthlyslab).each(function(k,v){
+						$('#sblHidIncId-'+(k+1)).text(v.sblmonthlyslabid);	
+						$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
+						$('#monthSblId-'+(k+1)).val(v.monthlyslab);
+					});
+				}
+				
 			});
 		}
 
