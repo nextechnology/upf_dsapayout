@@ -1,18 +1,22 @@
 var loginEntity = JSON.parse(localStorage.getItem("loginEntity"));
 var ip = '192.168.149.17'
-var API_ALLLOGINDETAIL_GET	  = 'http://'+ip+':8080/upf-system/upf/authentication/getUserByUserId?id='+loginEntity==null?1:loginEntity.id;
-
+var API_ALLLOGINDETAIL_GET = `http://${ip}:8080/upf-system/upf/authentication/getUserByUserId?id=${loginEntity==null?1:loginEntity.id}`;
 var api = {
 	getCount: function(){
 		return `/upf-system-dsapayout/dsapayout/dsa/getDsaCount`
 	},
-	getPayoutdate: function(y,m,i){
-		return 	`/upf-system-dsapayout/dsapayout/dsa/getPayoutdate?year=${y}&month=${m}&id=${i}`	
+	getPayoutdate: function(y,m,p,i){
+		return 	`/upf-system-dsapayout/dsapayout/dsa/getPayoutdate?year=${y}&month=${m}&producttype=${p}&id=${i}`	
 	},
-	getDate: function(y,m){
-		return `/upf-system-dsapayout/dsapayout/dsa/getDate?month=${m}&year=${y}`
+	getDate: function(y,m,p){
+		return `/upf-system-dsapayout/dsapayout/dsa/getDate?month=${m}&year=${y}&producttype=${p}`
 	},
-	
+	getSblPayoutdate: function(y,m,p,i){
+		return 	`/upf-system-dsapayout/dsapayout/dsa/getSblPayoutdate?year=${y}&month=${m}&producttype=${p}&id=${i}`	
+	}
+	,sendemailDsaOnMis: function(d,m,y){
+		return `/upf-system-dsapayout/dsapayout/dsa/sendemailDsaOnMis?dsacode=${d}&month=${m}&year=${y}`
+	}
 }
 
 
@@ -579,6 +583,7 @@ function $_cstMngSbmt(event){
 function $_actualSbmt(){
 	var formdata = [];
 	var emailData = [];
+	var uniqueDSA = [];
 	$('#btnCstMtgSbtId').attr('disabled',true);
 //	$('#finalSbmtId').attr('disabled',true);
 	
@@ -625,8 +630,9 @@ function $_actualSbmt(){
 				}
 		
 		formdata.push(arr);
+		uniqueDSA.push($('#dsaCodeMngId-'+i).text());
 		
-			emailData.push({
+		emailData.push({
 				  "dsacode" : $('#dsaCodeMngId-'+i).text(),//DSACODE,
 				  "dsa" : $('#dsaCstMngId-'+i).text(),
 				  "month":$('#monthAdmin').val(),
@@ -655,9 +661,14 @@ function $_actualSbmt(){
 //			  "productname" : $("#proTypCostId option:selected").text(),
 //			  "listlos" : $_listLos(glblCnt)
 //			}
-
+	console.log(uniqueDSA)
+	var set = new Set(uniqueDSA);
+	uniqueDSA = Array.from(set);
+	console.log(uniqueDSA)
+	
 	requestData(API_COST_POST,"POST",JSON.stringify(formdata)).done(function(reply){
 		if(reply.reply == "success"){
+			
 			requestData(API_EMAIL_DSA+EMAILID+'&month='+$("#monthAdmin :selected").text()+'&year='+$('#yearAdmin').val(),"POST",JSON.stringify(emailData)).done(function(emailReply){
 				if(reply.reply == "success"){
 					$('#diagMsgDivId').show();
@@ -678,7 +689,6 @@ function isNAN(a,b){
 	}
 }
 function $_searchSbmt(event){
-	
 	event.preventDefault();
 	$('#CstMtngFrmId')[0].reset();
 	$('#CstMtngFrmId').show();
@@ -688,22 +698,10 @@ function $_searchSbmt(event){
 	city = [];
 	data = [];
 	rowCnt = 0;
-	if($('#searchBoxCstMntgId').val() == ""){
-		DSACODE = null;
-//:p		$('.dsaHideCls').show();
-//		$('nav').css({"width":"1950px"});
-//		$('#costMainTblId').css({"width":"2100px"});
-		$('#btnCstMtgSbtId').attr('disabled',true);
-	}else{
-		DSACODE = DSACODE;
-//:p		$('.dsaHideCls').hide();
-//		$('nav').css({"width":"1650px"});
-//		$('#costMainTblId').css({"width":"1830px"});
-		$('#btnCstMtgSbtId').attr('disabled',false);
-	}
 	var year = $('#yearAdmin').val()
 	var month = $('#monthAdmin').val()
 	var productcode = parseInt($('#proTypCostId').val())
+	var producttype = $('#proTypCostId option:selected').text()
 	
 //	requestData(api.getPayoutdate(year,month),"POST").done(function(blResponse){
 //		blGet = blResponse;
@@ -734,14 +732,14 @@ function $_searchSbmt(event){
 	        }
 	});*/
 	var postData;
-	
-	requestData(api.getDate(year,month),"POST").done(function(getDateResponse){
+	requestData(api.getDate(year,month,producttype),"POST").done(function(getDateResponse){
 		console.log(getDateResponse);
 		if(getDateResponse.startdate==null){
 			alert("Please define payouts for given month!");
 			
 		}else{
-			requestData(api.getPayoutdate(year,month,1),"POST").done(function(blResponse){
+			apiToCall = producttype=='BL'?api.getPayoutdate(year,month,producttype,1):api.getSblPayoutdate(year,month,producttype,1)
+			requestData(apiToCall,"POST").done(function(blResponse){
 				blGet = blResponse;
 				/*if(blResponse.startdate==null){
 					blGet = blResponse[0];
@@ -795,7 +793,7 @@ function $_searchSbmt(event){
 							'<td id="srNoCstMng-'+rowCnt+'">'+rowCnt+'</td>'+
 							'<td id="state-'+rowCnt+'" class="stateCls">'+(v.state==undefined?'':v.state)+'</td>'+
 							'<td id="lctnCstMngId-'+rowCnt+'">'+(v.location===undefined ?"":v.location)+'</td>'+
-							//	'<td id="mnthCstMngId-'+rowCnt+'">'+(v.month===undefined ?"":v.month)+'</td>'+
+							'<td id="mnthCstMngId-'+rowCnt+'" class="a-dis">'+(v.month===undefined ?"":v.month)+'</td>'+
 							'<td id="cmpNmCstMngId-'+rowCnt+'">'+(v.companyname===undefined ?"":v.companyname)+'</td>'+
 							'<td id="slsMngrCstMngId-'+rowCnt+'">'+(v.salesmanger===undefined ?"":v.salesmanger)+'</td>'+
 							'<td id="dsaCodeMngId-'+rowCnt+'" class="dsaHideCls">'+(v.dsacode===undefined ?"":v.dsacode)+'</td>'+
@@ -1314,7 +1312,7 @@ function sortTable(n) {
 						'<td id="srNoCstMng-'+rowCnt+'">'+rowCnt+'</td>'+
 						'<td id="state-'+rowCnt+'" class="stateCls">'+(v.state==undefined?'':v.state)+'</td>'+
 						'<td id="lctnCstMngId-'+rowCnt+'">'+(v.location===undefined ?"":v.location)+'</td>'+
-					//	'<td id="mnthCstMngId-'+rowCnt+'">'+(v.month===undefined ?"":v.month)+'</td>'+
+						'<td id="mnthCstMngId-'+rowCnt+'" class="a-dis">'+(v.month===undefined ?"":v.month)+'</td>'+
 						'<td id="cmpNmCstMngId-'+rowCnt+'">'+(v.companyname===undefined ?"":v.companyname)+'</td>'+
 						'<td id="slsMngrCstMngId-'+rowCnt+'">'+(v.salesmanger===undefined ?"":v.salesmanger)+'</td>'+
 						'<td id="dsaCodeMngId-'+rowCnt+'" class="dsaHideCls">'+(v.dsacode===undefined ?"":v.dsacode)+'</td>'+
