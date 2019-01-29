@@ -71,7 +71,7 @@ $(function(){
 	$.getJSON(API_DSA_LIST,"GET",function(data) {
 		dsaList = data
 	});
-	
+/*autocomplete search	
 	$(document).on('keypress keydown, keyup','#searchBoxCstMntgId',function(){
 		if($('#searchBoxCstMntgId').val().replace(/\ /g,"").length == 0 || $('#searchBoxCstMntgId').val().includes("DSA Code") === false){
 			$('#btnCstMtgSbtId').attr('disabled',true);
@@ -108,7 +108,7 @@ $(function(){
 	 			}
 			},minLength: 3
 		});
-	});
+	});*/
 	/*$(listData).each(function(k,v){
 		$(listData).each(function(k,v){
 			
@@ -443,9 +443,9 @@ $(function(){
 		},500)
 	});
 	//remove this
-	$('#proTypCostId').val('1');
-	$('#yearAdmin').val('2018');
-	$('#monthAdmin').val('01');
+//	$('#proTypCostId').val('1');
+//	$('#yearAdmin').val('2018');
+//	$('#monthAdmin').val('01');
 });
 
 function $_cstMngSbmt(event){
@@ -527,7 +527,7 @@ function $_cstMngSbmt(event){
 				  "avgroi" : parseFloat($('#avgroi').text()),
 				  "int_amount_total" : parseFloat($comRem($('#int_amount_total').text())),
 				  "avgpf" : parseFloat($('#avgpf').text()),
-				  "dsacode" : DSACODE,
+				  "dsacode" : $('#dsaCodeMngId-'+i).text(),//DSACODE,
 				  "year":$('#yearAdmin').val(),
 				  "month":$('#monthAdmin').val(),
 				  "paymentFlag":$('#paymentdoneId-'+i).text(), 
@@ -610,7 +610,7 @@ function $_actualSbmt(){
 				  "avgroi" : parseFloat($('#avgroi').text()),
 				  "int_amount_total" : parseFloat($comRem($('#int_amount_total').text())),
 				  "avgpf" : parseFloat($('#avgpf').text()),
-				  "dsacode" : DSACODE,
+				  "dsacode" : $('#dsaCodeMngId-'+i).text(),//DSACODE,
 				  "year":$('#yearAdmin').val(),
 				  "month":$('#monthAdmin').val(),
 				  "paymentFlag":$('#paymentdoneId-'+i).text(), 
@@ -627,7 +627,7 @@ function $_actualSbmt(){
 		formdata.push(arr);
 		
 			emailData.push({
-				  "dsacode" : DSACODE,
+				  "dsacode" : $('#dsaCodeMngId-'+i).text(),//DSACODE,
 				  "dsa" : $('#dsaCstMngId-'+i).text(),
 				  "month":$('#monthAdmin').val(),
 				  "year":$('#yearAdmin').val(),

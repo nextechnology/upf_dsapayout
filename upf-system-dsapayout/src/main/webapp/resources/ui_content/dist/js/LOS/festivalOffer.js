@@ -16,6 +16,12 @@ var api = {
 		},
 		addFestivalPayout: function(){
 			return `/upf-system-dsapayout/dsapayout/dsa/addFestivalPayout`
+		},
+		getSBLFestivalPayout :function(){
+			return `/upf-system-dsapayout/dsapayout/dsa/getSBLFestivalPayout`
+		},
+		addSBLFestivalPayout: function(){
+			return `/upf-system-dsapayout/dsapayout/dsa/addSBLFestivalPayout`
 		}
 }
 	$(function(){
@@ -59,7 +65,7 @@ var api = {
 	});
 	
 	function $_sblGet(){
-		requestData(API_SBL_GET,"GET").done(function(reply){
+		requestData(api.getSBLFestivalPayout(),"GET").done(function(reply){
 			$(reply).each(function(k,v){
 				$('#sblHidIncId-'+(k+1)).text(v.sblincentiveid);	
 				$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
@@ -89,54 +95,66 @@ var api = {
 			}
 		});
 	}
-	function setValues(){
+	function setValues(a){
 		var id = $('#blincentiveId').text()==""?1:$('#blincentiveId').text();
 		var postData = {
 				"month": $('#monthAdmin').val(),
 				"year": $('#yearAdmin').val(),
 				"producttype": $('#proTypIncId').val()
 		}
-		requestData(api.getFestivalPayout(),"POST",JSON.stringify(postData)).done(function(blReply){
-			var startDate = '10/'+$('#monthAdmin').val()+'/'+$('#yearAdmin').val();
-			console.log(blReply)
-			if(blReply.dateid == null){
+		if(a=="BL"){
+			requestData(api.getFestivalPayout(),"POST",JSON.stringify(postData)).done(function(blReply){
+				var startDate = '10/'+$('#monthAdmin').val()+'/'+$('#yearAdmin').val();
+				console.log(blReply)
+				if(blReply.dateid == null){
 
-				$('#monthlyslabid-1').text(0); 
-				$('#monthlyslabid-2').text(0); 
-				$('#monthlyslabid-3').text(0);
+					$('#monthlyslabid-1').text(0); 
+					$('#monthlyslabid-2').text(0); 
+					$('#monthlyslabid-3').text(0);
 
-				$('#disbursalincr-1').text(blReply[0].disbursalincr);
-				$('#disbursalincr-2').text(blReply[1].disbursalincr);
-				$('#disbursalincr-3').text(blReply[2].disbursalincr);
+					$('#disbursalincr-1').text(blReply[0].disbursalincr);
+					$('#disbursalincr-2').text(blReply[1].disbursalincr);
+					$('#disbursalincr-3').text(blReply[2].disbursalincr);
 
-				$('#minFileDis-1').val(blReply[0].minfilesdisbursed);
-				$('#minFileDis-2').val(blReply[1].minfilesdisbursed);
-				$('#minFileDis-3').val(blReply[2].minfilesdisbursed);
+					$('#minFileDis-1').val(blReply[0].minfilesdisbursed);
+					$('#minFileDis-2').val(blReply[1].minfilesdisbursed);
+					$('#minFileDis-3').val(blReply[2].minfilesdisbursed);
 
-				$('#mnthPayout-1').val(blReply[0].monthlypayout);
-				$('#mnthPayout-2').val(blReply[1].monthlypayout);
-				$('#mnthPayout-3').val(blReply[2].monthlypayout);
-			}else{
-				$('#blincentiveId').text(blReply.dateid);
+					$('#mnthPayout-1').val(blReply[0].monthlypayout);
+					$('#mnthPayout-2').val(blReply[1].monthlypayout);
+					$('#mnthPayout-3').val(blReply[2].monthlypayout);
+				}else{
+					$('#blincentiveId').text(blReply.dateid);
 
-				$('#monthlyslabid-1').text(blReply.monthlyslab[0].monthlyslabid); 
-				$('#monthlyslabid-2').text(blReply.monthlyslab[1].monthlyslabid); 
-				$('#monthlyslabid-3').text(blReply.monthlyslab[2].monthlyslabid);
+					$('#monthlyslabid-1').text(blReply.monthlyslab[0].monthlyslabid); 
+					$('#monthlyslabid-2').text(blReply.monthlyslab[1].monthlyslabid); 
+					$('#monthlyslabid-3').text(blReply.monthlyslab[2].monthlyslabid);
 
-				$('#disbursalincr-1').text(blReply.monthlyslab[0].disbursalincr);
-				$('#disbursalincr-2').text(blReply.monthlyslab[1].disbursalincr);
-				$('#disbursalincr-3').text(blReply.monthlyslab[2].disbursalincr);
+					$('#disbursalincr-1').text(blReply.monthlyslab[0].disbursalincr);
+					$('#disbursalincr-2').text(blReply.monthlyslab[1].disbursalincr);
+					$('#disbursalincr-3').text(blReply.monthlyslab[2].disbursalincr);
 
-				$('#minFileDis-1').val(blReply.monthlyslab[0].minfilesdisbursed);
-				$('#minFileDis-2').val(blReply.monthlyslab[1].minfilesdisbursed);
-				$('#minFileDis-3').val(blReply.monthlyslab[2].minfilesdisbursed);
+					$('#minFileDis-1').val(blReply.monthlyslab[0].minfilesdisbursed);
+					$('#minFileDis-2').val(blReply.monthlyslab[1].minfilesdisbursed);
+					$('#minFileDis-3').val(blReply.monthlyslab[2].minfilesdisbursed);
 
-				$('#mnthPayout-1').val(blReply.monthlyslab[0].monthlypayout);
-				$('#mnthPayout-2').val(blReply.monthlyslab[1].monthlypayout);
-				$('#mnthPayout-3').val(blReply.monthlyslab[2].monthlypayout);
+					$('#mnthPayout-1').val(blReply.monthlyslab[0].monthlypayout);
+					$('#mnthPayout-2').val(blReply.monthlyslab[1].monthlypayout);
+					$('#mnthPayout-3').val(blReply.monthlyslab[2].monthlypayout);
 
-			}
-		});
+				}
+			});
+		}
+		else{
+			requestData(api.getSBLFestivalPayout(),"POST",JSON.stringify(postData)).done(function(reply){
+				$(reply).each(function(k,v){
+					$('#sblHidIncId-'+(k+1)).text(v.sblincentiveid);	
+					$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
+					$('#monthSblId-'+(k+1)).val(v.monthlyslab);
+				});
+			});
+		}
+
 		
 	}
 	function $_blPost(event){
@@ -178,7 +196,7 @@ var api = {
 
 	function $_yearList(initOpt,idToApp){
 		var dateYrOptn = initOpt;
-		for(i=(new Date()).getFullYear();i>=2000;i--){
+		for(i=(new Date()).getFullYear();i>=2018;i--){
 			dateYrOptn += '<option>'+i+'</option>';
 		}
 		$('#'+idToApp).html(dateYrOptn);
@@ -207,11 +225,11 @@ var api = {
 			if(prodType == "BL"){
 				$('#sblDivRowId').hide();
 				$('#blDivRowId,#startEndDateRowId').show();
-				setValues();
+				setValues('BL');
 			}else if(prodType == "SBL"){
 				$('#sblDivRowId').show();
 				$('#blDivRowId,#startEndDateRowId').hide();
-				setValues();
+				setValues('SBL');
 			}
 		}
 	}

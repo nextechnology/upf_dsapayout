@@ -3186,7 +3186,7 @@ public class DSADaoImpl implements DSADao {
 	public PayoutDate getPayoutdate(String year,String month,String producttype) throws Exception {
 		PayoutDate festivalPayoutDate=new PayoutDate();
 		try{
-			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE year=:year AND month=:month AND producttype=:producttype";
+			String queryString = "From PayoutDate WHERE year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);
@@ -3204,7 +3204,7 @@ public class DSADaoImpl implements DSADao {
 	public List<FestivalPayout> getPayoutFestivaldate(String year,String month,String producttype) throws Exception {
 		FestivalPayout festivalPayout=new FestivalPayout();
 		try{
-			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
+			String queryString = "From FestivalPayout WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);
@@ -3252,7 +3252,7 @@ public class DSADaoImpl implements DSADao {
 	public List<PayoutDate> getPayout(String producttype) throws Exception {
 		//PayoutDate payoutDate1=new PayoutDate();
 		try{
-			String queryString = "select monthlyslab from PayoutDate monthlyslab where producttype=:producttype";
+			String queryString = "select monthlyslab from PayoutDate monthlyslab where monthlyslab.producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("producttype", producttype);
 			return query.list();
@@ -3282,7 +3282,7 @@ public class DSADaoImpl implements DSADao {
 		FestivalPayout festivalPayout1=new FestivalPayout();
 		try{
 			
-			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
+			String queryString = "From FestivalPayout  WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year",festivalPayout.getYear());
 			query.setParameter("month",festivalPayout.getMonth());
@@ -3314,7 +3314,7 @@ public class DSADaoImpl implements DSADao {
 		SBLFestivalPayout sblfestivalPayout1=new SBLFestivalPayout();
 		try{
 			
-			String queryString = "select monthlyslab from SBLFestivalPayout monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
+			String queryString = "From SBLFestivalPayout WHERE year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year",sblfestivalPayout.getYear());
 			query.setParameter("month",sblfestivalPayout.getMonth());
@@ -3328,9 +3328,10 @@ public class DSADaoImpl implements DSADao {
 	}
 
 	@Override
+	@Transactional
 	public List<FestivalSBLMonthlyPayout> getFestivalSblmonthlypayout() throws Exception {
 		try{
-			String queryString = "select monthlyslab from FestivalSBLMonthlyPayout monthlyslab ";
+			String queryString = "select monthlyslab from FestivalSBLMonthlyPayout monthlyslab";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			return query.list();
 		} catch (Exception exception) {
@@ -3339,6 +3340,7 @@ public class DSADaoImpl implements DSADao {
 	}
 
 	@Override
+	@Transactional
 	public long addSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout) throws Exception {
 		LOGGER.info("DSADaoImpl addSBLMonthlyslab start");
 		long id = 0;
@@ -3353,11 +3355,12 @@ public class DSADaoImpl implements DSADao {
 	}
 
 	@Override
+	@Transactional
 	public List<SBLFestivalPayout> getSblPayoutFestivaldate(String year, String month, String producttype)
 			throws Exception {
 		SBLFestivalPayout sblfestivalPayout=new SBLFestivalPayout();
 		try{
-			String queryString = "select monthlyslab from SBLFestivalPayout monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
+			String queryString = "From SBLFestivalPayout  WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);

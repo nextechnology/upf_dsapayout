@@ -144,7 +144,7 @@ padding-right:10px;
 	 
 	 	<div>
 					<form onsubmit="$_searchSbmt(event);">
-					<div class="row col-md-offset-2">
+					<div class="row col-md-offset-3">
 					<div class="col-md-2">
 						<select id="proTypCostId" class="form-control" required>
 					    	<option value="">Product Type</option>
@@ -177,7 +177,7 @@ padding-right:10px;
 						<option value="12">December</option>
 						</select>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 a-dis">
 						<select id="roleAdmin" class="form-control" disabled>
 							<option>DSA</option>
 						</select>
