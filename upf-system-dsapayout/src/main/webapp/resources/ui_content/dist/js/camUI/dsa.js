@@ -178,7 +178,7 @@ var mainDsaStat = '<table class="sortable table table-striped table-bordered" id
 `<tfoot class ="a-dis" style="background-color:#fff;">
 	<tr align="center"><td colspan="17">NO DATA FOUND !</td></tr>
 </tfoot>`+
-'</table>'; 
+'</table>';  
 var  API_APPSTAT_POST = '/upf-system-dsapayout/dsapayout/dsa/getlistdsa'
 	,API_PAYOUT_POST  = '/upf-system-dsapayout/dsapayout/dsa/getdsabasedlist'
 	,API_QUARTERLY_POST = '/upf-system-dsapayout/dsapayout/dsa/getdsalistquarterly'
