@@ -3183,13 +3183,14 @@ public class DSADaoImpl implements DSADao {
 
 	@Override
 	@Transactional
-	public PayoutDate getPayoutdate(String year,String month) throws Exception {
+	public PayoutDate getPayoutdate(String year,String month,String producttype) throws Exception {
 		PayoutDate festivalPayoutDate=new PayoutDate();
 		try{
-			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE year=:year AND month=:month";
+			String queryString = "select monthlyslab from PayoutDate monthlyslab  WHERE year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);
+			query.setParameter("producttype", producttype);
 			PayoutDate payoutDate= (PayoutDate) query.uniqueResult();
 			
 			return payoutDate;
@@ -3200,13 +3201,14 @@ public class DSADaoImpl implements DSADao {
 	
 	@Override
 	@Transactional
-	public List<FestivalPayout> getPayoutFestivaldate(String year,String month) throws Exception {
+	public List<FestivalPayout> getPayoutFestivaldate(String year,String month,String producttype) throws Exception {
 		FestivalPayout festivalPayout=new FestivalPayout();
 		try{
-			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  year=:year AND month=:month";
+			String queryString = "select monthlyslab from FestivalPayout monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);
+			query.setParameter("producttype", producttype);
 			return query.list();
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
@@ -3348,6 +3350,37 @@ public class DSADaoImpl implements DSADao {
 		}
 		LOGGER.info("DSADaoImpl addSBLMonthlyslab end");
 		return id;
+	}
+
+	@Override
+	public List<SBLFestivalPayout> getSblPayoutFestivaldate(String year, String month, String producttype)
+			throws Exception {
+		SBLFestivalPayout sblfestivalPayout=new SBLFestivalPayout();
+		try{
+			String queryString = "select monthlyslab from SBLFestivalPayout monthlyslab  WHERE  year=:year AND month=:month AND producttype=:producttype";
+			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			query.setParameter("year", year);
+			query.setParameter("month", month);
+			query.setParameter("producttype", producttype);
+			return query.list();
+		} catch (Exception exception) {
+			throw new RuntimeException("Exception occured while getting getSblPayoutdate details.Reason : " + exception);
+		}
+	}
+
+	@Override
+	@Transactional
+	public SblInsentive getSBLInsentiveInfo(long id) throws Exception {
+		LOGGER.info("DSADaoImpl getSBLInsentiveInfo start");
+		try {
+			String queryString = "select sblinsentive from SBLInsentive sblinsentive where sblinsentive.sblincentiveid =:id";
+			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
+			query.setParameter("id", id);
+			return (SblInsentive) query.uniqueResult();
+		} catch (Exception exception) {
+			throw new RuntimeException(
+					"Exception occured while getting getBLInsentiveInfo details.Reason : " + exception);
+		}
 	}
 	
 }

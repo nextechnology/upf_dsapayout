@@ -1728,11 +1728,11 @@ public class DSAServiceImpl implements DSAService {
 	}
 
 	@Override
-	public PayoutDate getPayoutdate(String year,String month) throws Exception {
+	public PayoutDate getPayoutdate(String year,String month, String producttype) throws Exception {
 		LOGGER.info("DSAServiceImpl getPayoutdate start");
-		return dsaDao.getPayoutdate(year,month);
+		return dsaDao.getPayoutdate(year,month,producttype);
 	}
-
+	
 	@Override
 	public long addFestivalPayout(FestivalPayout festivalPayout) throws Exception {
 		LOGGER.info("DSAServiceImpl getDsaCount start");
@@ -1772,9 +1772,9 @@ public class DSAServiceImpl implements DSAService {
 	}
 
 	@Override
-	public List<FestivalPayout> getPayoutFestivaldate(String year,String month) throws Exception {
+	public List<FestivalPayout> getPayoutFestivaldate(String year,String month, String producttype) throws Exception {
 		LOGGER.info("DSAServiceImpl getPayoutdate start");
-		return dsaDao.getPayoutFestivaldate( year, month);
+		return dsaDao.getPayoutFestivaldate( year, month,producttype);
 	}
 
 	@Override
@@ -1787,6 +1787,18 @@ public class DSAServiceImpl implements DSAService {
 	public long addSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout) throws Exception {
 		LOGGER.info("DSAServiceImpl getDsaCount start");
 		return dsaDao.addSBLFestivalPayout(sblfestivalPayout);
+	}
+
+	@Override
+	public List<SBLFestivalPayout> getSblPayoutFestivaldate(String year, String month, String producttype)
+			throws Exception {
+		LOGGER.info("DSAServiceImpl getPayoutdate start");
+		return dsaDao.getSblPayoutFestivaldate( year, month,producttype);
+	}
+
+	@Override
+	public SblInsentive getSBLInsentiveInfo(long id) throws Exception {
+		return dsaDao.getSBLInsentiveInfo(id);
 	}
 
 

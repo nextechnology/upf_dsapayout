@@ -489,8 +489,8 @@ public interface DSAService {
 
 	public long addPayout(PayoutDate blMonthlySlab)throws Exception;
 
-	public PayoutDate getPayoutdate(String year, String month) throws Exception;
-
+	public PayoutDate getPayoutdate(String year, String month, String producttype) throws Exception;
+	
 	public long addFestivalPayout(FestivalPayout festivalPayout)throws Exception;
 
 	public List<PayoutDate> getPayout(String producttype)throws Exception;
@@ -501,13 +501,17 @@ public interface DSAService {
 
 	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout()throws Exception;
 
-	public List<FestivalPayout> getPayoutFestivaldate(String year,String month)throws Exception;
+	public List<FestivalPayout> getPayoutFestivaldate(String year,String month, String producttype)throws Exception;
 
 	public SBLFestivalPayout getSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout) throws Exception;
 
 	public List<FestivalSBLMonthlyPayout> getFestivalSblmonthlypayout()throws Exception;
 
 	public long addSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout)throws Exception;
+
+	public List<SBLFestivalPayout> getSblPayoutFestivaldate(String year, String month, String producttype)throws Exception;
+
+	public SblInsentive getSBLInsentiveInfo(long id)throws Exception;
 
 	
 

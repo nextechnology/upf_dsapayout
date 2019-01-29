@@ -2999,8 +2999,9 @@ public class DSAPayoutController {
 		try {
 			String year=request.getParameter("year");
 			String month=request.getParameter("month");
+			String producttype=request.getParameter("producttype");
 			String id=request.getParameter("id");
-			festivalPayout=dsaService.getPayoutFestivaldate(year,month);
+			festivalPayout=dsaService.getPayoutFestivaldate(year,month,producttype);
 			if(festivalPayout.size()!=0){
 				jsonInString = mapper.writeValueAsString(festivalPayout);
 			}
@@ -3016,8 +3017,43 @@ public class DSAPayoutController {
 		return jsonInString;
 
 	}
-
 	
+	
+	/*
+	 * for sbl getSblpayoutdate
+	 * 
+	 * 
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/getSblPayoutdate", method = RequestMethod.POST, consumes = "application/json")
+	public String getSblPayoutdate(HttpServletRequest request) {
+		LOGGER.info("DSAController getSblPayoutdate start");
+		String jsonInString=null;
+		ObjectMapper mapper = new ObjectMapper();
+		SblInsentive sblInsentive=new SblInsentive();
+		List<SBLFestivalPayout> sblfestivalPayout=new ArrayList<>();
+		try {
+			String year=request.getParameter("year");
+			String month=request.getParameter("month");
+			String producttype=request.getParameter("producttype");
+			String id=request.getParameter("id");
+			sblfestivalPayout=dsaService.getSblPayoutFestivaldate(year,month,producttype);
+			if(sblfestivalPayout.size()!=0){
+				jsonInString = mapper.writeValueAsString(sblfestivalPayout);
+			}
+			else{
+				sblInsentive=dsaService.getSBLInsentiveInfo(Long.parseLong(id));
+				jsonInString = mapper.writeValueAsString(sblInsentive);
+				
+			}
+		} catch (Exception exception) {
+			LOGGER.error("Error while  getPayoutdate details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController getPayoutdate end");
+		return jsonInString;
+
+	}
 	@ResponseBody
 	@RequestMapping(value = "/getPayout", method = RequestMethod.GET, consumes = "application/json")
 	public List<PayoutDate> getPayout(HttpServletRequest request) {
@@ -3104,8 +3140,12 @@ public class DSAPayoutController {
 
 	}
 	
-	
-	@ResponseBody
+	/*
+	 * 
+	 *  for bl 
+	 * 
+	 */
+	/*@ResponseBody
 	@RequestMapping(value = "/getDate", method = RequestMethod.POST, consumes = "application/json")
 	public PayoutDate getDate(HttpServletRequest request) {
 		LOGGER.info("DSAController getFestivalPayout start");
@@ -3122,8 +3162,27 @@ public class DSAPayoutController {
 		LOGGER.info("DSAController getPayout end");
 		return payoutDate;
 
-	}
+	}*/
 	
+	@ResponseBody
+	@RequestMapping(value = "/getDate", method = RequestMethod.POST, consumes = "application/json")
+	public PayoutDate getDate(HttpServletRequest request) {
+		LOGGER.info("DSAController getFestivalPayout start");
+		String jsonInString=null;
+		PayoutDate payoutDate=new PayoutDate();
+		String year=request.getParameter("year");
+		String month=request.getParameter("month");
+		String producttype=request.getParameter("producttype");
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			payoutDate= dsaService.getPayoutdate(year, month,producttype);			
+		} catch (Exception exception) {
+			LOGGER.error("Error while  getPayout details. Reason : " + exception);
+		}
+		LOGGER.info("DSAController getPayout end");
+		return payoutDate;
+
+	}
 	
 	public String getdate(String date){
 		String date1=date.substring(6,10).concat(date.substring(3, 5).concat(date.substring(0, 2)));
