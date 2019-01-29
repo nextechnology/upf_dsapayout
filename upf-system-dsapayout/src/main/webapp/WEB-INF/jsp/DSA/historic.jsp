@@ -209,7 +209,7 @@ font-size: 12px;
 							<form id="CstMtngFrmId" class="a-dis">
 								<table class="sortable table table-striped table-bordered" id="costMainTblId" style="width:1850px; background:#fff;">
 									<thead>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375;" class="a-dis">
 										<td>COUNT</td>
 										<td></td>
 										<td class="dsaYearDis"></td>
@@ -233,7 +233,7 @@ font-size: 12px;
 										<td></td>
 										<td></td>
 										</tr>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375;" class="a-dis">
 										<td>SUM</td>
 										<td></td>
 										<td class="dsaYearDis"></td>
@@ -257,7 +257,7 @@ font-size: 12px;
 										<td></td>
 										<td></td>
 										</tr>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375;" class="a-dis">
 										<td>AVERAGE</td>
 										<td></td>
 										<td class="dsaYearDis"></td>

@@ -217,7 +217,7 @@ select.slctCnfrmCls:invalid,
 							<form id="CstMtngFrmId" class="a-dis" onsubmit="$_actualSbmt(event)">
 								<table class="sortable table table-bordered" id="costMainTblId" style="width:2850px; background:#fff;">
 									<thead>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375;" class="a-dis">
 										<td>COUNT</td>
 										<td></td>
 										<td></td>
@@ -246,7 +246,7 @@ select.slctCnfrmCls:invalid,
 										<td></td>
 										<td></td>
 										</tr>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375;" class="a-dis">
 										<td>SUM</td>
 										<td></td>
 										<td></td>
@@ -275,7 +275,7 @@ select.slctCnfrmCls:invalid,
 										<td></td>
 										<td></td>
 										</tr>
-										<tr style="align:center;background-color:#ffb375;">
+										<tr style="align:center;background-color:#ffb375;" class="a-dis">
 										<td>AVERAGE</td>
 										<td></td>
 										<td></td>

@@ -1,6 +1,6 @@
 var appStat = '<table class="table table-bordered" id="dsaPayoutTblId" style="width:1500px;">'+
 		'<thead>'+
-	'<tr style="align:center;background-color:#ffb375;">'+
+	'<tr style="align:center;background-color:#ffb375;" class="a-dis">'+
 	'<td>COUNT</td>'+
 	'<td></td>'+
 	'<td class="dsaMonthDis"></td>'+
@@ -14,7 +14,7 @@ var appStat = '<table class="table table-bordered" id="dsaPayoutTblId" style="wi
 	'<td class="dsaPyCntCls"></td>'+
 	'<td class="dsaPyCntCls"></td>'+
 	'</tr>'+
-	'<tr style="align:center;background-color:#ffb375;">'+
+	'<tr style="align:center;background-color:#ffb375;" class="a-dis">'+
 	'<td>SUM</td>'+
 	'<td></td>'+
 	'<td class="dsaMonthDis"></td>'+
@@ -28,7 +28,7 @@ var appStat = '<table class="table table-bordered" id="dsaPayoutTblId" style="wi
 	'<td id="sancSumId"></td>'+
 	'<td id="finalPySumId"></td>'+
 	'</tr>'+
-	'<tr style="align:center;background-color:#ffb375;">'+
+	'<tr style="align:center;background-color:#ffb375;" class="a-dis">'+
 	'<td>AVERAGE</td>'+
 	'<td></td>'+
 	'<td class="dsaMonthDis"></td>'+

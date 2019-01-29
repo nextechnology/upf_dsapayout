@@ -19,7 +19,7 @@ var dsaHtml = {
 }; 
 var appStat = `<table class="table table-bordered" id="payoutTblId" style="">
 		<thead>
-	<tr style="align:center;background-color:#ffb375;">
+	<tr style="align:center;background-color:#ffb375;" class="a-dis">
 	<td>COUNT</td>
 	<td></td>
 	<td></td>
@@ -34,7 +34,7 @@ var appStat = `<table class="table table-bordered" id="payoutTblId" style="">
 	<td></td>
 	<td></td>
 	</tr>
-	<tr style="align:center;background-color:#ffb375;">
+	<tr style="align:center;background-color:#ffb375;" class="a-dis">
 	<td>SUM</td>
 	<td></td>
 	<td></td>
@@ -49,7 +49,7 @@ var appStat = `<table class="table table-bordered" id="payoutTblId" style="">
 	<td></td>
 	<td></td>
 	</tr>
-	<tr style="align:center;background-color:#ffb375;">
+	<tr style="align:center;background-color:#ffb375;" class="a-dis">
 	<td>AVERAGE</td>
 	<td></td>
 	<td></td>
@@ -93,7 +93,7 @@ var appStat = `<table class="table table-bordered" id="payoutTblId" style="">
 //<input type="submit" id="dsaSbmtId" class="btn btn-success" onclick="$_payoutSbmt(event);">
 var mainDsaStat = '<table class="sortable table table-striped table-bordered" id="dsaStatTblId" style="width:1500px; background:#fff;">'+
 '<thead>'+
-'<tr style="align:center;background-color:#ffb375;">'+
+'<tr style="align:center;background-color:#ffb375;" class="a-dis">'+
 '<td>COUNT</td>'+
 '<td></td>'+
 '<td></td>'+
@@ -112,7 +112,7 @@ var mainDsaStat = '<table class="sortable table table-striped table-bordered" id
 '<td class="dsaAppCntCls"></td>'+
 '<td></td>'+
 '</tr>'+
-'<tr style="align:center;background-color:#ffb375;">'+
+'<tr style="align:center;background-color:#ffb375;" class="a-dis">'+
 '<td>SUM</td>'+
 '<td></td>'+
 '<td></td>'+
@@ -131,7 +131,7 @@ var mainDsaStat = '<table class="sortable table table-striped table-bordered" id
 '<td id="appSumAmntId"></td>'+
 '<td></td>'+
 '</tr>'+
-'<tr style="align:center;background-color:#ffb375;">'+
+'<tr style="align:center;background-color:#ffb375;" class="a-dis">'+
 '<td>AVERAGE</td>'+
 '<td></td>'+
 '<td></td>'+
@@ -1046,7 +1046,7 @@ function $_payoutSbmt(event){
 						  "avgpf" : v.avgpf,
 						  "dsacode" : v.dsacode,
 						  "year": v.year,
-						  "month": $('#byMnthMnth').val(),
+						  "month": mTD($('#byMnthMnth').val()),
 						  "paymentFlag": v.paymentFlag,
 						  "misFlag" : v.misFlag,
 						  "frequency" : v.frequency,
@@ -2054,6 +2054,9 @@ function dupChk(_this){
 		}
 		
 	})
+}
+function mTD(n) {
+	return (n < 10 ? '0' : '') + n;
 }
 /*
 1)Agree All in case of DSA login
