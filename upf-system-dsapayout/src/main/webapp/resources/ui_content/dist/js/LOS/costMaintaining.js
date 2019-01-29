@@ -11,8 +11,8 @@ var api = {
 	getDate: function(y,m,p){
 		return `/upf-system-dsapayout/dsapayout/dsa/getDate?month=${m}&year=${y}&producttype=${p}`
 	},
-	getSblPayoutdate: function(y,m,p,i){
-		return 	`/upf-system-dsapayout/dsapayout/dsa/getSblPayoutdate?year=${y}&month=${m}&producttype=${p}&id=${i}`	
+	getSblPayoutdate: function(y,m,p){
+		return 	`/upf-system-dsapayout/dsapayout/dsa/getSblPayoutdate?year=${y}&month=${m}&producttype=${p}`	
 	},
 	sendemailDsaOnMis: function(d,m,y){
 		return `/upf-system-dsapayout/dsapayout/dsa/sendemailDsaOnMis?dsacode=${d}&month=${m}&year=${y}`
@@ -738,7 +738,7 @@ function $_searchSbmt(event){
 			alert("Please define payouts for given month!");
 			
 		}else{
-			apiToCall = producttype=='BL'?api.getPayoutdate(year,month,producttype,1):api.getSblPayoutdate(year,month,producttype,1)
+			apiToCall = producttype=='BL'?api.getPayoutdate(year,month,producttype,1):api.getSblPayoutdate(year,month,producttype)
 			requestData(apiToCall,"POST").done(function(blSblResponse){
 				if(producttype=='BL'){
 					if(blSblResponse.blincentiveid==null){
