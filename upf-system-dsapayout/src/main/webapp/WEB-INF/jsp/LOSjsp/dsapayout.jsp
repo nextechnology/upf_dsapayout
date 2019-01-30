@@ -8,19 +8,19 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/bootstrap/css/bootstrap.min.css">
+	href="/upf-system-dsapayout/resources/ui_content/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/datatables/dataTables.bootstrap.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/datatables/dataTables.bootstrap.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/select2/select2.min.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/select2/select2.min.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/datepicker/datepicker3.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/datepicker/datepicker3.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/dist/css/scrypt.css">
+	href="/upf-system-dsapayout/resources/ui_content/dist/css/scrypt.css">
 <link rel="stylesheet"
-	href="/upf-system/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.css">
+	href="/upf-system-dsapayout/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.css">
 <link href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.9/themes/blitzer/jquery-ui.css" rel="stylesheet" type="text/css" />
 	<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>	
@@ -67,8 +67,8 @@ font-size: 12px;
 	<div class="wrapper" >
 	<div id="headerId"></div>
 	<!-- <header class="main-header m-layer" id="headerId">
-			<a href="/upf-system/upf/debitCredit/welcome" class="logo"> <span class="logo-lg">
-					<img src="/upf-system/resources/ui_content/dist/img/KTlogo.png"
+			<a href="/upf-system-dsapayout/upf/debitCredit/welcome" class="logo"> <span class="logo-lg">
+					<img src="/upf-system-dsapayout/resources/ui_content/dist/img/KTlogo.png"
 					class="m-KTBrandCls" alt="KapitalTech">
 				</span>
 			</a>
@@ -303,40 +303,40 @@ font-size: 12px;
 	</div>
 
 <script
-		src="/upf-system/resources/ui_content/plugins/jQuery/jquery-2.2.3.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/jQuery/jquery-2.2.3.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/ajax/ajax-1.12.0.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/ajax/ajax-1.12.0.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.concat.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/jQuery/jquery.mCustomScrollbar.concat.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/bootstrap/js/bootstrap.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/bootstrap/js/bootstrap.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/jQueryUI/jquery-ui.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/jQueryUI/jquery-ui.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/select2/select2.full.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/select2/select2.full.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/datepicker/bootstrap-datepicker.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/datepicker/bootstrap-datepicker.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/datatables/jquery.dataTables.min.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/datatables/jquery.dataTables.min.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/datatables/dataTables.bootstrap.min.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/forAll.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/scrypt.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/datatables/dataTables.bootstrap.min.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/forAll.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/scrypt.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/plugins/boottag/boottag-1.0.7.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/camUI/forAll.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/camUI/itr.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/plugins/boottag/boottag-1.0.7.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/forAll.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/itr.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/bankSummary.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/bankSummary.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/stressTest.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/stressTest.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/qualitative.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/qualitative.js"></script>
 	<script
-		src="/upf-system/resources/ui_content/dist/js/camUI/snapShot.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/LOS/forAllLos.js"></script>
-	<script src="/upf-system/resources/ui_content/plugins/canvas/canvasjs.min.js"></script>
-	<script src="/upf-system/resources/ui_content/dist/js/LOS/dsapayout.js"></script>
+		src="/upf-system-dsapayout/resources/ui_content/dist/js/camUI/snapShot.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/forAllLos.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/plugins/canvas/canvasjs.min.js"></script>
+	<script src="/upf-system-dsapayout/resources/ui_content/dist/js/LOS/dsapayout.js"></script>
 <script type="text/javascript">
 
 

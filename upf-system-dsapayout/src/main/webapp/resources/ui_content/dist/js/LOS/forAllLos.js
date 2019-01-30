@@ -72,7 +72,7 @@ var html = {
         "COLLECTION_LIST":'<li><a href="/upf-system/upf/debitCredit/collectionList" class="asideCls"><span>COLLECTION LIST</span></a></li>',
         
         "MONTHOFFERS":'<li><a href="/upf-system-dsapayout/dsapayout/dsa/offerMonths" class="asideCls"><span>OFFER MONTHS</span></a></li>',
-        "FESTIVALOFFERS":'<li><a href="/upf-system-dsapayout/dsapayout/dsa/festivalOffer" class="asideCls"><span>FESTIVAL MONTHS</span></a></li>'
+        "FESTIVALOFFERS":'<li><a href="/upf-system-dsapayout/dsapayout/dsa/festivalOffer" class="asideCls"><span>FESTIVAL OFFER</span></a></li>'
 		//"SALES_APPLICATION_MIS" : '<li><a href="/upf-system/upf/debitCredit/salesmis" class="asideCls"><span>SALES APPLICATION MIS</span></a></li>'
 };   
 $(document).ready(function(){
