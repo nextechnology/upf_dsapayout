@@ -333,29 +333,29 @@ $(function(){
 		  
 		for(arr=1;arr<rowArr.length;arr++){
 			if($('#proTypCostId').val() == "1"){
-				if((parseInt(noOfIndFiles) >= blGet.monthlyslab[2].minfilesdisbursed)) {
+				if((parseInt(noOfIndFiles) >= blGet[2].minfilesdisbursed)) {
 				     if((sancIndTtl > 10000000)) {
-				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
+				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[2].monthlypayout).toFixed(2));
 				     }else if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 				     }else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 				     }else{
-				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
+				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[2].monthlypayout).toFixed(2));
 				     }
-				    }else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[1].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[2].minfilesdisbursed)) {
+				    }else if((parseInt(noOfIndFiles) >= blGet[1].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet[2].minfilesdisbursed)) {
 				     if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 				     }else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 				     }else{
-				    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+				    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 				     }
-				    }else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[0].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[1].minfilesdisbursed)) {
+				    }else if((parseInt(noOfIndFiles) >= blGet[0].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet[1].minfilesdisbursed)) {
 				     if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+				      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 				     }else{
-				    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));  
+				    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));  
 				     }
 				    }else{
 				     $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(0).toFixed(2));
@@ -741,10 +741,10 @@ function $_searchSbmt(event){
 			apiToCall = producttype=='BL'?api.getPayoutdate(year,month,producttype):api.getSblPayoutdate(year,month,producttype)
 			requestData(apiToCall,"POST").done(function(blSblResponse){
 				if(producttype=='BL'){
-					if(blSblResponse.blincentiveid==null){
-						blGet = blSblResponse[0];
-					}else{
+					if(blSblResponse[0].dateid==null){
 						blGet = blSblResponse;
+					}else{
+						blGet = blSblResponse[0].monthlyslab;
 					}
 				}else{
 					if(blSblResponse[0].dateid==null){
@@ -956,29 +956,29 @@ function $_searchSbmt(event){
 						}
 						for(arr=1;arr<rowArr.length;arr++){
 							if($('#proTypCostId').val() == "1"){
-								if((parseInt(noOfIndFiles) >= blGet.monthlyslab[2].minfilesdisbursed)) {
+								if((parseInt(noOfIndFiles) >= blGet[2].minfilesdisbursed)) {
 									if((sancIndTtl > 10000000)) {
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[2].monthlypayout).toFixed(2));
 									}else if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 									}else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 									}else{
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[2].monthlypayout).toFixed(2));
 									}
-								}else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[1].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[2].minfilesdisbursed)) {
+								}else if((parseInt(noOfIndFiles) >= blGet[1].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet[2].minfilesdisbursed)) {
 									if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 									}else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 									}else{
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 									}
-								}else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[0].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[1].minfilesdisbursed)) {
+								}else if((parseInt(noOfIndFiles) >= blGet[0].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet[1].minfilesdisbursed)) {
 									if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 									}else{
-										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));  
+										$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));  
 									}
 								}else{
 									$('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(0).toFixed(2));
@@ -1475,29 +1475,29 @@ function sortTable(n) {
 									}
 								for(arr=1;arr<rowArr.length;arr++){
 									if($('#proTypCostId').val() == "1"){
-										if((parseInt(noOfIndFiles) >= blGet.monthlyslab[2].minfilesdisbursed)) {
+										if((parseInt(noOfIndFiles) >= blGet[2].minfilesdisbursed)) {
 										     if((sancIndTtl > 10000000)) {
-										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
+										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[2].monthlypayout).toFixed(2));
 										     }else if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 										     }else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 										     }else{
-										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[2].monthlypayout).toFixed(2));
+										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[2].monthlypayout).toFixed(2));
 										     }
-										    }else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[1].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[2].minfilesdisbursed)) {
+										    }else if((parseInt(noOfIndFiles) >= blGet[1].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet[2].minfilesdisbursed)) {
 										     if((sancIndTtl >= 5100000 && sancIndTtl <= 10000000)) {
-										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 										     }else if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 										     }else{
-										    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[1].monthlypayout).toFixed(2));
+										    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[1].monthlypayout).toFixed(2));
 										     }
-										    }else if((parseInt(noOfIndFiles) >= blGet.monthlyslab[0].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet.monthlyslab[1].minfilesdisbursed)) {
+										    }else if((parseInt(noOfIndFiles) >= blGet[0].minfilesdisbursed) && (parseInt(noOfIndFiles) < blGet[1].minfilesdisbursed)) {
 										     if((sancIndTtl >= 1000000 && sancIndTtl <= 5100000)) {
-										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));
+										      $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));
 										     }else{
-										    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet.monthlyslab[0].monthlypayout).toFixed(2));  
+										    	 $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(blGet[0].monthlypayout).toFixed(2));  
 										     }
 										    }else{
 										     $('#defPyRtCstMngId-'+rowArr[arr]).text(parseFloat(0).toFixed(2));
