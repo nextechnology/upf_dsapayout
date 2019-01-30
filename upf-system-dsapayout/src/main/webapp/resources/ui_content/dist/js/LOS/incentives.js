@@ -3,7 +3,7 @@
 	,API_SBL_POST = '/upf-system-dsapayout/dsapayout/dsa/addsblincentive'
 	,API_BL_GET = '/upf-system-dsapayout/dsapayout/dsa/getBLInsentive?id='
 	,API_BL_POST = '/upf-system-dsapayout/dsapayout/dsa/addBlincentive'
-	;
+	; 
 	$(function(){
 		
 		if(localStorage.getItem('productType') == "BL" && localStorage.getItem("role").includes('SM')){
