@@ -627,102 +627,103 @@ public class DSADaoImpl implements DSADao {
 	 * @throws Exception
 	 */
 	@Override
-	 @Transactional
-	 public InputDsaDto getdsaadmindetails(DsaDetailsEntity dsanameEntity) throws Exception {
-	  LOGGER.info("DSADaoImpl getdsaadmindetails start");
-	  // Create a variable for the connection string.
-	  StringBuilder connectionUrl = new StringBuilder();
-	  connectionUrl.append(MSSQL_URL).append(";").append("user=").append(MSSQL_DB_USERNAME).append(";")
-	    .append("password=").append(MSSQL_DB_PASSWORD);
-	  InputDsaDto input = new InputDsaDto();
-	  List<DsaDetailsEntity> listdsadetails = new ArrayList<DsaDetailsEntity>();
-	  // Declare the JDBC objects.
-	  Connection con = null;
-	  Statement stmt = null;
-	  ResultSet rs = null;
-	  String SQL1 = null;
-	  List<Double> amountlist = new ArrayList<Double>();
-	  try {
+	@Transactional
+	public InputDsaDto getdsaadmindetails(DsaDetailsEntity dsanameEntity) throws Exception {
+		LOGGER.info("DSADaoImpl getdsaadmindetails start");
+		// Create a variable for the connection string.
+		StringBuilder connectionUrl = new StringBuilder();
+		connectionUrl.append(MSSQL_URL).append(";").append("user=").append(MSSQL_DB_USERNAME).append(";")
+				.append("password=").append(MSSQL_DB_PASSWORD);
+		InputDsaDto input = new InputDsaDto();
+		List<DsaDetailsEntity> listdsadetails = new ArrayList<DsaDetailsEntity>();
+		// Declare the JDBC objects.
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String SQL1 = null;
+		List<Double> amountlist = new ArrayList<Double>();
+		try {
 
-	   Class.forName(MSSQL_DB_DRIVER);
-	   con = DriverManager.getConnection(connectionUrl.toString());
-	   double sumamount = 0.0;
-	   long count = 0;
+			Class.forName(MSSQL_DB_DRIVER);
+			con = DriverManager.getConnection(connectionUrl.toString());
+			double sumamount = 0.0;
+			long count = 0;
 
-	   if (null != dsanameEntity.getDsa()) {
-	    SQL1 = "SELECT DISTINCT [LOCATION] = c.ResCity,[Disbursal Dastatete] = CBSDIS.DisbDate ,[Applied Loan Amount]=L.Applied_Loan_Amt,[DisbYear] = Year(CBSDIS.DisbDate),[DisbMonth]= month(CBSDIS.DisbDate),[COMAPNY/ ESTABLISHMENT NAME] = C.name,[SALES MANAGER NAME] = L.VOFFICER,[DSA Code] = L.CRMSUPERVISOR ,[DSA Name] = DSA.Name,[Product Catesgory] = LS.ShortName,[STATUS] = SM.DESCRIPTION,[Sanctioned Loan Amount] = CBSDIS.DISBAMOUNT,[LOAN ID] = L.LOANNO,[GATE KEEPER ID] = L.FCSNO,[PAY RATE] = '',[RATE OF INTEREST (ROI)] = L.INTEREST,[PROCESSING FEES] = CAML.PROCESSINGCHARGES,[FREQUENCY] = CASE WHEN l.instalmentfrequency = 1 THEN 'Daily' WHEN l.instalmentfrequency = 7 THEN 'Weekly' WHEN l.instalmentfrequency IN ( 14, 15 ) THEN 'fortnightly' WHEN l.instalmentfrequency IN ( 30 ) THEN 'Monthly' END, [State]= St.NAME FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE  WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END  LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and L.CRMSUPERVISOR =? and Year(CBSDIS.DisbDate)=? and month(CBSDIS.DisbDate)=? and L.LoanSubType =? ORDER BY St.NAME";
-	    PreparedStatement statement = con.prepareStatement(SQL1);
-	    statement.setString(1, dsanameEntity.getDsa());
-	    statement.setString(2, dsanameEntity.getYear());
-	    statement.setString(3, dsanameEntity.getMonth());
-	    statement.setLong(4, dsanameEntity.getProductcode());
-	    rs = statement.executeQuery();
-	   } else if (dsanameEntity.getDsa() == null && dsanameEntity.getStartdate()!=null && dsanameEntity.getEnddate()!=null){
-		   
-			    SQL1 = "SELECT DISTINCT [LOCATION] = c.ResCity,[Disbursal Date] = CBSDIS.DisbDate ,[Applied Loan Amount]=L.Applied_Loan_Amt,[DisbYear] = Year(CBSDIS.DisbDate),[DisbMonth]= month(CBSDIS.DisbDate),[COMAPNY/ ESTABLISHMENT NAME] = C.name,[SALES MANAGER NAME] = L.VOFFICER,[DSA Code] = L.CRMSUPERVISOR ,[DSA Name] = DSA.Name,[Product Catesgory] = LS.ShortName,[STATUS] = SM.DESCRIPTION,[Sanctioned Loan Amount] = CBSDIS.DISBAMOUNT,[LOAN ID] = L.LOANNO,[GATE KEEPER ID] = L.FCSNO,[PAY RATE] = '',[RATE OF INTEREST (ROI)] = L.INTEREST,[PROCESSING FEES] = CAML.PROCESSINGCHARGES,[FREQUENCY] = CASE WHEN l.instalmentfrequency = 1 THEN 'Daily' WHEN l.instalmentfrequency = 7 THEN 'Weekly' WHEN l.instalmentfrequency IN ( 14, 15 ) THEN 'fortnightly' WHEN l.instalmentfrequency IN ( 30 ) THEN 'Monthly' END, [State] = St.NAME  FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and convert(char,ActualDate, 112) BETWEEN '"+dsanameEntity.getStartdate()+"' AND '"+dsanameEntity.getEnddate()+"' and L.LoanSubType =? "
-	    		+ "ORDER BY St.NAME"; 
-	    		
-	    PreparedStatement statement = con.prepareStatement(SQL1);
-	    statement.setLong(1, dsanameEntity.getProductcode());
-	    rs = statement.executeQuery();
-	   }
-	   stmt = con.createStatement();
-	   while (rs.next()) {
-	    DsaDetailsEntity dsadetails = new DsaDetailsEntity();
-	    dsadetails.setYear(rs.getString("DisbYear"));
-	    dsadetails.setLocation(rs.getString("LOCATION"));
-	    dsadetails.setSalesmanager(rs.getString("SALES MANAGER NAME"));
-	    dsadetails.setDsa(rs.getString("DSA Name"));
-	    dsadetails.setLosid(rs.getLong("LOAN ID"));
-	    dsadetails.setRoi(rs.getString("RATE OF INTEREST (ROI)"));
-	    if (null != rs.getString("DisbMonth")) {
-	     dsadetails.setMonth(getmonthon(rs.getString("DisbMonth")));
-	    }
-	    dsadetails.setCompanyname(rs.getString("COMAPNY/ ESTABLISHMENT NAME"));
-	    dsadetails.setStatus(rs.getString("STATUS"));
-	    dsadetails.setSanctionedamount(rs.getDouble("Sanctioned Loan Amount"));
-	    dsadetails.setPfamount(rs.getDouble("PROCESSING FEES"));
-	    dsadetails.setProductname(rs.getString("Product Catesgory"));
-	    dsadetails.setGatekeeperid(rs.getString("GATE KEEPER ID"));
-	    dsadetails.setDsacode(rs.getString("DSA Code"));
-	    dsadetails.setFrequency(rs.getString("FREQUENCY"));
-	    dsadetails.setState(rs.getString("State"));
-	    dsadetails.setApplied_loan_amount(rs.getDouble("Applied Loan Amount"));
-	    if (0 != rs.getDouble("Sanctioned Loan Amount") && 0 != rs.getDouble("PROCESSING FEES")) {
-	     dsadetails
-	       .setPf((100 / (rs.getDouble("Sanctioned Loan Amount") / rs.getDouble("PROCESSING FEES"))));
-	    } else {
-	     dsadetails.setPf(0.0);
-	    }
-	    amountlist.add(rs.getDouble("Sanctioned Loan Amount"));
+			if (null != dsanameEntity.getDsa()) {
+				SQL1 = "SELECT DISTINCT [LOCATION] = c.ResCity,[Disbursal Dastatete] = CBSDIS.DisbDate ,[Applied Loan Amount]=L.Applied_Loan_Amt,[DisbYear] = Year(CBSDIS.DisbDate),[DisbMonth]= month(CBSDIS.DisbDate),[COMAPNY/ ESTABLISHMENT NAME] = C.name,[SALES MANAGER NAME] = L.VOFFICER,[DSA Code] = L.CRMSUPERVISOR ,[DSA Name] = DSA.Name,[Product Catesgory] = LS.ShortName,[STATUS] = SM.DESCRIPTION,[Sanctioned Loan Amount] = CBSDIS.DISBAMOUNT,[LOAN ID] = L.LOANNO,[GATE KEEPER ID] = L.FCSNO,[PAY RATE] = '',[RATE OF INTEREST (ROI)] = L.INTEREST,[PROCESSING FEES] = CAML.PROCESSINGCHARGES,[FREQUENCY] = CASE WHEN l.instalmentfrequency = 1 THEN 'Daily' WHEN l.instalmentfrequency = 7 THEN 'Weekly' WHEN l.instalmentfrequency IN ( 14, 15 ) THEN 'fortnightly' WHEN l.instalmentfrequency IN ( 30 ) THEN 'Monthly' END, [State]= St.NAME FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE  WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END  LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and L.CRMSUPERVISOR =? and Year(CBSDIS.DisbDate)=? and month(CBSDIS.DisbDate)=? and L.LoanSubType =? ORDER BY St.NAME";
+				PreparedStatement statement = con.prepareStatement(SQL1);
+				statement.setString(1, dsanameEntity.getDsa());
+				statement.setString(2, dsanameEntity.getYear());
+				statement.setString(3, dsanameEntity.getMonth());
+				statement.setLong(4, dsanameEntity.getProductcode());
+				rs = statement.executeQuery();
+			} else if (dsanameEntity.getDsa() == null && dsanameEntity.getStartdate() != null
+					&& dsanameEntity.getEnddate() != null) {
 
-	    listdsadetails.add(dsadetails);
-	    input.setProduct(rs.getString("Product Catesgory"));
+				SQL1 = "SELECT DISTINCT [LOCATION] = c.ResCity,[Disbursal Date] = CBSDIS.DisbDate ,[Applied Loan Amount]=L.Applied_Loan_Amt,[DisbYear] = Year(CBSDIS.DisbDate),[DisbMonth]= month(CBSDIS.DisbDate),[COMAPNY/ ESTABLISHMENT NAME] = C.name,[SALES MANAGER NAME] = L.VOFFICER,[DSA Code] = L.CRMSUPERVISOR ,[DSA Name] = DSA.Name,[Product Catesgory] = LS.ShortName,[STATUS] = SM.DESCRIPTION,[Sanctioned Loan Amount] = CBSDIS.DISBAMOUNT,[LOAN ID] = L.LOANNO,[GATE KEEPER ID] = L.FCSNO,[PAY RATE] = '',[RATE OF INTEREST (ROI)] = L.INTEREST,[PROCESSING FEES] = CAML.PROCESSINGCHARGES,[FREQUENCY] = CASE WHEN l.instalmentfrequency = 1 THEN 'Daily' WHEN l.instalmentfrequency = 7 THEN 'Weekly' WHEN l.instalmentfrequency IN ( 14, 15 ) THEN 'fortnightly' WHEN l.instalmentfrequency IN ( 30 ) THEN 'Monthly' END, [State] = St.NAME  FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and convert(char,ActualDate, 112) BETWEEN '"
+						+ dsanameEntity.getStartdate() + "' AND '" + dsanameEntity.getEnddate()
+						+ "' and L.LoanSubType =? " + "ORDER BY St.NAME";
 
-	   }
-	   sumamount = amountlist.stream().mapToDouble(Double::doubleValue).sum();
-	   count = amountlist.stream().count();
-	   input.setDsalist(listdsadetails);
-	   input.setCountdisbursalfile(count);
-	   input.setTotalsanctionamount(sumamount);
-	   input.setProduct(rs.getString("Product Catesgory"));
+				PreparedStatement statement = con.prepareStatement(SQL1);
+				statement.setLong(1, dsanameEntity.getProductcode());
+				rs = statement.executeQuery();
+			}
+			stmt = con.createStatement();
+			while (rs.next()) {
+				DsaDetailsEntity dsadetails = new DsaDetailsEntity();
+				dsadetails.setYear(rs.getString("DisbYear"));
+				dsadetails.setLocation(rs.getString("LOCATION"));
+				dsadetails.setSalesmanager(rs.getString("SALES MANAGER NAME"));
+				dsadetails.setDsa(rs.getString("DSA Name"));
+				dsadetails.setLosid(rs.getLong("LOAN ID"));
+				dsadetails.setRoi(rs.getString("RATE OF INTEREST (ROI)"));
+				if (null != rs.getString("DisbMonth")) {
+					dsadetails.setMonth(getmonthon(rs.getString("DisbMonth")));
+				}
+				dsadetails.setCompanyname(rs.getString("COMAPNY/ ESTABLISHMENT NAME"));
+				dsadetails.setStatus(rs.getString("STATUS"));
+				dsadetails.setSanctionedamount(rs.getDouble("Sanctioned Loan Amount"));
+				dsadetails.setPfamount(rs.getDouble("PROCESSING FEES"));
+				dsadetails.setProductname(rs.getString("Product Catesgory"));
+				dsadetails.setGatekeeperid(rs.getString("GATE KEEPER ID"));
+				dsadetails.setDsacode(rs.getString("DSA Code"));
+				dsadetails.setFrequency(rs.getString("FREQUENCY"));
+				dsadetails.setState(rs.getString("State"));
+				dsadetails.setApplied_loan_amount(rs.getDouble("Applied Loan Amount"));
+				if (0 != rs.getDouble("Sanctioned Loan Amount") && 0 != rs.getDouble("PROCESSING FEES")) {
+					dsadetails
+							.setPf((100 / (rs.getDouble("Sanctioned Loan Amount") / rs.getDouble("PROCESSING FEES"))));
+				} else {
+					dsadetails.setPf(0.0);
+				}
+				amountlist.add(rs.getDouble("Sanctioned Loan Amount"));
 
-	  }
+				listdsadetails.add(dsadetails);
+				input.setProduct(rs.getString("Product Catesgory"));
 
-	  catch (Exception exception) {
-	   LOGGER.debug("Exception occured while getdsaadmindetails from database.Reason : " + exception);
-	  }
-	  if (rs != null)
-	   rs.close();
-	  if (stmt != null)
-	   stmt.close();
-	  if (con != null)
-	   con.close();
-	  LOGGER.info("DSADaoImpl getdsaadmindetails ends");
-	  return input;
+			}
+			sumamount = amountlist.stream().mapToDouble(Double::doubleValue).sum();
+			count = amountlist.stream().count();
+			input.setDsalist(listdsadetails);
+			input.setCountdisbursalfile(count);
+			input.setTotalsanctionamount(sumamount);
+			input.setProduct(rs.getString("Product Catesgory"));
 
-	 }
+		}
 
+		catch (Exception exception) {
+			LOGGER.debug("Exception occured while getdsaadmindetails from database.Reason : " + exception);
+		}
+		if (rs != null)
+			rs.close();
+		if (stmt != null)
+			stmt.close();
+		if (con != null)
+			con.close();
+		LOGGER.info("DSADaoImpl getdsaadmindetails ends");
+		return input;
+
+	}
 
 	/**
 	 * This api is used for getting months basedon number
@@ -775,7 +776,7 @@ public class DSADaoImpl implements DSADao {
 			break;
 		default:
 			month = "nomonth";
-			//month = number;
+			// month = number;
 		}
 		LOGGER.info("DSADaoImpl getmonthon ends");
 		return month;
@@ -822,12 +823,8 @@ public class DSADaoImpl implements DSADao {
 				dsadetails.setDsa(rs.getString("DSA Name"));
 				dsadetails.setLosid(rs.getLong("File no"));
 				if (null != rs.getString("DisbMonth")) {
-					dsadetails.setMonth(getmonthon(rs.getString("DisbMonth")));
+					dsadetails.setMonth(getmonthonlos(rs.getString("DisbMonth")));
 				}
-				// dsadetails.setDsacode(rs.getString("DSA Code"));
-				// dsadetails.setProductname(rs.getString("Product Catesgory"));
-				// dsadetails.setCompanyname(rs.getString("COMAPNY/
-				// ESTABLISHMENT NAME"));
 				dsadetails.setStatus(rs.getString("STATUS"));
 				dsadetails.setSanctionedamount(rs.getDouble("Approved amount"));
 				dsadetails.setApplied_loan_amount(rs.getDouble("Loan amt applied"));
@@ -3056,7 +3053,7 @@ public class DSADaoImpl implements DSADao {
 			throw new RuntimeException("Exception occured while getting getSMInfo details.Reason : " + exception);
 		}
 	}
-	
+
 	@Override
 	@Transactional
 	public ClientInfo getclientinfodetail(long losid) throws Exception {
@@ -3070,7 +3067,7 @@ public class DSADaoImpl implements DSADao {
 			throw new RuntimeException("Exception occured while getting getDsaInfo details.Reason : " + exception);
 		}
 	}
-	
+
 	@Override
 	@Transactional
 	public void updateClientInfo(String cname, long losid) throws Exception {
@@ -3155,16 +3152,17 @@ public class DSADaoImpl implements DSADao {
 	@Transactional
 	public long getDsaCount(DsaDetailsEntity dsadto) throws Exception {
 		LOGGER.info("DSADaoImpl getDsaCount start");
-		  StringBuilder connectionUrl = new StringBuilder();
-		  Connection con = null;
-		  connectionUrl.append(MSSQL_URL).append(";").append("user=").append(MSSQL_DB_USERNAME).append(";")
-		    .append("password=").append(MSSQL_DB_PASSWORD);
-		  Class.forName(MSSQL_DB_DRIVER);
-			con = DriverManager.getConnection(connectionUrl.toString());
+		StringBuilder connectionUrl = new StringBuilder();
+		Connection con = null;
+		connectionUrl.append(MSSQL_URL).append(";").append("user=").append(MSSQL_DB_USERNAME).append(";")
+				.append("password=").append(MSSQL_DB_PASSWORD);
+		Class.forName(MSSQL_DB_DRIVER);
+		con = DriverManager.getConnection(connectionUrl.toString());
 		PreparedStatement psmt = null;
 		ResultSet rs = null;
 		long x = 0;
-		psmt = con.prepareStatement("SELECT COUNT(*) as count FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and Year(CBSDIS.DisbDate)=? and month(CBSDIS.DisbDate)=? and L.LoanSubType =? ");
+		psmt = con.prepareStatement(
+				"SELECT COUNT(*) as count FROM cams..loandetails L (NOLOCK) INNER JOIN cams..loansubtype LS ON LS.subtypecode = L.loansubtype INNER JOIN cams..STATUSMASTER SM (NOLOCK) ON L.STATUS = SM.STATUSCODE AND UPPER(SM.LANGID) = 'EN-GB' LEFT JOIN CBS..CUSTOMER C (NOLOCK) ON L.CUSTOMERCODE = C.CODE LEFT JOIN CBS..INDUSTRY IND (NOLOCK) ON L.INDUSTRY = IND.CODE LEFT JOIN  CBS..users  DSA (NOLOCK) ON L.CRMSUPERVISOR = DSA.alphacode LEFT JOIN CBS..loandetails CAML (NOLOCK) ON CAML.ACNO = L.CBSACNO LEFT JOIN CBS..DISBURSEMENTSCHEDULE CBSDIS (NOLOCK) ON CBSDIS.ACNO = L.CBSACNO LEFT JOIN CBS..branchmaster Br ON Br.code = l.branchcode LEFT JOIN CBS..cities Ct ON CT.NAME = CASE WHEN Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) = '' THEN Br.NAME ELSE Substring(Br.NAME, 1, Charindex(' ', Br.NAME)) END LEFT JOIN CBS..states St ON St.code = Ct.state  WHERE C.CustomerType =13 and CBSDIS.DisbDate is not null and Year(CBSDIS.DisbDate)=? and month(CBSDIS.DisbDate)=? and L.LoanSubType =? ");
 		psmt.setString(1, dsadto.getYear());
 		psmt.setString(2, dsadto.getMonth());
 		psmt.setLong(3, dsadto.getProductcode());
@@ -3172,7 +3170,7 @@ public class DSADaoImpl implements DSADao {
 		if (rs.next()) {
 			x = rs.getInt("count");
 		}
-		
+
 		if (rs != null)
 			rs.close();
 
@@ -3183,27 +3181,27 @@ public class DSADaoImpl implements DSADao {
 
 	@Override
 	@Transactional
-	public PayoutDate getPayoutdate(String year,String month,String producttype) throws Exception {
-		PayoutDate festivalPayoutDate=new PayoutDate();
-		try{
+	public PayoutDate getPayoutdate(String year, String month, String producttype) throws Exception {
+		PayoutDate festivalPayoutDate = new PayoutDate();
+		try {
 			String queryString = "From PayoutDate WHERE year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
 			query.setParameter("month", month);
 			query.setParameter("producttype", producttype);
-			PayoutDate payoutDate= (PayoutDate) query.uniqueResult();
-			
+			PayoutDate payoutDate = (PayoutDate) query.uniqueResult();
+
 			return payoutDate;
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
 	}
-	
+
 	@Override
 	@Transactional
-	public List<FestivalPayout> getPayoutFestivaldate(String year,String month,String producttype) throws Exception {
-		FestivalPayout festivalPayout=new FestivalPayout();
-		try{
+	public List<FestivalPayout> getPayoutFestivaldate(String year, String month, String producttype) throws Exception {
+		FestivalPayout festivalPayout = new FestivalPayout();
+		try {
 			String queryString = "From FestivalPayout WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
@@ -3214,6 +3212,7 @@ public class DSADaoImpl implements DSADao {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
 	}
+
 	@Override
 	@Transactional
 	public long addPayout(PayoutDate blMonthlySlab) throws Exception {
@@ -3230,7 +3229,6 @@ public class DSADaoImpl implements DSADao {
 
 	}
 
-	
 	@Override
 	@Transactional
 	public long addFestivalPayout(FestivalPayout festivalPayout) throws Exception {
@@ -3250,8 +3248,8 @@ public class DSADaoImpl implements DSADao {
 	@Override
 	@Transactional
 	public List<PayoutDate> getPayout(String producttype) throws Exception {
-		//PayoutDate payoutDate1=new PayoutDate();
-		try{
+		// PayoutDate payoutDate1=new PayoutDate();
+		try {
 			String queryString = "select monthlyslab from PayoutDate monthlyslab where monthlyslab.producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("producttype", producttype);
@@ -3260,13 +3258,13 @@ public class DSADaoImpl implements DSADao {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
 	}
-	
+
 	@Override
 	@Transactional
-	public List<BLMonthlyPayout> getBlmonthlypayout()throws Exception {
-		BLMonthlyPayout payoutDate=new BLMonthlyPayout();
-		try{
-			
+	public List<BLMonthlyPayout> getBlmonthlypayout() throws Exception {
+		BLMonthlyPayout payoutDate = new BLMonthlyPayout();
+		try {
+
 			String queryString = "select monthlyslab from BLMonthlyPayout monthlyslab ";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			return query.list();
@@ -3274,32 +3272,30 @@ public class DSADaoImpl implements DSADao {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
 	}
-	
-	
+
 	@Override
 	@Transactional
 	public FestivalPayout getFestivalPayout(FestivalPayout festivalPayout) throws Exception {
-		FestivalPayout festivalPayout1=new FestivalPayout();
-		try{
-			
+		FestivalPayout festivalPayout1 = new FestivalPayout();
+		try {
+
 			String queryString = "From FestivalPayout  WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
-			query.setParameter("year",festivalPayout.getYear());
-			query.setParameter("month",festivalPayout.getMonth());
-			query.setParameter("producttype",festivalPayout.getProducttype());
-			festivalPayout1= (FestivalPayout) query.uniqueResult();
-			
+			query.setParameter("year", festivalPayout.getYear());
+			query.setParameter("month", festivalPayout.getMonth());
+			query.setParameter("producttype", festivalPayout.getProducttype());
+			festivalPayout1 = (FestivalPayout) query.uniqueResult();
+
 			return festivalPayout1;
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
 		}
 	}
-	
-	
+
 	@Override
 	@Transactional
 	public List<FestivalMonthlyPayout> getFestivalBlmonthlypayout() throws Exception {
-		try{
+		try {
 			String queryString = "select monthlyslab from FestivalMonthlyPayout monthlyslab ";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			return query.list();
@@ -3311,16 +3307,16 @@ public class DSADaoImpl implements DSADao {
 	@Override
 	@Transactional
 	public SBLFestivalPayout getSBLFestivalPayout(SBLFestivalPayout sblfestivalPayout) {
-		SBLFestivalPayout sblfestivalPayout1=new SBLFestivalPayout();
-		try{
-			
+		SBLFestivalPayout sblfestivalPayout1 = new SBLFestivalPayout();
+		try {
+
 			String queryString = "From SBLFestivalPayout WHERE year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
-			query.setParameter("year",sblfestivalPayout.getYear());
-			query.setParameter("month",sblfestivalPayout.getMonth());
-			query.setParameter("producttype",sblfestivalPayout.getProducttype());
-			sblfestivalPayout1= (SBLFestivalPayout) query.uniqueResult();
-			
+			query.setParameter("year", sblfestivalPayout.getYear());
+			query.setParameter("month", sblfestivalPayout.getMonth());
+			query.setParameter("producttype", sblfestivalPayout.getProducttype());
+			sblfestivalPayout1 = (SBLFestivalPayout) query.uniqueResult();
+
 			return sblfestivalPayout1;
 		} catch (Exception exception) {
 			throw new RuntimeException("Exception occured while getting getPayoutdate details.Reason : " + exception);
@@ -3330,7 +3326,7 @@ public class DSADaoImpl implements DSADao {
 	@Override
 	@Transactional
 	public List<FestivalSBLMonthlyPayout> getFestivalSblmonthlypayout() throws Exception {
-		try{
+		try {
 			String queryString = "select monthlyslab from FestivalSBLMonthlyPayout monthlyslab";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			return query.list();
@@ -3358,8 +3354,8 @@ public class DSADaoImpl implements DSADao {
 	@Transactional
 	public List<SBLFestivalPayout> getSblPayoutFestivaldate(String year, String month, String producttype)
 			throws Exception {
-		SBLFestivalPayout sblfestivalPayout=new SBLFestivalPayout();
-		try{
+		SBLFestivalPayout sblfestivalPayout = new SBLFestivalPayout();
+		try {
 			String queryString = "From SBLFestivalPayout  WHERE  year=:year AND month=:month AND producttype=:producttype";
 			Query query = sessionFactory.getCurrentSession().createQuery(queryString);
 			query.setParameter("year", year);
@@ -3367,7 +3363,8 @@ public class DSADaoImpl implements DSADao {
 			query.setParameter("producttype", producttype);
 			return query.list();
 		} catch (Exception exception) {
-			throw new RuntimeException("Exception occured while getting getSblPayoutdate details.Reason : " + exception);
+			throw new RuntimeException(
+					"Exception occured while getting getSblPayoutdate details.Reason : " + exception);
 		}
 	}
 
@@ -3385,5 +3382,54 @@ public class DSADaoImpl implements DSADao {
 					"Exception occured while getting getBLInsentiveInfo details.Reason : " + exception);
 		}
 	}
-	
+
+	public String getmonthonlos(String number) {
+		LOGGER.info("DSADaoImpl getmonthon start");
+		String month = null;
+		switch (number) {
+		case "1":
+			month = "January";
+			break;
+		case "2":
+			month = "February";
+			break;
+		case "3":
+			month = "March";
+			break;
+		case "4":
+			month = "April";
+			break;
+		case "5":
+			month = "May";
+			break;
+		case "6":
+			month = "June";
+			break;
+		case "7":
+			month = "July";
+			break;
+		case "8":
+			month = "August";
+			break;
+		case "9":
+			month = "September";
+			break;
+		case "10":
+			month = "October";
+			break;
+		case "11":
+			month = "November";
+			break;
+		case "12":
+			month = "December";
+			break;
+		default:
+			month = "nomonth";
+			// month = number;
+		}
+		LOGGER.info("DSADaoImpl getmonthon ends");
+		return month;
+
+	}
+
 }
