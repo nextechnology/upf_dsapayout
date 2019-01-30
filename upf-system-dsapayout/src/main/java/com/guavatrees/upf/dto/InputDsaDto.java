@@ -23,6 +23,7 @@ public class InputDsaDto {
 	private double finalpayoutamount;
 	
 	private List<DsaDetailsEntity> dsalist;
+	private List<String> dsacodelist;
 	
 	private double quarterlypayout;
 	private double quarterlypayrate;
@@ -97,6 +98,12 @@ public class InputDsaDto {
 	}
 	public void setQuarterlypayout(double quarterlypayout) {
 		this.quarterlypayout = quarterlypayout;
+	}
+	public List<String> getDsacodelist() {
+		return dsacodelist;
+	}
+	public void setDsacodelist(List<String> dsacodelist) {
+		this.dsacodelist = dsacodelist;
 	}
 	public double getQuarterlypayrate() {
 		return quarterlypayrate;

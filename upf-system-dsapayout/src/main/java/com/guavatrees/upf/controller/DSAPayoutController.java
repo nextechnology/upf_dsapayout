@@ -2403,12 +2403,16 @@ public class DSAPayoutController {
 
 	@ResponseBody
 	@RequestMapping(value = "/sendemailDsaOnMis", method = RequestMethod.POST, produces = "application/json")
-	public String sendemailDsaOnMis(@RequestBody List<DsaDetailsEntity> listdsasm, HttpServletRequest request,
+	public String sendemailDsaOnMis(@RequestBody InputDsaDto input, HttpServletRequest request,
 			HttpSession session) throws Exception {
 		LOGGER.info("DSAController sendemailDsaOnMis start");
 		String dsacode = request.getParameter("dsacode");
 		String month = request.getParameter("month");
 		String year = request.getParameter("year");
+		
+		List<DsaDetailsEntity> dsalist=input.getDsalist();
+		List<String> dsacodelist=input.getDsacodelist();
+		
 		JSONObject object = new JSONObject();
 		try {
 			List<DsaDetailsEntity> list = new ArrayList<DsaDetailsEntity>();
@@ -2993,19 +2997,18 @@ public class DSAPayoutController {
 		LOGGER.info("DSAController getPayoutdate start");
 		String jsonInString = null;
 		ObjectMapper mapper = new ObjectMapper();
-		BLInsentive blInsentive = new BLInsentive();
+		List<FestivalMonthlyPayout> blMonthlyPayout = new ArrayList<>();
 		List<FestivalPayout> festivalPayout = new ArrayList<>();
 		try {
 			String year = request.getParameter("year");
 			String month = request.getParameter("month");
 			String producttype = request.getParameter("producttype");
-			String id = request.getParameter("id");
 			festivalPayout = dsaService.getPayoutFestivaldate(year, month, producttype);
 			if (festivalPayout.size() != 0) {
 				jsonInString = mapper.writeValueAsString(festivalPayout);
 			} else {
-				blInsentive = dsaService.getBLInsentiveInfo(Long.parseLong(id));
-				jsonInString = mapper.writeValueAsString(blInsentive);
+				blMonthlyPayout = dsaService.getFestivalBlmonthlypayout();
+				jsonInString = mapper.writeValueAsString(blMonthlyPayout);
 
 			}
 		} catch (Exception exception) {
@@ -3028,19 +3031,18 @@ public class DSAPayoutController {
 		LOGGER.info("DSAController getSblPayoutdate start");
 		String jsonInString = null;
 		ObjectMapper mapper = new ObjectMapper();
-		SblInsentive sblInsentive = new SblInsentive();
 		List<SBLFestivalPayout> sblfestivalPayout = new ArrayList<>();
+		List<FestivalSBLMonthlyPayout> sblMonthlyPayout = new ArrayList<>();
 		try {
 			String year = request.getParameter("year");
 			String month = request.getParameter("month");
 			String producttype = request.getParameter("producttype");
-			String id = request.getParameter("id");
 			sblfestivalPayout = dsaService.getSblPayoutFestivaldate(year, month, producttype);
 			if (sblfestivalPayout.size() != 0) {
 				jsonInString = mapper.writeValueAsString(sblfestivalPayout);
 			} else {
-				sblInsentive = dsaService.getSBLInsentiveInfo(Long.parseLong(id));
-				jsonInString = mapper.writeValueAsString(sblInsentive);
+				sblMonthlyPayout = dsaService.getFestivalSblmonthlypayout();
+				jsonInString = mapper.writeValueAsString(sblMonthlyPayout);
 
 			}
 		} catch (Exception exception) {
