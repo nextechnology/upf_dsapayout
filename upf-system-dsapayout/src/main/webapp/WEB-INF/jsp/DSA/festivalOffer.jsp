@@ -194,7 +194,7 @@ padding-right:10px;
     		<div class="col-md-2"></div>   
     		<div class="col-md-8" style="background-color:#fff;padding-top:20px;">
     		<div align=center style="padding-bottom:15px;"><b style="font-size:18px;">BUSINESS LOAN</b></div>
-    			<table class="table table-bordered table-condensed">
+    			<table class="table table-bordered table-condensed" id="blIncentTblId">
 							<thead>
 								<tr  class="leftbgcolor">
 								<td>Disbursal in Cr.</td>
@@ -300,7 +300,7 @@ padding-right:10px;
     		<div class="col-md-6" style="background-color:#fff;padding-top:20px;">
     		<div align=center style="padding-bottom:15px;"><b style="font-size:18px;">SMALL BUSINESS LOAN</b></div>
     			<form onsubmit="$_sblpost(event);">
-    			<table class="table table-bordered table-condensed">
+    			<table class="table table-bordered table-condensed" id="sblIncentTblId">
     				<thead align="center">
     				<tr class="leftbgcolor">
     					<td>Disbursements in Lacs</td>

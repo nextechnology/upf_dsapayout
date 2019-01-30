@@ -24,7 +24,8 @@ var api = {
 			return `/upf-system-dsapayout/dsapayout/dsa/addSBLFestivalPayout`
 		}
 };
-var sReply = {};
+var bReply = {},
+	sReply = {};
 	$(function(){
 		
 		if(localStorage.getItem('productType') == "BL" && localStorage.getItem("role").includes('SM')){
@@ -77,7 +78,7 @@ var sReply = {};
 				var startDate = '10/'+$('#monthAdmin').val()+'/'+$('#yearAdmin').val();
 				console.log(blReply)
 				if(blReply.dateid == null){
-
+					bReply = {};
 					$('#monthlyslabid-1').text(0); 
 					$('#monthlyslabid-2').text(0); 
 					$('#monthlyslabid-3').text(0);
@@ -93,8 +94,11 @@ var sReply = {};
 					$('#mnthPayout-1').val(blReply[0].monthlypayout);
 					$('#mnthPayout-2').val(blReply[1].monthlypayout);
 					$('#mnthPayout-3').val(blReply[2].monthlypayout);
-				}else{
 					
+					$('#blIncentTblId').find('input').removeAttr('disabled');
+					$('#btnBlSubmitId').removeAttr('disabled');
+				}else{
+					bReply = blReply;
 					$('#blincentiveId').text(blReply.dateid);
 
 					$('#monthlyslabid-1').text(blReply.monthlyslab[0].monthlyslabid); 
@@ -113,6 +117,8 @@ var sReply = {};
 					$('#mnthPayout-2').val(blReply.monthlyslab[1].monthlypayout);
 					$('#mnthPayout-3').val(blReply.monthlyslab[2].monthlypayout);
 
+					$('#blIncentTblId').find('input').attr('disabled',true);
+					$('#btnBlSubmitId').attr('disabled',true);
 				}
 			});
 		}
@@ -126,6 +132,8 @@ var sReply = {};
 						$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
 						$('#monthSblId-'+(k+1)).val(v.monthlyslab);
 					});
+					$('#sblIncentTblId').find('input').removeAttr('disabled');
+					$('#sblSbmtId').removeAttr('disabled');
 				}else{
 					sReply = reply;
 					$(reply.sblmonthlyslab).each(function(k,v){
@@ -133,6 +141,8 @@ var sReply = {};
 						$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
 						$('#monthSblId-'+(k+1)).val(v.monthlyslab);
 					});
+					$('#sblIncentTblId').find('input').attr('disabled',true);
+					$('#sblSbmtId').attr('disabled',true);
 				}
 				
 			});
@@ -143,30 +153,26 @@ var sReply = {};
 	function $_blPost(event){
 		event.preventDefault();
 		$('#btnBlSubmitId').attr('disabled',true);
-		var formData = {
-				"dateid":isNaN(parseInt($('#blincentiveId').text()))?0:(parseInt($('#blincentiveId').text())),
-				"monthlyslab": [{
-						  "monthlyslabid": isNaN(parseInt($('#monthlyslabid-1').text()))?0:(parseInt($('#monthlyslabid-1').text())),
-						  "disbursalincr": $('#disbursalincr-1').text(),
-						  "minfilesdisbursed": parseInt($('#minFileDis-1').val()),
-						  "monthlypayout": parseFloat($('#mnthPayout-1').val())
-						 }, {
-						  "monthlyslabid": isNaN(parseInt($('#monthlyslabid-2').text()))?0:(parseInt($('#monthlyslabid-2').text())),
-						  "disbursalincr": $('#disbursalincr-2').text(),
-						  "minfilesdisbursed": parseInt($('#minFileDis-2').val()),
-						  "monthlypayout": parseFloat($('#mnthPayout-2').val())
-						},{
-						  "monthlyslabid": isNaN(parseInt($('#monthlyslabid-3').text()))?0:(parseInt($('#monthlyslabid-3').text())),
-						  "disbursalincr": $('#disbursalincr-3').text(),
-						  "minfilesdisbursed": parseInt($('#minFileDis-3').val()),
-						  "monthlypayout": parseFloat($('#mnthPayout-3').val())
-						 }],
-//				"enddate":$('#endDateId').val(),
-//				"startdate": $('#startDateId').val(),
-				"producttype": $('#proTypIncId').val(),
-				"month": $('#monthAdmin').val(),
-				"year": $('#yearAdmin').val()
+		var formData = bReply;
+		var monthlyslab = [];
+		if($.isEmptyObject(bReply)){
+			formData = {
+					"dateid": 0,
+					"producttype": $('#proTypIncId').val(),
+					"month": $('#monthAdmin').val(),
+					"year": $('#yearAdmin').val(),
+					"monthlyslab": []
+			};
 		}
+		for(i=1;i<=3;i++){
+			monthlyslab.push({
+		        "monthlyslabid": isNaN(parseInt($('#monthlyslabid-'+i).text()))?0:(parseInt($('#monthlyslabid-'+i).text())),
+				"disbursalincr": $('#disbursalincr-'+i).text(),
+				"minfilesdisbursed": parseInt($('#minFileDis-'+i).val()),
+				"monthlypayout": parseFloat($('#mnthPayout-'+i).val())
+			});
+		}
+		formData.monthlyslab = monthlyslab;
 		requestData(api.addFestivalPayout(),"POST",JSON.stringify(formData)).done(function(blReply){
 			if(blReply.reply == "success"){
 				$('#btnBlSubmitId').attr('disabled',false);

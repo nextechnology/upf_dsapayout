@@ -119,7 +119,7 @@ var tempRangeObj = [];
 					$(".startDateRangePicker").datepicker(start_options); 
 					$(".endDateRangePicker").datepicker(end_options);
 					$(".startDateRangePicker").datepicker('setDate', mTD(dd)+'/'+mTD(mm)+'/'+y).find('span').hide();
-					$(".endDateRangePicker").datepicker('setDate', mTD(dd)+'/'+mTD(mm)+'/'+y);
+					$(".endDateRangePicker").datepicker('setDate', mTD(dd+1)+'/'+mTD(mm)+'/'+y);
 					$('#startEndDateRowId').show();
 					$('#startEndDivId').show();
 				}else{
