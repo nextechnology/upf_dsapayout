@@ -45,9 +45,9 @@ var sReply = {};
 		
 		$(document).ajaxSend(function(e, xhr, opt){
 			if(opt.method=='POST'){
-				$('.loadingoverlay').html(`<h2>Please wait...</h2>`).fadeIn(250);
+//				$('.loadingoverlay').html(`<h2>Please wait...</h2>`).fadeIn(250);
 			}else{
-				$('.loadingoverlay').html(`<h2>Loading...</h2>`).fadeIn(250);
+//				$('.loadingoverlay').html(`<h2>Loading...</h2>`).fadeIn(250);
 			}
 		});
 		$(document).ajaxComplete(function(e, xhr, opt){
@@ -65,38 +65,6 @@ var sReply = {};
 		renStartEnd();
 	});
 	
-	function $_sblpost(event){
-		event.preventDefault();
-		$('#sblSbmtId').attr('disabled',true);
-		var formData = sReply;
-		var sblmonthlyslab = [];
-		if($.isEmptyObject(sReply)){
-			formData = {
-					"dateid": 0,
-					"producttype": $('#proTypIncId').val(),
-					"month": $('#monthAdmin').val(),
-					"year": $('#yearAdmin').val(),
-					"sblmonthlyslab": []
-			};
-		}
-		for(i=1;i<=5;i++){
-			sblmonthlyslab.push({
-				"sblmonthlyslabid": $('#sblHidIncId-'+i).text(),
-		        "disbursementinlac": $('#disbursementId-'+i).text(),
-		        "monthlyslab": parseFloat($('#monthSblId-'+i).val())
-			});
-		}
-		formData.sblmonthlyslab = sblmonthlyslab;
-		
-		requestData(api.addSBLFestivalPayout(),"POST",JSON.stringify(formData)).done(function(reply){
-			if(reply.reply == "success"){
-				$('#sblSbmtId').attr('disabled',false);
-				$('#diagMsgDivId').show();
-				$('#sucMgsId').html(`<span class="glyphicon glyphicon-ok-circle"></span>SBL Incentives saved successfully.`);
-				$('#sucModalWindId').click();
-			}
-		});
-	}
 	function setValues(a){
 		var id = $('#blincentiveId').text()==""?1:$('#blincentiveId').text();
 		var postData = {
@@ -126,6 +94,7 @@ var sReply = {};
 					$('#mnthPayout-2').val(blReply[1].monthlypayout);
 					$('#mnthPayout-3').val(blReply[2].monthlypayout);
 				}else{
+					
 					$('#blincentiveId').text(blReply.dateid);
 
 					$('#monthlyslabid-1').text(blReply.monthlyslab[0].monthlyslabid); 
@@ -151,6 +120,7 @@ var sReply = {};
 			requestData(api.getSBLFestivalPayout(),"POST",JSON.stringify(postData)).done(function(reply){
 				console.log(reply);
 				if(reply.dateid==null){
+					sReply = {};
 					$(reply).each(function(k,v){
 						$('#sblHidIncId-'+(k+1)).text(0);	
 						$('#disbursementId-'+(k+1)).text(v.disbursementinlac);
@@ -206,6 +176,38 @@ var sReply = {};
 			}
 		});
 	} 
+	function $_sblpost(event){
+		event.preventDefault();
+		$('#sblSbmtId').attr('disabled',true);
+		var formData = sReply;
+		var sblmonthlyslab = [];
+		if($.isEmptyObject(sReply)){
+			formData = {
+					"dateid": 0,
+					"producttype": $('#proTypIncId').val(),
+					"month": $('#monthAdmin').val(),
+					"year": $('#yearAdmin').val(),
+					"sblmonthlyslab": []
+			};
+		}
+		for(i=1;i<=5;i++){
+			sblmonthlyslab.push({
+				"sblmonthlyslabid": $('#sblHidIncId-'+i).text(),
+		        "disbursementinlac": $('#disbursementId-'+i).text(),
+		        "monthlyslab": parseFloat($('#monthSblId-'+i).val())
+			});
+		}
+		formData.sblmonthlyslab = sblmonthlyslab;
+		
+		requestData(api.addSBLFestivalPayout(),"POST",JSON.stringify(formData)).done(function(reply){
+			if(reply.reply == "success"){
+				$('#sblSbmtId').attr('disabled',false);
+				$('#diagMsgDivId').show();
+				$('#sucMgsId').html(`<span class="glyphicon glyphicon-ok-circle"></span>SBL Incentives saved successfully.`);
+				$('#sucModalWindId').click();
+			}
+		});
+	}
 
 	function $_yearList(initOpt,idToApp){
 		var dateYrOptn = initOpt;

@@ -747,7 +747,12 @@ function $_searchSbmt(event){
 						blGet = blSblResponse;
 					}
 				}else{
-					sblGet = blSblResponse[0].sblmonthlyslab;
+					if(blSblResponse[0].dateid==null){
+						sblGet = blSblResponse;
+					}else{
+						sblGet = blSblResponse[0].sblmonthlyslab;
+					}
+					
 				}
 				/*if(blResponse.startdate==null){
 					blGet = blResponse[0];
