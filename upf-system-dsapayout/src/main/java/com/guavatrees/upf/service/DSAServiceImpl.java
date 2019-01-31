@@ -860,13 +860,16 @@ public class DSAServiceImpl implements DSAService {
 				&& !dsaentity.getGstdetails().getIfsccode().equalsIgnoreCase("")
 				&& !dsaentity.getGstdetails().getBankaccountname().equalsIgnoreCase("")
 				&& !dsaentity.getGstdetails().getGstcode().equalsIgnoreCase("")) {
-			responsemessage = "gst absent";
+			
 
 			if (invoice.getProductname().equalsIgnoreCase("UBL") || invoice.getProductname().equalsIgnoreCase("BL")) {
 				responsemessage = createPDFUBL(invoice);
 			} else if (invoice.getProductname().equalsIgnoreCase("SBL")) {
 				responsemessage = createPDFSBL(invoice);
 			}
+		}
+		else {
+			responsemessage = "gst absent";
 		}
 		return responsemessage;
 	}
@@ -1337,10 +1340,11 @@ public class DSAServiceImpl implements DSAService {
 					docWriter.close();
 				}
 			}
-			LOGGER.info("DSAServiceImpl createPDF ends");
+				LOGGER.info("DSAServiceImpl createPDF ends");
+			}
+			return path;
 		}
-		return path;
-	}
+
 
 	@Override
 	public String generateinvoice(String dsacode, String year, String month) throws Exception {

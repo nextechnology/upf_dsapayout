@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -1790,12 +1791,15 @@ public class DSAPayoutController {
 		String responseMessage = null;
 		JSONObject jsonResponse = new JSONObject();
 		List<String> listpath = new ArrayList<String>();
+		String response =null;
 		try {
 			for (Invoice invoice1 : invoice) {
-				String path = dsaService.CreateInvoicePdfInfo(invoice1);
+				response = dsaService.CreateInvoicePdfInfo(invoice1);
 			}
-
-			jsonResponse.put("reply", "success");
+			if(response.equals("gst absent"))
+			jsonResponse.put("reply", "failure");
+			else
+				jsonResponse.put("reply", "success");
 
 			responseMessage = jsonResponse.toString();
 		} catch (Exception exception) {
@@ -2402,34 +2406,37 @@ public class DSAPayoutController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/sendemailDsaOnMis", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/sendemailDsaOnMis", method = RequestMethod.POST)
 	public String sendemailDsaOnMis(@RequestBody InputDsaDto input, HttpServletRequest request,
 			HttpSession session) throws Exception {
 		LOGGER.info("DSAController sendemailDsaOnMis start");
-		String dsacode = request.getParameter("dsacode");
-		String month = request.getParameter("month");
-		String year = request.getParameter("year");
 		
 		List<DsaDetailsEntity> dsalist=input.getDsalist();
 		List<String> dsacodelist=input.getDsacodelist();
 		
 		JSONObject object = new JSONObject();
-		try {
-			List<DsaDetailsEntity> list = new ArrayList<DsaDetailsEntity>();
-
-			for (DsaDetailsEntity entity : listdsasm) {
-				if (entity.getInclude().equalsIgnoreCase("yes") && entity.getDsacode().equalsIgnoreCase(dsacode)) {
-					list.add(entity);
-				}
-			}
-			if (list.size() != 0) {
-				DSAEntity dsa = dsaService.getDsaOndsacode(dsacode);
-				if (null != dsa) {
-					sendingMailToDsa(dsa.getEmailid(), list, month, year);
+		
+		String jsonInString = null;
+		try 
+		{
+			for(String dsacode : dsacodelist){
+				for(DsaDetailsEntity entity : dsalist)
+				{
+					if(dsacode.equals(entity.getDsacode()))
+					{
+						DSAEntity dsa = dsaService.getDsaOndsacode(entity.getDsacode());
+						if (null != dsa) 
+						{
+							sendingMailToDsa(dsa.getEmailid(), dsalist, entity.getMonth(), entity.getYear());
+						}
+					}
+					else
+					{
+						System.out.println("exception occured while checking the dsa code...");
+					}
 				}
 			}
 			object.put("reply", "success");
-
 		} catch (Exception e) {
 			LOGGER.error("Error while sendemailDsaOnMis. Reason : " + e.getMessage(), e);
 		}
@@ -2437,9 +2444,8 @@ public class DSAPayoutController {
 		return object.toString();
 
 	}
-
 	
-
+	
 	private void sendingMailToDsa(String emailid, List<DsaDetailsEntity> list, String month, String year)
 			throws Exception {
 
