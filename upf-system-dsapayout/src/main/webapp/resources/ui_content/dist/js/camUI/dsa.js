@@ -1,4 +1,4 @@
-
+//for invoice no. pattern="^[a-zA-Z0-9][a-zA-Z0-9.,',\s]+$"
 var dsaHtml = {
 	invoice: function(_class, stateName,billingState){
 		return `

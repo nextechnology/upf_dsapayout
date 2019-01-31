@@ -14,8 +14,8 @@ var api = {
 	getSblPayoutdate: function(y,m,p){
 		return 	`/upf-system-dsapayout/dsapayout/dsa/getSblPayoutdate?year=${y}&month=${m}&producttype=${p}`	
 	},
-	sendemailDsaOnMis: function(d,m,y){
-		return `/upf-system-dsapayout/dsapayout/dsa/sendemailDsaOnMis?dsacode=${d}&month=${m}&year=${y}`
+	sendemailDsaOnMis: function(){
+		return `/upf-system-dsapayout/dsapayout/dsa/sendemailDsaOnMis`
 	}
 }
 
@@ -583,8 +583,9 @@ function $_cstMngSbmt(event){
 }
 function $_actualSbmt(){
 	var formdata = [];
-	var emailData = [];
-	var uniqueDSA = [];
+	var emailData = {};
+	var dsalist = [];
+	var dsacodelist = [];
 	$('#btnCstMtgSbtId').attr('disabled',true);
 //	$('#finalSbmtId').attr('disabled',true);
 	
@@ -631,47 +632,33 @@ function $_actualSbmt(){
 				}
 		
 		formdata.push(arr);
-		uniqueDSA.push($('#dsaCodeMngId-'+i).text());
 		
-		emailData.push({
+		dsacodelist.push($('#dsaCodeMngId-'+i).text());
+		dsalist.push({
 				  "dsacode" : $('#dsaCodeMngId-'+i).text(),//DSACODE,
 				  "dsa" : $('#dsaCstMngId-'+i).text(),
 				  "month":$('#monthAdmin').val(),
 				  "year":$('#yearAdmin').val(),
-				  "finalpayoutamount" : parseFloat($comRem($('#fnlPayAmntCstMngId-'+i).text())),
-				  "location":$('#lctnCstMngId-'+i).text(),
 				  "companyname":$('#cmpNmCstMngId-'+i).text(),
+				  "frequency" : $('#frequencyId-'+i).text(),
 				  "state":$('#state-'+i).text(),
-				  "include":$('#includeCstMngId-'+i).val(),
-				  "constatus" : $('#dsaConfirmId-'+i).text(),
-				  "salesmanager" : $('#slsMngrCstMngId-'+i).text(),
-				  "sanctionedamount" : parseFloat($comRem($('#sancAmntCstMngId-'+i).text())),
-				  "netpayrate" : parseFloat($('#netPayRteCstMngId-'+i).text()),
-				  "paymentFlag":$('#paymentdoneId-'+i).text()
+				  "finalpayoutamount" : parseFloat($comRem($('#fnlPayAmntCstMngId-'+i).text())),
+				  "location":$('#lctnCstMngId-'+i).text()
 			});
-		
-		
 	}
-//	var invoiceRr = {
-//			  "invoicename" : null,
-//			  "invoicepath" : null,
-//			  "updated_date" : null,
-//			  "year" : $('#yearAdmin').val(),
-//			  "month" : $("#monthAdmin option:selected").text(),
-//			  "dsacode" : DSACODE,
-//			  "productname" : $("#proTypCostId option:selected").text(),
-//			  "listlos" : $_listLos(glblCnt)
-//			}
-	console.log(uniqueDSA)
-	var set = new Set(uniqueDSA);
-	uniqueDSA = Array.from(set);
-	console.log(uniqueDSA)
+	
+	var set = new Set(dsacodelist);
+	dsacodelist = Array.from(set);
+	
+	emailData = {
+			dsalist : dsalist,
+			dsacodelist : dsacodelist
+	};
 	
 	requestData(API_COST_POST,"POST",JSON.stringify(formdata)).done(function(reply){
 		if(reply.reply == "success"){
-			
-			requestData(API_EMAIL_DSA+EMAILID+'&month='+$("#monthAdmin :selected").text()+'&year='+$('#yearAdmin').val(),"POST",JSON.stringify(emailData)).done(function(emailReply){
-				if(reply.reply == "success"){
+			requestData(api.sendemailDsaOnMis(),"POST",JSON.stringify(emailData)).done(function(reply){
+				if(reply.reply=="success"){
 					$('#sucMwHdrId').css({"background-color":"#9ffc85", "color":"#000","padding":"9px"});
 					$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Success</b></h4>');
 					$('#sucMgsId').html('<span class="glyphicon glyphicon-ok-circle"></span>Data saved successfully.');
@@ -681,7 +668,26 @@ function $_actualSbmt(){
 					          				'</div>');
 					$('#myModal').modal('show')
 				}
+			}).fail(function(){
+				window.location.reload();
 			});
+			
+			
+//			
+//			requestData(API_EMAIL_DSA+EMAILID+'&month='+$("#monthAdmin :selected").text()+'&year='+$('#yearAdmin').val(),"POST",JSON.stringify(emailData)).done(function(emailReply){
+//				if(reply.reply == "success"){
+//					$('#sucMwHdrId').css({"background-color":"#9ffc85", "color":"#000","padding":"9px"});
+//					$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Success</b></h4>');
+//					$('#sucMgsId').html('<span class="glyphicon glyphicon-ok-circle"></span>Data saved successfully.');
+//					$('#sucMwFtrId').html('<div align="center">'+
+//					          				'<button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal" onclick="$_reloadWindow();">OK</button>'+
+//					         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+//					          				'</div>');
+//					$('#myModal').modal('show')
+//				}
+//			}).fail(function(e){
+//				window.location.reload();
+//			});
 		}
 	}).fail(function(e){
 //		$('#finalSbmtId').attr('disabled',false);
