@@ -1102,7 +1102,7 @@ function $_payoutSbmt(event){
 								          				'<button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal" onclick="$_reloadWindow();">OK</button>'+
 								         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
 								          				'</div>');
-								$('#sucModalWindId').click();
+								$('#myModal').modal('show')
 							}
 						});
 					 }
@@ -1711,7 +1711,7 @@ function $_postInvoice(event, dynClasses) {
 			          				'<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>'+
 			         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
 			          				'</div>');
-			$('#sucModalWindId').click();
+			$('#myModal').modal('show')
 		}else{
 			 requestData(API_INVOICE_GET,"POST",JSON.stringify(postJSON_array)).done(function(reply) {
 				 if(reply.reply == "success") {
@@ -1779,6 +1779,17 @@ function $_postInvoice(event, dynClasses) {
 							 
 						 }
 					 });
+				 }else if(reply.reply == "failure"){
+					 $('#sucMwHdrId').css({"background-color":"#F29D02", "color":"#000","padding":"9px"});
+						$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Warning</b></h4>');
+						$('#sucMgsId').html(`<span class="glyphicon glyphicon-exclamation-sign"></span> Bank details not found !`);
+						$('#sucMwFtrId').html('<div align="center">'+
+						          				'<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>'+
+						         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+						          				'</div>');
+						$('#myModal').modal('show');
+						$('#dsaSbmtId').hide();
+						$('#invSbmtId').show();
 				 }
 			 }).error(function(error) {
 				 $('#dsaSbmtId').hide();
