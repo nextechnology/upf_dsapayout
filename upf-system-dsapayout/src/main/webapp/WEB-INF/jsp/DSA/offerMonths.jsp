@@ -194,36 +194,24 @@ input::placeholder {
 	</div>
 
 	<!-- Modal -->
-	<button type="button" class="btn btn-info btn-lg a-dis"
-		data-toggle="modal" data-target="#myModal" data-backdrop="static"
-		data-keyboard="false" id="sucModalWindId"></button>
-	<div class="modal fade" id="myModal" role="dialog">
-		<div class="modal-dialog" style="height: 350px; width: 400px;">
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header"
-					style="background-color: #9ffc85; color: #000; padding: 9px !important;">
-					<button type="button" class="close" data-dismiss="modal"></button>
-					<h4 class="modal-title">
-						<b>Success</b>
-					</h4>
-				</div>
-				<div class="modal-body">
-					<h4 style="text-align: center;">
-						<span id="sucMgsId"></span>
-					</h4>
-				</div>
-				<div class="modal-footer" style="padding: 7px !important;">
-					<div align="center">
-						<button type="button" class="btn btn-primary" id="doneMsgOkId"
-							data-dismiss="modal">OK</button>
-						<button type="button" class="btn btn-default msgCLoseCls a-dis"
-							data-dismiss="modal">Close</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<button type="button" class="btn btn-info btn-lg a-dis" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false" id="sucModalWindId"></button>
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog" style="height:350px;width:400px;">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" id="sucMwHdrId" style="background-color:#9ffc85; color:#000;padding:9px !important;">
+          
+        </div>
+        <div class="modal-body">
+          <h4 style="text-align:center;"><span id="sucMgsId"></span></h4>
+          <span class="a-dis" id="delSpanId"></span>
+        </div>
+        <div class="modal-footer" id="sucMwFtrId" style="padding:7px !important;">
+          
+        </div>
+      </div>
+    </div>
+  </div>
 
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>

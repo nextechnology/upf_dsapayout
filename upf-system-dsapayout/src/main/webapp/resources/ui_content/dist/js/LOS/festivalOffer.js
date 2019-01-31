@@ -67,7 +67,6 @@ var bReply = {},
 	});
 	
 	function setValues(a){
-		var id = $('#blincentiveId').text()==""?1:$('#blincentiveId').text();
 		var postData = {
 				"month": $('#monthAdmin').val(),
 				"year": $('#yearAdmin').val(),
@@ -99,7 +98,6 @@ var bReply = {},
 					$('#btnBlSubmitId').removeAttr('disabled');
 				}else{
 					bReply = blReply;
-					$('#blincentiveId').text(blReply.dateid);
 
 					$('#monthlyslabid-1').text(blReply.monthlyslab[0].monthlyslabid); 
 					$('#monthlyslabid-2').text(blReply.monthlyslab[1].monthlyslabid); 
@@ -178,7 +176,7 @@ var bReply = {},
 				$('#btnBlSubmitId').attr('disabled',false);
 				$('#diagMsgDivId').show();
 				$('#sucMgsId').html(`<span class="glyphicon glyphicon-ok-circle"></span>BL Incentives saved successfully.`);
-				$('#sucModalWindId').click();
+				$('#myModal').modal('show');
 			}
 		});
 	} 
@@ -210,7 +208,7 @@ var bReply = {},
 				$('#sblSbmtId').attr('disabled',false);
 				$('#diagMsgDivId').show();
 				$('#sucMgsId').html(`<span class="glyphicon glyphicon-ok-circle"></span>SBL Incentives saved successfully.`);
-				$('#sucModalWindId').click();
+				$('#myModal').modal('show');
 			}
 		});
 	}

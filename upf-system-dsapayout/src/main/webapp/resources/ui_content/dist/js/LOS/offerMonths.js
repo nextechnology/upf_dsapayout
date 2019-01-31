@@ -94,7 +94,14 @@ var tempRangeObj = [];
 		}else{
 			$(tempRangeObj).each(function(k,v){
 				if((year == v.year) && (v.month==$('#monthAdmin option:selected').text())){
-					alert("You've already added this month defination")
+					$('#sucMwHdrId').css({"background-color":"#F29D02", "color":"#000","padding":"9px"});
+					$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Warning</b></h4>');
+					$('#sucMgsId').html(`<span class="glyphicon glyphicon-exclamation-sign"></span> You've already added this month defination!`);
+					$('#sucMwFtrId').html('<div align="center">'+
+					          				'<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>'+
+					         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+					          				'</div>');
+					$('#myModal').modal('show')
 					$(_this).val('');
 					$('#startEndDivId').hide();
 					flag = false;
@@ -119,11 +126,18 @@ var tempRangeObj = [];
 					$(".startDateRangePicker").datepicker(start_options); 
 					$(".endDateRangePicker").datepicker(end_options);
 					$(".startDateRangePicker").datepicker('setDate', mTD(dd)+'/'+mTD(mm)+'/'+y).find('span').hide();
-					$(".endDateRangePicker").datepicker('setDate', mTD(dd+1)+'/'+mTD(mm)+'/'+y);
+//					$(".endDateRangePicker").datepicker('setDate', mTD(dd+1)+'/'+mTD(mm)+'/'+y);
 					$('#startEndDateRowId').show();
 					$('#startEndDivId').show();
 				}else{
-					alert("Please add previous month defination first!");
+					$('#sucMwHdrId').css({"background-color":"#F29D02", "color":"#000","padding":"9px"});
+					$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Warning</b></h4>');
+					$('#sucMgsId').html(`<span class="glyphicon glyphicon-exclamation-sign"></span> Please add previous month defination first!`);
+					$('#sucMwFtrId').html('<div align="center">'+
+					          				'<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>'+
+					         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+					          				'</div>');
+					$('#myModal').modal('show')
 					$(_this).val('');
 					$('#startEndDivId').hide();
 					return false;
@@ -150,11 +164,26 @@ var tempRangeObj = [];
 				"producttype":$('#proTypIncId').val()
 				}
 		if($('#startDateId').val() == '' || $('#endDateId').val() == ''){
-			alert('Please select end date! ')
+			$('#sucMwHdrId').css({"background-color":"#F29D02", "color":"#000","padding":"9px"});
+			$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Warning</b></h4>');
+			$('#sucMgsId').html(`<span class="glyphicon glyphicon-exclamation-sign"></span> Please select end date! `);
+			$('#sucMwFtrId').html('<div align="center">'+
+			          				'<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>'+
+			         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+			          				'</div>');
+			$('#myModal').modal('show')
 		}else{
 			requestData(api.addPayout(),'POST',JSON.stringify(postData)).done(function(reply){
 				if(reply.reply=='success'){
-					window.location.reload()
+					$('#sucMwHdrId').css({"background-color":"#9ffc85", "color":"#000","padding":"9px"});
+					$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Success</b></h4>');
+					$('#sucMgsId').html('<span class="glyphicon glyphicon-ok-circle"></span>Data saved successfully.');
+					$('#sucMwFtrId').html('<div align="center">'+
+					          				'<button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal" onclick="$_reloadWindow();">OK</button>'+
+					         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+					          				'</div>');
+					$('#myModal').modal('show')
+//					window.location.reload()
 				}else{
 					
 				}
