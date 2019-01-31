@@ -651,6 +651,7 @@ function $_actualSbmt(){
 	dsacodelist = Array.from(set);
 	
 	emailData = {
+			year : $('#yearAdmin').val(),
 			dsalist : dsalist,
 			dsacodelist : dsacodelist
 	};
