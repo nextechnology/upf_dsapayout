@@ -1,6 +1,7 @@
 package com.guavatrees.upf.dto;
 
 import java.util.List;
+import java.util.Set;
 
 import com.guavatrees.upf.dao.entity.DsaDetailsEntity;
 
@@ -23,7 +24,7 @@ public class InputDsaDto {
 	private double finalpayoutamount;
 	
 	private List<DsaDetailsEntity> dsalist;
-	private List<String> dsacodelist;
+	private Set<String> dsacodelist;
 	
 	private double quarterlypayout;
 	private double quarterlypayrate;
@@ -99,10 +100,10 @@ public class InputDsaDto {
 	public void setQuarterlypayout(double quarterlypayout) {
 		this.quarterlypayout = quarterlypayout;
 	}
-	public List<String> getDsacodelist() {
+	public Set<String> getDsacodelist() {
 		return dsacodelist;
 	}
-	public void setDsacodelist(List<String> dsacodelist) {
+	public void setDsacodelist(Set<String> dsacodelist) {
 		this.dsacodelist = dsacodelist;
 	}
 	public double getQuarterlypayrate() {

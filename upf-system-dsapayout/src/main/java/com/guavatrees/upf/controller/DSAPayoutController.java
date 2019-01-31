@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -1810,6 +1811,7 @@ public class DSAPayoutController {
 
 	}
 
+
 	@RequestMapping(value = "/getinvoicelist", method = RequestMethod.POST, consumes = "application/json")
 	public ResponseEntity<List<Invoice>> getinvoicelist(@RequestBody Invoice dsanameEntity) {
 		List<Invoice> invoice = null;
@@ -2412,40 +2414,64 @@ public class DSAPayoutController {
 		LOGGER.info("DSAController sendemailDsaOnMis start");
 		
 		List<DsaDetailsEntity> dsalist=input.getDsalist();
-		List<String> dsacodelist=input.getDsacodelist();
+		Set<String> dsacodelist = input.getDsacodelist();
 		
 		JSONObject object = new JSONObject();
 		
-		String jsonInString = null;
 		try 
 		{
-			for(String dsacode : dsacodelist){
-				for(DsaDetailsEntity entity : dsalist)
+			DSAEntity dsa = null;
+			for(String dsacode : dsacodelist)
+			{
+				List<DsaDetailsEntity> newdsalist = new ArrayList<>();
+				
+				for(DsaDetailsEntity dsaentity : dsalist)
 				{
-					if(dsacode.equals(entity.getDsacode()))
+					if(dsacode.equals(dsaentity.getDsacode()))
 					{
-						DSAEntity dsa = dsaService.getDsaOndsacode(entity.getDsacode());
-						if (null != dsa) 
-						{
-							sendingMailToDsa(dsa.getEmailid(), dsalist, entity.getMonth(), entity.getYear());
-						}
-					}
-					else
-					{
-						System.out.println("exception occured while checking the dsa code...");
-					}
+						newdsalist.add(dsaentity);
+					}	
 				}
+				if(newdsalist != null)
+				{
+					 dsa = dsaService.getDsaOndsacode(dsacode);
+					 if(null != dsa) {
+						 Set<String> dsamonth = new HashSet<>();
+					for(DsaDetailsEntity dsaentity2 : newdsalist)
+					{
+						dsamonth.add(dsaentity2.getMonth());
+					}
+					for(String month:dsamonth )
+					{
+						List<DsaDetailsEntity> dsamonthlist = new ArrayList<>();
+						for(DsaDetailsEntity monthdsalist:newdsalist)
+						{
+							
+							if(monthdsalist.getMonth().equals(month))
+							{
+								dsamonthlist.add(monthdsalist);
+							}
+						}
+						sendingMailToDsa(dsa.getEmailid(), dsamonthlist, month, input.getYear());
+					}	
+				
+				
+				}
+				
+				
+				
 			}
 			object.put("reply", "success");
-		} catch (Exception e) {
+		} }catch (Exception e) {
 			LOGGER.error("Error while sendemailDsaOnMis. Reason : " + e.getMessage(), e);
 		}
 		LOGGER.info("DSAController sendemailDsaOnMis end");
 		return object.toString();
 
 	}
+
 	
-	
+
 	private void sendingMailToDsa(String emailid, List<DsaDetailsEntity> list, String month, String year)
 			throws Exception {
 
