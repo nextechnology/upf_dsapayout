@@ -435,16 +435,17 @@ $(function(){
 		});
 	}); 
 	$(document).ajaxSend(function(e, xhr, opt){
-		if(opt.method=='POST'){
-			$('.loadingoverlay').html(`<h2>Please wait...</h2>`).fadeIn(250);
-		}else{
+//		$('.loadingoverlay').html(`<h2>Please wait...</h2>`).fadeIn(250);
+		if(opt.method=='GET'){
 			$('.loadingoverlay').html(`<h2>Loading...</h2>`).fadeIn(250);
+		}else{
+//			$('.loadingoverlay').html(`<h2>Please wait...</h2>`).fadeIn(250);
 		}
 	});
 	$(document).ajaxComplete(function(e, xhr, opt){
 		setTimeout(function(){
 			$('.loadingoverlay').fadeOut(250);
-		},500)
+		},100)
 	});
 	//remove this
 //	$('#proTypCostId').val('1');
@@ -671,8 +672,14 @@ function $_actualSbmt(){
 			
 			requestData(API_EMAIL_DSA+EMAILID+'&month='+$("#monthAdmin :selected").text()+'&year='+$('#yearAdmin').val(),"POST",JSON.stringify(emailData)).done(function(emailReply){
 				if(reply.reply == "success"){
-					$('#diagMsgDivId').show();
-					$('#sucModalWindId').click();
+					$('#sucMwHdrId').css({"background-color":"#9ffc85", "color":"#000","padding":"9px"});
+					$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Success</b></h4>');
+					$('#sucMgsId').html('<span class="glyphicon glyphicon-ok-circle"></span>Data saved successfully.');
+					$('#sucMwFtrId').html('<div align="center">'+
+					          				'<button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal" onclick="$_reloadWindow();">OK</button>'+
+					         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+					          				'</div>');
+					$('#myModal').modal('show')
 				}
 			});
 		}
@@ -735,8 +742,14 @@ function $_searchSbmt(event){
 	requestData(api.getDate(year,month,producttype),"POST").done(function(getDateResponse){
 		console.log(getDateResponse);
 		if(getDateResponse.startdate==null){
-			alert("Please define payouts for given month!");
-			
+			$('#sucMwHdrId').css({"background-color":"#F29D02", "color":"#000","padding":"9px"});
+			$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Warning</b></h4>');
+			$('#sucMgsId').html(`<span class="glyphicon glyphicon-exclamation-sign"></span> Please define payouts for given month!! `);
+			$('#sucMwFtrId').html('<div align="center">'+
+			          				'<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>'+
+			         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+			          				'</div>');
+			$('#myModal').modal('show')
 		}else{
 			apiToCall = producttype=='BL'?api.getPayoutdate(year,month,producttype):api.getSblPayoutdate(year,month,producttype)
 			requestData(apiToCall,"POST").done(function(blSblResponse){
@@ -1092,7 +1105,14 @@ function $_searchSbmt(event){
 		tblData += 
 				'<tr><td colspan="18" style="text-align:center;">NO DATA FOUND</td></tr>';
 			$('#CstMtngTbBdyId').html(tblData);
-		alert("Please add month defination for given month first!");
+		$('#sucMwHdrId').css({"background-color":"#F29D02", "color":"#000","padding":"9px"});
+		$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Warning</b></h4>');
+		$('#sucMgsId').html(`<span class="glyphicon glyphicon-exclamation-sign"></span> Please add month defination for given month first! `);
+		$('#sucMwFtrId').html('<div align="center">'+
+		          				'<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>'+
+		         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+		          				'</div>');
+		$('#myModal').modal('show')
 	});
 	
 }

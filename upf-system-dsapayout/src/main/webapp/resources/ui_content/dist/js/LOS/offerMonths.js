@@ -183,7 +183,6 @@ var tempRangeObj = [];
 					         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
 					          				'</div>');
 					$('#myModal').modal('show')
-//					window.location.reload()
 				}else{
 					
 				}

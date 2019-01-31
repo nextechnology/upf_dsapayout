@@ -437,18 +437,15 @@ padding-right:10px;
     <div class="modal-dialog" style="height:350px;width:400px;">
       <!-- Modal content-->
       <div class="modal-content">
-        <div class="modal-header" style="background-color:#9ffc85; color:#000;padding:9px !important;">
-          <button type="button" class="close" data-dismiss="modal"></button>
-          <h4 class="modal-title"><b>Success</b></h4>
+        <div class="modal-header" id="sucMwHdrId" style="background-color:#9ffc85; color:#000;padding:9px !important;">
+          
         </div>
         <div class="modal-body">
-          <h4 style="text-align:center;"><span id="sucMgsId"><span class="glyphicon glyphicon-ok-circle"></span>Data Saved Successfully.</span></h4>
+          <h4 style="text-align:center;"><span id="sucMgsId"></span></h4>
+          <span class="a-dis" id="delSpanId"></span>
         </div>
-        <div class="modal-footer" style="padding:7px !important;">
-          <div align="center">
-          <button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal">OK</button>
-          <button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>
-          </div>
+        <div class="modal-footer" id="sucMwFtrId" style="padding:7px !important;">
+          
         </div>
       </div>
     </div>
