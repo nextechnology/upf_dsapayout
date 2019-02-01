@@ -2427,7 +2427,7 @@ public class DSAPayoutController {
 				
 				for(DsaDetailsEntity dsaentity : dsalist)
 				{
-					if(dsacode.equals(dsaentity.getDsacode()))
+					if(dsacode.equals(dsaentity.getDsacode()) && dsaentity.getInclude().equalsIgnoreCase("YES"))
 					{
 						newdsalist.add(dsaentity);
 					}	
