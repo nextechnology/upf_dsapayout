@@ -637,7 +637,7 @@ function $_actualSbmt(){
 		dsalist.push({
 				  dsacode : $('#dsaCodeMngId-'+i).text(),//DSACODE,
 				  dsa: $('#dsaCstMngId-'+i).text(),
-				  month:$('#monthAdmin').val(),
+				  month: $("#monthAdmin :selected").text(),
 				  year: $('#yearAdmin').val(),
 				  include : $('#includeCstMngId-'+i).val(),
 				  companyname: $('#cmpNmCstMngId-'+i).text(),
