@@ -639,6 +639,7 @@ function $_actualSbmt(){
 				  "dsa" : $('#dsaCstMngId-'+i).text(),
 				  "month":$('#monthAdmin').val(),
 				  "year":$('#yearAdmin').val(),
+				  "include" : $('#includeCstMngId-'+i).val(),
 				  "companyname":$('#cmpNmCstMngId-'+i).text(),
 				  "frequency" : $('#frequencyId-'+i).text(),
 				  "state":$('#state-'+i).text(),
