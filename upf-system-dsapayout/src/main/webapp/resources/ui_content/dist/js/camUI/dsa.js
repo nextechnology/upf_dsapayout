@@ -1090,23 +1090,37 @@ function $_payoutSbmt(event){
 							});
 					 }
 				}); 
-				 requestData(API_INVOICE_GET,"POST",JSON.stringify(postJSON_array)).done(function(invReply) {
-					 if(invReply.reply == "success"){
-					 requestData(API_EMAIL_NSM,"POST",JSON.stringify(finalpostData)).done(function(emailReply){
-							if(emailReply.reply == "success"){
-								$('#dsaSbmtSecondId').attr('disabled',false);
-								$('#sucMwHdrId').css({"background-color":"#9ffc85", "color":"#000","padding":"9px"});
-								$('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Success</b></h4>');
-								$('#sucMgsId').html('<span class="glyphicon glyphicon-ok-circle"></span>Data saved successfully.');
-								$('#sucMwFtrId').html('<div align="center">'+
-								          				'<button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal" onclick="$_reloadWindow();">OK</button>'+
-								         				'<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
-								          				'</div>');
-								$('#myModal').modal('show')
-							}
-						});
-					 }
-				 });
+				 requestData(API_EMAIL_NSM,"POST",JSON.stringify(finalpostData)).done(function(emailReply){
+						if(emailReply.reply == "success"){
+							requestData(API_INVOICE_GET,"POST",JSON.stringify(postJSON_array)).done(function(invReply) {
+								 if(invReply.reply == "success"){
+									 $('#dsaSbmtSecondId').attr('disabled',false);
+									 $('#sucMwHdrId').css({"background-color":"#9ffc85", "color":"#000","padding":"9px"});
+									 $('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Success</b></h4>');
+									 $('#sucMgsId').html('<span class="glyphicon glyphicon-ok-circle"></span>Data saved successfully.');
+									 $('#sucMwFtrId').html('<div align="center">'+
+											 '<button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal" onclick="$_reloadWindow();">OK</button>'+
+											 '<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+									 '</div>');
+									 $('#myModal').modal('show')
+								 }
+							 }).fail(function(){
+								 $('#dsaSbmtSecondId').attr('disabled',false);
+								 $('#sucMwHdrId').css({"background-color":"#9ffc85", "color":"#000","padding":"9px"});
+								 $('#sucMwHdrId').html('<button type="button" class="close" data-dismiss="modal"></button><h4 class="modal-title"><b>Success</b></h4>');
+								 $('#sucMgsId').html('<span class="glyphicon glyphicon-ok-circle"></span>Data saved successfully!');
+								 $('#sucMwFtrId').html('<div align="center">'+
+										 '<button type="button" class="btn btn-primary" id="doneMsgOkId" data-dismiss="modal" onclick="$_reloadWindow();">OK</button>'+
+										 '<button type="button" class="btn btn-default msgCLoseCls a-dis" data-dismiss="modal">Close</button>'+
+								 '</div>');
+								 $('#myModal').modal('show')
+							 });
+							
+						}
+					}).fail(function(){
+						$('#dsaSbmtSecondId').attr('disabled',false);
+					});
+				 
 				}
 			//console.log(postJSON_array);
 		}).fail(function(e){
