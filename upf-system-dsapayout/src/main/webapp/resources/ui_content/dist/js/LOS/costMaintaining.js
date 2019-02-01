@@ -635,16 +635,16 @@ function $_actualSbmt(){
 		
 		dsacodelist.push($('#dsaCodeMngId-'+i).text());
 		dsalist.push({
-				  "dsacode" : $('#dsaCodeMngId-'+i).text(),//DSACODE,
-				  "dsa" : $('#dsaCstMngId-'+i).text(),
-				  "month":$('#monthAdmin').val(),
-				  "year":$('#yearAdmin').val(),
-				  "include" : $('#includeCstMngId-'+i).val(),
-				  "companyname":$('#cmpNmCstMngId-'+i).text(),
-				  "frequency" : $('#frequencyId-'+i).text(),
-				  "state":$('#state-'+i).text(),
-				  "finalpayoutamount" : parseFloat($comRem($('#fnlPayAmntCstMngId-'+i).text())),
-				  "location":$('#lctnCstMngId-'+i).text()
+				  dsacode : $('#dsaCodeMngId-'+i).text(),//DSACODE,
+				  dsa: $('#dsaCstMngId-'+i).text(),
+				  month:$('#monthAdmin').val(),
+				  year: $('#yearAdmin').val(),
+				  include : $('#includeCstMngId-'+i).val(),
+				  companyname: $('#cmpNmCstMngId-'+i).text(),
+				  frequency : $('#frequencyId-'+i).text(),
+				  state: $('#state-'+i).text(),
+				  finalpayoutamount : parseFloat($comRem($('#fnlPayAmntCstMngId-'+i).text())),
+				  location:$('#lctnCstMngId-'+i).text()
 			});
 	}
 	
